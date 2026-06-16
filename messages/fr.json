@@ -1,0 +1,21 @@
+{
+  "app": {
+    "name": "Riviere de Stock"
+  },
+  "nav": {
+    "stock": "Stock",
+    "caisse": "Caisse",
+    "entrees": "Entrees",
+    "sorties": "Sorties",
+    "produits": "Produits",
+    "rapports": "Rapports"
+  },
+  "actions": {
+    "ouvrir": "Ouvrir",
+    "fermer": "Fermer",
+    "enregistrer": "Enregistrer",
+    "annuler": "Annuler",
+    "exportExcel": "Export Excel",
+    "exportPdf": "Export PDF"
+  }
+}

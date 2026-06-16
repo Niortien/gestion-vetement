@@ -1,0 +1,35 @@
+import type { Taille } from "./enums";
+
+export interface Categorie {
+  id: string;
+  nom: string;
+  slug: string;
+  description: string | null;
+}
+
+export interface Variante {
+  id: string;
+  produitId: string;
+  taille: Taille;
+  couleur: string;
+  quantiteStock: number;
+  seuilAlerte: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Produit {
+  id: string;
+  nom: string;
+  sku: string;
+  description: string | null;
+  categorieId: string;
+  categorie?: Categorie;
+  prixVente: string;
+  prixAchat: string;
+  imageUrl: string | null;
+  isActif: boolean;
+  createdAt: string;
+  updatedAt: string;
+  variantes?: Variante[];
+}

@@ -1,0 +1,48 @@
+"use client";
+
+import { useState } from "react";
+import { Card, CardBody } from "@heroui/react";
+import { CurrencyDisplay } from "@/components/common/CurrencyDisplay";
+import { StockBadge } from "@/components/common/StockBadge";
+import type { Produit } from "@/types";
+
+interface ProduitCardProps {
+  produit: Produit;
+  onPress: () => void;
+}
+
+export function ProduitCard({ produit, onPress }: ProduitCardProps) {
+  const [imgError, setImgError] = useState(false);
+  const totalStock = produit.variantes?.reduce((sum, v) => sum + v.quantiteStock, 0) ?? 0;
+
+  return (
+    <Card
+      isPressable
+      onPress={onPress}
+      className="group mb-3 w-full overflow-hidden border border-border/80 bg-[linear-gradient(145deg,rgba(45,69,103,0.32),rgba(34,54,81,0.8))] text-left transition hover:scale-[1.02] hover:border-accent/40 hover:shadow-glow-yellow"
+    >
+      <div className="relative h-36 w-full overflow-hidden">
+        {produit.imageUrl && !imgError ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={produit.imageUrl}
+            alt={produit.nom}
+            className="h-full w-full object-cover"
+            onError={() => setImgError(true)}
+          />
+        ) : (
+          <div className="h-full w-full bg-gradient-to-br from-[var(--color-surface-high)] via-[color:rgba(143,126,245,0.22)] to-border" />
+        )}
+        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgba(23,38,58,0.85)_0%,transparent_70%)]" />
+      </div>
+      <CardBody className="p-3">
+        <p className="truncate text-sm font-semibold text-text">{produit.nom}</p>
+        <p className="font-[var(--font-mono)] text-xs text-text-muted">{produit.sku}</p>
+        <div className="mt-2 flex items-center justify-between">
+          <StockBadge value={totalStock} />
+          <CurrencyDisplay montant={produit.prixVente} size="sm" />
+        </div>
+      </CardBody>
+    </Card>
+  );
+}
