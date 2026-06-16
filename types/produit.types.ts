@@ -1,5 +1,13 @@
 import type { Taille } from "./enums";
 
+export interface ProduitImage {
+  id: string;
+  produitId: string;
+  url: string;
+  ordre: number;
+  createdAt: string;
+}
+
 export interface Categorie {
   id: string;
   nom: string;
@@ -32,4 +40,5 @@ export interface Produit {
   createdAt: string;
   updatedAt: string;
   variantes?: Variante[];
+  images?: ProduitImage[];
 }

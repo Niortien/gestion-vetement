@@ -1,10 +1,15 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import type { AppError } from "@/types";
 import {
+  addProduitImage,
   adjustVarianteStock,
   createProduit,
+  deleteVariante,
   deleteProduit,
+  removeProduitImage,
   updateProduit,
   updateVariante,
   type AdjustStockBody,
@@ -62,5 +67,39 @@ export function useAdjustStock(id: string) {
       await qc.invalidateQueries({ queryKey: ["stock"] });
       await qc.invalidateQueries({ queryKey: produitKeys.all });
     },
+    onError: (err) => toast.error((err as unknown as AppError).message ?? "Erreur ajustement stock"),
+  });
+}
+
+export function useAddProduitImage(produitId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (url: string) => addProduitImage(produitId, url),
+    onSuccess: async () => {
+      await qc.invalidateQueries({ queryKey: produitKeys.detail(produitId) });
+    },
+    onError: (err) => toast.error((err as unknown as AppError).message ?? "Erreur ajout image"),
+  });
+}
+
+export function useRemoveProduitImage(produitId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (imageId: string) => removeProduitImage(produitId, imageId),
+    onSuccess: async () => {
+      await qc.invalidateQueries({ queryKey: produitKeys.detail(produitId) });
+    },
+    onError: (err) => toast.error((err as unknown as AppError).message ?? "Erreur suppression image"),
+  });
+}
+
+export function useDeleteVariante(produitId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (varianteId: string) => deleteVariante(varianteId),
+    onSuccess: async () => {
+      await qc.invalidateQueries({ queryKey: produitKeys.detail(produitId) });
+    },
+    onError: (err) => toast.error((err as unknown as AppError).message ?? "Impossible de supprimer la variante"),
   });
 }

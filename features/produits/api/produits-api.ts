@@ -1,5 +1,5 @@
 import { apiDelete, apiGet, apiPatch, apiPost } from "@/lib/api";
-import type { Categorie, MouvementStock, Produit, Taille } from "@/types";
+import type { Categorie, MouvementStock, Produit, ProduitImage, Taille } from "@/types";
 
 export interface ProduitListParams {
   page?: number;
@@ -79,3 +79,12 @@ export const adjustVarianteStock = (id: string, body: AdjustStockBody) =>
 
 export const getCategories = () =>
   apiGet<Categorie[]>("/produits/categories");
+
+export const addProduitImage = (produitId: string, url: string) =>
+  apiPost<ProduitImage, { url: string }>(`/produits/${produitId}/images`, { url });
+
+export const removeProduitImage = (produitId: string, imageId: string) =>
+  apiDelete<void>(`/produits/${produitId}/images/${imageId}`);
+
+export const deleteVariante = (id: string) =>
+  apiDelete<void>(`/variantes/${id}`);
