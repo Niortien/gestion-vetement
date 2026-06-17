@@ -1,12 +1,14 @@
 "use client";
 
 import { Button, Input } from "@heroui/react";
-import type { Taille } from "@/types";
+import type { NewProduitForEntree } from "@/features/entrees/api/entrees-api";
 
 export interface EntreeFormLineData {
-  varianteId: string;
+  varianteId?: string;
+  newProduit?: NewProduitForEntree;
+  isNew?: boolean;
   produitNom: string;
-  taille: Taille;
+  taille: string;
   couleur: string;
   quantite: number;
   prixUnitaire: string;
@@ -16,12 +18,21 @@ interface EntreeFormLineProps {
   line: EntreeFormLineData;
   index: number;
   onPickVariante: () => void;
+  onEditNew?: () => void;
   onChange: (index: number, field: "quantite" | "prixUnitaire", value: string | number) => void;
   onRemove: (index: number) => void;
 }
 
-export function EntreeFormLine({ line, index, onPickVariante, onChange, onRemove }: EntreeFormLineProps) {
+export function EntreeFormLine({ line, index, onPickVariante, onEditNew, onChange, onRemove }: EntreeFormLineProps) {
   const sousTotal = (line.quantite * parseFloat(line.prixUnitaire || "0")).toFixed(0);
+
+  const handleRowClick = () => {
+    if (line.isNew && onEditNew) {
+      onEditNew();
+    } else {
+      onPickVariante();
+    }
+  };
 
   return (
     <div className="grid grid-cols-[1fr_80px_100px_80px_32px] items-center gap-2 rounded-lg border border-border/60 bg-[var(--color-surface-high)] px-3 py-2">
@@ -29,10 +40,17 @@ export function EntreeFormLine({ line, index, onPickVariante, onChange, onRemove
       <button
         type="button"
         className="flex flex-col items-start text-left"
-        onClick={onPickVariante}
-        aria-label="Changer la variante"
+        onClick={handleRowClick}
+        aria-label={line.isNew ? "Modifier le nouveau produit" : "Changer la variante"}
       >
-        <span className="text-sm font-medium text-text">{line.produitNom}</span>
+        <span className="flex items-center gap-1.5 text-sm font-medium text-text">
+          {line.produitNom}
+          {line.isNew && (
+            <span className="rounded bg-in/20 px-1 py-0.5 [font-family:var(--font-mono)] text-[9px] font-bold uppercase tracking-wide text-in">
+              NOUVEAU
+            </span>
+          )}
+        </span>
         <span className="font-[var(--font-mono)] text-xs text-text-muted">
           {line.taille} · {line.couleur}
         </span>

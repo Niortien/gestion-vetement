@@ -1,7 +1,7 @@
 "use client";
 
-import { Button, Input, Spinner } from "@heroui/react";
-import { useState } from "react";
+import { Spinner } from "@heroui/react";
+import { useEffect } from "react";
 import { useActiveSession } from "@/features/caisse/query/caisse-queries";
 import { useOuvrirSession } from "@/features/caisse/mutation/caisse-mutations";
 
@@ -10,44 +10,39 @@ interface SessionGuardProps {
 }
 
 export function SessionGuard({ children }: SessionGuardProps) {
-  const [montantOuverture, setMontantOuverture] = useState("");
-  const { data, isLoading, isError } = useActiveSession();
+  const { data, isLoading } = useActiveSession();
   const openMutation = useOuvrirSession();
   const activeSession = data?.data ?? null;
 
-  if (isLoading) {
+  // Auto-ouvre une session dès que la page est chargée et qu'aucune n'est active
+  useEffect(() => {
+    if (!isLoading && !activeSession && !openMutation.isPending && !openMutation.isSuccess) {
+      openMutation.mutate({ montantOuverture: "0" });
+    }
+  }, [isLoading, activeSession, openMutation]);
+
+  if (isLoading || openMutation.isPending) {
     return (
-      <div className="mx-auto mt-20 flex max-w-md items-center justify-center rounded-lg border border-border bg-surface p-6">
-        <Spinner color="warning" />
+      <div className="flex h-32 items-center justify-center gap-3">
+        <Spinner color="warning" size="sm" />
+        <p className="text-sm text-text-muted">Chargement de la caisse…</p>
       </div>
     );
   }
 
-  if (activeSession) return <>{children}</>;
+  if (openMutation.isError) {
+    return (
+      <div className="rounded-xl border border-out/30 bg-out/8 p-4 text-center">
+        <p className="text-sm text-out">Impossible d'ouvrir la caisse. Vérifie ta connexion.</p>
+        <button
+          onClick={() => openMutation.mutate({ montantOuverture: "0" })}
+          className="mt-3 text-xs font-semibold text-text-muted underline"
+        >
+          Réessayer
+        </button>
+      </div>
+    );
+  }
 
-  return (
-    <div className="mx-auto mt-20 max-w-md rounded-lg border border-border bg-surface p-6">
-      <h2 className="mb-3 text-xl font-semibold">Ouvrir une session</h2>
-      {isError ? <p className="mb-3 text-sm text-out">Impossible de charger la session active.</p> : null}
-      <Input
-        value={montantOuverture}
-        onValueChange={setMontantOuverture}
-        variant="bordered"
-        labelPlacement="outside"
-        placeholder="Montant d'ouverture"
-      />
-      {openMutation.error ? (
-        <p className="mt-2 text-sm text-[var(--color-out)]">
-          {(openMutation.error as { message?: string })?.message ?? "Erreur lors de l'ouverture"}
-        </p>
-      ) : null}
-      <Button
-        className="mt-4 w-full bg-accent text-black"
-        isLoading={openMutation.isPending}
-        onPress={() => openMutation.mutate({ montantOuverture: montantOuverture || "0" })}
-      >
-        Ouvrir
-      </Button>
-    </div>
-  );
+  return <>{children}</>;
 }

@@ -12,6 +12,7 @@ import {
   type UpdateSortieBody,
 } from "../api/sorties-api";
 import { sortieKeys } from "../query/sorties-queries";
+import { produitKeys } from "@/features/produits/query/produits-queries";
 
 function isAppError(e: unknown): e is AppError {
   return typeof e === "object" && e !== null && "code" in e && "message" in e;
@@ -42,6 +43,7 @@ export function useCreateSortie() {
       await qc.invalidateQueries({ queryKey: sortieKeys.all });
       await qc.invalidateQueries({ queryKey: ["stock"] });
       await qc.invalidateQueries({ queryKey: ["caisse"] });
+      await qc.invalidateQueries({ queryKey: produitKeys.all });
     },
   });
 }
@@ -54,6 +56,7 @@ export function useAnnulerSortie() {
       await qc.invalidateQueries({ queryKey: sortieKeys.all });
       await qc.invalidateQueries({ queryKey: ["stock"] });
       await qc.invalidateQueries({ queryKey: ["caisse"] });
+      await qc.invalidateQueries({ queryKey: produitKeys.all });
     },
     onError: (error) => {
       if (isAppError(error)) toast.error(error.message);
@@ -83,6 +86,7 @@ export function useDeleteSortie() {
       await qc.invalidateQueries({ queryKey: sortieKeys.all });
       await qc.invalidateQueries({ queryKey: ["stock"] });
       await qc.invalidateQueries({ queryKey: ["caisse"] });
+      await qc.invalidateQueries({ queryKey: produitKeys.all });
     },
     onError: (error) => {
       if (isAppError(error)) toast.error(error.message);

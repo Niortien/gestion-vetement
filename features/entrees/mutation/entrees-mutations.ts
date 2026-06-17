@@ -10,6 +10,7 @@ import {
   type UpdateEntreeBody,
 } from "../api/entrees-api";
 import { entreeKeys } from "../query/entrees-queries";
+import { produitKeys } from "@/features/produits/query/produits-queries";
 
 export function useCreateEntree() {
   const qc = useQueryClient();
@@ -18,6 +19,7 @@ export function useCreateEntree() {
     onSuccess: async () => {
       await qc.invalidateQueries({ queryKey: entreeKeys.all });
       await qc.invalidateQueries({ queryKey: ["stock"] });
+      await qc.invalidateQueries({ queryKey: produitKeys.all });
     },
   });
 }
@@ -29,6 +31,7 @@ export function useAnnulerEntree() {
     onSuccess: async () => {
       await qc.invalidateQueries({ queryKey: entreeKeys.all });
       await qc.invalidateQueries({ queryKey: ["stock"] });
+      await qc.invalidateQueries({ queryKey: produitKeys.all });
     },
   });
 }
@@ -51,6 +54,7 @@ export function useDeleteEntree() {
     onSuccess: async () => {
       await qc.invalidateQueries({ queryKey: entreeKeys.all });
       await qc.invalidateQueries({ queryKey: ["stock"] });
+      await qc.invalidateQueries({ queryKey: produitKeys.all });
     },
   });
 }

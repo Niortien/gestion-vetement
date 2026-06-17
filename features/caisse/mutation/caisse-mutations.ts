@@ -36,13 +36,20 @@ export function useOuvrirSession() {
 
 export function useFermerSession() {
   const qc = useQueryClient();
+  const router = useRouter();
   const clearSession = useCaisseStore((s) => s.clearSession);
   return useMutation({
     mutationFn: ({ id, montantFermeture }: { id: string; montantFermeture: string }) =>
       fermerSession(id, { montantFermeture }),
     onSuccess: async () => {
       clearSession();
+      disconnectCaisseSocket();
       await qc.invalidateQueries({ queryKey: caisseKeys.all });
+      toast.success("Session clôturée");
+      router.push("/caisse");
+    },
+    onError: (err: { message?: string }) => {
+      toast.error(err?.message ?? "Impossible de clôturer la session");
     },
   });
 }

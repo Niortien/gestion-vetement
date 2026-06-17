@@ -10,11 +10,22 @@ export interface EntreesListParams {
   sortOrder?: "asc" | "desc";
 }
 
+export interface NewProduitForEntree {
+  nom: string;
+  categorieId: string;
+  prixVente: string;
+  prixAchat: string;
+  taille: string;
+  couleur: string;
+  seuilAlerte?: number;
+}
+
 export interface CreateEntreeBody {
   fournisseur: string;
   notes?: string;
   lignes: Array<{
-    varianteId: string;
+    varianteId?: string;
+    newProduit?: NewProduitForEntree;
     quantite: number;
     prixUnitaire: string;
   }>;

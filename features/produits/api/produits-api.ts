@@ -1,5 +1,5 @@
 import { apiDelete, apiGet, apiPatch, apiPost } from "@/lib/api";
-import type { Categorie, MouvementStock, Produit, ProduitImage, Taille } from "@/types";
+import type { Categorie, MouvementStock, Produit, ProduitImage } from "@/types";
 
 export interface ProduitListParams {
   page?: number;
@@ -24,7 +24,7 @@ export interface CreateProduitBody {
   prixAchat: string;
   imageUrl?: string;
   variantes?: Array<{
-    taille: Taille;
+    taille: string;
     couleur: string;
     quantiteStock: number;
     seuilAlerte: number;
@@ -41,7 +41,7 @@ export interface UpdateProduitBody {
 }
 
 export interface UpdateVarianteBody {
-  taille?: Taille;
+  taille?: string;
   couleur?: string;
   seuilAlerte?: number;
 }

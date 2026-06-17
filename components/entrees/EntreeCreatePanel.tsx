@@ -5,13 +5,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button, Input, Spinner } from "@heroui/react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import toast from "react-hot-toast";
 import { getMotionVariant, panelSlide } from "@/lib/motionVariants";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useCreateEntree } from "@/features/entrees/mutation/entrees-mutations";
 import { VariantePicker, type VarianteSelection } from "@/components/common/VariantePicker";
 import { EntreeFormLine, type EntreeFormLineData } from "./EntreeFormLine";
+import { NewProduitModal } from "./NewProduitModal";
 import type { AppError } from "@/types";
 
 const headerSchema = z.object({
@@ -19,6 +20,8 @@ const headerSchema = z.object({
   notes: z.string().optional(),
 });
 type HeaderFields = z.infer<typeof headerSchema>;
+
+type AddMode = "idle" | "choosing" | "picker" | "new";
 
 interface EntreeCreatePanelProps {
   isOpen: boolean;
@@ -30,7 +33,7 @@ export function EntreeCreatePanel({ isOpen, onClose }: EntreeCreatePanelProps) {
   const createMutation = useCreateEntree();
 
   const [lines, setLines] = useState<EntreeFormLineData[]>([]);
-  const [pickerOpen, setPickerOpen] = useState(false);
+  const [addMode, setAddMode] = useState<AddMode>("idle");
   const [replacingIndex, setReplacingIndex] = useState<number | null>(null);
 
   const {
@@ -44,7 +47,7 @@ export function EntreeCreatePanel({ isOpen, onClose }: EntreeCreatePanelProps) {
     .reduce((sum, l) => sum + l.quantite * parseFloat(l.prixUnitaire || "0"), 0)
     .toFixed(0);
 
-  const addLine = (sel: VarianteSelection) => {
+  const addExistingLine = (sel: VarianteSelection) => {
     const newLine: EntreeFormLineData = {
       varianteId: sel.varianteId,
       produitNom: sel.produitNom,
@@ -56,14 +59,31 @@ export function EntreeCreatePanel({ isOpen, onClose }: EntreeCreatePanelProps) {
     if (replacingIndex !== null) {
       setLines((cur) => cur.map((l, i) => (i === replacingIndex ? newLine : l)));
       setReplacingIndex(null);
+      setAddMode("idle");
     } else {
+      // Mode batch : on reste dans le picker jusqu'au clic "Terminer"
       setLines((cur) => [...cur, newLine]);
     }
   };
 
-  const openPickerToReplace = (index: number) => {
+  const addNewLine = (line: EntreeFormLineData) => {
+    if (replacingIndex !== null) {
+      setLines((cur) => cur.map((l, i) => (i === replacingIndex ? line : l)));
+      setReplacingIndex(null);
+    } else {
+      setLines((cur) => [...cur, line]);
+    }
+    setAddMode("idle");
+  };
+
+  const openReplaceExisting = (index: number) => {
     setReplacingIndex(index);
-    setPickerOpen(true);
+    setAddMode("picker");
+  };
+
+  const openEditNew = (index: number) => {
+    setReplacingIndex(index);
+    setAddMode("new");
   };
 
   const handleChange = (index: number, field: "quantite" | "prixUnitaire", value: string | number) => {
@@ -76,9 +96,14 @@ export function EntreeCreatePanel({ isOpen, onClose }: EntreeCreatePanelProps) {
     setLines((cur) => cur.filter((_, i) => i !== index));
   };
 
+  const closeAddFlow = () => {
+    setAddMode("idle");
+    setReplacingIndex(null);
+  };
+
   const onSubmit = handleSubmit((fields) => {
     if (lines.length === 0) {
-      toast.error("Ajoute au moins une variante.");
+      toast.error("Ajoute au moins un produit.");
       return;
     }
     createMutation.mutate(
@@ -87,6 +112,7 @@ export function EntreeCreatePanel({ isOpen, onClose }: EntreeCreatePanelProps) {
         notes: fields.notes?.trim() || undefined,
         lignes: lines.map((l) => ({
           varianteId: l.varianteId,
+          newProduit: l.newProduit,
           quantite: l.quantite,
           prixUnitaire: parseFloat(l.prixUnitaire).toFixed(2),
         })),
@@ -106,16 +132,44 @@ export function EntreeCreatePanel({ isOpen, onClose }: EntreeCreatePanelProps) {
 
   if (!isOpen) return null;
 
+  const existingVarianteIds = lines
+    .filter((l) => l.varianteId && !l.isNew)
+    .map((l) => l.varianteId as string);
+
   return (
     <>
+      {/* Picker produit existant */}
       <VariantePicker
-        isOpen={pickerOpen}
-        onClose={() => { setPickerOpen(false); setReplacingIndex(null); }}
-        onSelect={addLine}
-        excludedVarianteIds={replacingIndex !== null ? [] : lines.map((l) => l.varianteId)}
+        isOpen={addMode === "picker"}
+        onClose={closeAddFlow}
+        onSelect={addExistingLine}
+        onDone={replacingIndex === null ? closeAddFlow : undefined}
+        excludedVarianteIds={replacingIndex !== null ? [] : existingVarianteIds}
       />
 
-      {/* Overlay */}
+      {/* Modal nouveau produit */}
+      <NewProduitModal
+        isOpen={addMode === "new"}
+        defaultValues={
+          replacingIndex !== null && lines[replacingIndex]?.isNew
+            ? {
+                nom: lines[replacingIndex].produitNom,
+                taille: lines[replacingIndex].taille,
+                couleur: lines[replacingIndex].couleur,
+                quantite: lines[replacingIndex].quantite,
+                prixUnitaire: lines[replacingIndex].prixUnitaire,
+                prixVente: lines[replacingIndex].newProduit?.prixVente,
+                prixAchat: lines[replacingIndex].newProduit?.prixAchat,
+                categorieId: lines[replacingIndex].newProduit?.categorieId,
+                seuilAlerte: lines[replacingIndex].newProduit?.seuilAlerte,
+              }
+            : undefined
+        }
+        onClose={closeAddFlow}
+        onAdd={addNewLine}
+      />
+
+      {/* Overlay panneau */}
       <div
         className="fixed inset-0 z-[700] bg-black/40 backdrop-blur-sm"
         onClick={onClose}
@@ -184,23 +238,65 @@ export function EntreeCreatePanel({ isOpen, onClose }: EntreeCreatePanelProps) {
             <div className="space-y-2">
               {lines.map((line, i) => (
                 <EntreeFormLine
-                  key={`${line.varianteId}-${i}`}
+                  key={`${line.varianteId ?? "new"}-${i}`}
                   line={line}
                   index={i}
-                  onPickVariante={() => openPickerToReplace(i)}
+                  onPickVariante={() => openReplaceExisting(i)}
+                  onEditNew={() => openEditNew(i)}
                   onChange={handleChange}
                   onRemove={handleRemove}
                 />
               ))}
             </div>
 
-            <Button
-              variant="flat"
-              className="mt-3 w-full border border-dashed border-in/40 bg-[color:rgba(57,211,83,0.08)] text-in"
-              onPress={() => { setReplacingIndex(null); setPickerOpen(true); }}
-            >
-              + Ajouter une variante
-            </Button>
+            {/* Choix d'ajout */}
+            <AnimatePresence>
+              {addMode === "choosing" ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 6 }}
+                  className="mt-3 overflow-hidden rounded-xl border border-in/30 bg-[color:rgba(34,81,60,0.35)] p-3"
+                >
+                  <p className="mb-2.5 text-center text-xs text-text-muted">Ce produit existe-t-il déjà dans le stock ?</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => { setReplacingIndex(null); setAddMode("picker"); }}
+                      className="flex flex-col items-center gap-1.5 rounded-lg border border-border/60 bg-surface/60 px-3 py-3 text-left transition-colors hover:border-in/40 hover:bg-in/10"
+                    >
+                      <span className="text-xl">📦</span>
+                      <span className="text-xs font-semibold text-text">Produit existant</span>
+                      <span className="text-[10px] text-text-dim">Déjà dans le stock</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => { setReplacingIndex(null); setAddMode("new"); }}
+                      className="flex flex-col items-center gap-1.5 rounded-lg border border-in/30 bg-in/10 px-3 py-3 text-left transition-colors hover:border-in/60 hover:bg-in/20"
+                    >
+                      <span className="text-xl">✨</span>
+                      <span className="text-xs font-semibold text-in">Nouveau produit</span>
+                      <span className="text-[10px] text-text-dim">Créer et enregistrer</span>
+                    </button>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={closeAddFlow}
+                    className="mt-2 w-full text-center text-[11px] text-text-dim hover:text-text-muted"
+                  >
+                    Annuler
+                  </button>
+                </motion.div>
+              ) : (
+                <Button
+                  variant="flat"
+                  className="mt-3 w-full border border-dashed border-in/40 bg-[color:rgba(57,211,83,0.08)] text-in"
+                  onPress={() => setAddMode("choosing")}
+                >
+                  + Ajouter un produit
+                </Button>
+              )}
+            </AnimatePresence>
           </section>
         </div>
 

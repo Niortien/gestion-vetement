@@ -1,5 +1,3 @@
-import type { Taille } from "./enums";
-
 export interface ProduitImage {
   id: string;
   produitId: string;
@@ -18,7 +16,7 @@ export interface Categorie {
 export interface Variante {
   id: string;
   produitId: string;
-  taille: Taille;
+  taille: string;
   couleur: string;
   quantiteStock: number;
   seuilAlerte: number;

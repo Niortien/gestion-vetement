@@ -117,9 +117,13 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
   const tailleOptions = useMemo(() => Object.values(Taille), []);
   const [varianteError, setVarianteError] = useState<string | null>(null);
 
-  const [selectedTailles, setSelectedTailles] = useState<Taille[]>(
+  const selectedCat = categories.find((c) => c.id === selectedCategorieId);
+  const isChaussure = selectedCat?.slug === "chaussures";
+
+  const [selectedTailles, setSelectedTailles] = useState<string[]>(
     produit?.variantes?.map((v) => v.taille) ?? [Taille.M, Taille.L]
   );
+  const [newTaille, setNewTaille] = useState("");
   const [selectedCouleurs, setSelectedCouleurs] = useState<string[]>(
     produit?.variantes
       ? [...new Set(produit.variantes.map((v) => v.couleur))]
@@ -138,9 +142,17 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
   });
 
   /* ── helpers ─────────────────────────────────────────────── */
-  const toggleTaille = (t: Taille) => {
+  const toggleTaille = (t: string) => {
     setVarianteError(null);
     setSelectedTailles((cur) => (cur.includes(t) ? cur.filter((x) => x !== t) : [...cur, t]));
+  };
+
+  const addTaille = () => {
+    const n = newTaille.trim();
+    if (!n || selectedTailles.includes(n)) return;
+    setVarianteError(null);
+    setSelectedTailles((cur) => [...cur, n]);
+    setNewTaille("");
   };
 
   const addColor = () => {
@@ -151,7 +163,7 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
     setNewColor("");
   };
 
-  const setQty = (taille: Taille, couleur: string, val: number) =>
+  const setQty = (taille: string, couleur: string, val: number) =>
     setQuantites((cur) => ({ ...cur, [`${taille}-${couleur}`]: Math.max(0, val) }));
 
   /* ── submit ──────────────────────────────────────────────── */
@@ -374,22 +386,55 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
         {/* VARIANTES */}
         <section className="rounded-lg border border-border/80 bg-[color:rgba(45,69,103,0.4)] p-4">
           <p className="mb-3 text-xs uppercase tracking-[0.08em] text-text-muted">Tailles</p>
-          <div className="flex flex-wrap gap-2">
-            {tailleOptions.map((t) => (
-              <Chip
-                key={t}
-                variant="flat"
-                className={
-                  selectedTailles.includes(t)
-                    ? "cursor-pointer bg-accent text-black"
-                    : "cursor-pointer bg-[var(--color-surface-high)] text-text"
-                }
-                onClick={() => toggleTaille(t)}
-              >
-                {t}
-              </Chip>
-            ))}
-          </div>
+          {isChaussure ? (
+            <div className="space-y-2">
+              <div className="flex flex-wrap gap-2">
+                {selectedTailles.map((t) => (
+                  <Chip
+                    key={t}
+                    variant="flat"
+                    className="bg-accent text-black"
+                    onClose={() => {
+                      setVarianteError(null);
+                      setSelectedTailles((cur) => cur.filter((x) => x !== t));
+                    }}
+                  >
+                    {t}
+                  </Chip>
+                ))}
+              </div>
+              <div className="flex gap-2">
+                <Input
+                  variant="bordered"
+                  placeholder="Pointure (ex : 42)"
+                  type="number"
+                  min={28}
+                  max={60}
+                  value={newTaille}
+                  onValueChange={setNewTaille}
+                  onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addTaille(); } }}
+                />
+                <Button variant="flat" className="shrink-0 bg-accent text-black" onPress={addTaille}>+</Button>
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {tailleOptions.map((t) => (
+                <Chip
+                  key={t}
+                  variant="flat"
+                  className={
+                    selectedTailles.includes(t)
+                      ? "cursor-pointer bg-accent text-black"
+                      : "cursor-pointer bg-[var(--color-surface-high)] text-text"
+                  }
+                  onClick={() => toggleTaille(t)}
+                >
+                  {t}
+                </Chip>
+              ))}
+            </div>
+          )}
 
           <p className="mb-3 mt-4 text-xs uppercase tracking-[0.08em] text-text-muted">Couleurs</p>
           <div className="mb-3 flex flex-wrap gap-2">

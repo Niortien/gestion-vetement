@@ -1,15 +1,14 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Button, Input, Modal, ModalBody, ModalContent, ModalHeader, Spinner } from "@heroui/react";
+import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner } from "@heroui/react";
 import { StockBadge } from "@/components/common/StockBadge";
 import { useProduitsList } from "@/features/produits/query/produits-queries";
-import type { Taille } from "@/types";
 
 export interface VarianteSelection {
   varianteId: string;
   produitNom: string;
-  taille: Taille;
+  taille: string;
   couleur: string;
   prixVente: string;
   prixAchat: string;
@@ -20,12 +19,14 @@ interface VariantePickerProps {
   isOpen: boolean;
   onClose: () => void;
   onSelect: (selection: VarianteSelection) => void;
+  onDone?: () => void;
   excludedVarianteIds?: string[];
 }
 
-export function VariantePicker({ isOpen, onClose, onSelect, excludedVarianteIds = [] }: VariantePickerProps) {
+export function VariantePicker({ isOpen, onClose, onSelect, onDone, excludedVarianteIds = [] }: VariantePickerProps) {
   const [search, setSearch] = useState("");
   const [expandedProduitId, setExpandedProduitId] = useState<string | null>(null);
+  const [addedCount, setAddedCount] = useState(0);
 
   const { data, isLoading } = useProduitsList({ limit: 50, isActif: true });
   const produits = data?.data ?? [];
@@ -38,15 +39,29 @@ export function VariantePicker({ isOpen, onClose, onSelect, excludedVarianteIds 
 
   const handleSelect = (sel: VarianteSelection) => {
     onSelect(sel);
+    setAddedCount((n) => n + 1);
     setSearch("");
     setExpandedProduitId(null);
+  };
+
+  const handleDone = () => {
+    setAddedCount(0);
+    if (onDone) {
+      onDone();
+    } else {
+      onClose();
+    }
+  };
+
+  const handleClose = () => {
+    setAddedCount(0);
     onClose();
   };
 
   return (
     <Modal
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={handleClose}
       size="lg"
       scrollBehavior="inside"
       classNames={{
@@ -58,7 +73,7 @@ export function VariantePicker({ isOpen, onClose, onSelect, excludedVarianteIds 
     >
       <ModalContent>
         <ModalHeader className="text-base font-semibold">Sélectionner une variante</ModalHeader>
-        <ModalBody className="pb-6">
+        <ModalBody className="pb-4">
           <Input
             autoFocus
             placeholder="Rechercher un produit (nom ou SKU)…"
@@ -146,6 +161,23 @@ export function VariantePicker({ isOpen, onClose, onSelect, excludedVarianteIds 
             })}
           </div>
         </ModalBody>
+
+        <ModalFooter className="border-t border-border/60 pt-3">
+          {addedCount > 0 && (
+            <span className="mr-auto font-[var(--font-mono)] text-xs text-in">
+              {addedCount} article{addedCount > 1 ? "s" : ""} ajouté{addedCount > 1 ? "s" : ""}
+            </span>
+          )}
+          <Button variant="light" onPress={handleClose}>
+            Annuler
+          </Button>
+          <Button
+            className="bg-in font-semibold text-black"
+            onPress={handleDone}
+          >
+            Terminer
+          </Button>
+        </ModalFooter>
       </ModalContent>
     </Modal>
   );
