@@ -4,7 +4,7 @@ import type { Taille, TypeSortie } from "@/types";
 
 export type SortiePeriode = "7j" | "30j" | "90j";
 type FeedDensity = "compact" | "cozy";
-type RapportGroupBy = "jour" | "semaine" | "mois";
+export type RapportGroupBy = "jour" | "semaine" | "mois";
 
 interface UiState {
   produitPanelId: string | null;
@@ -22,6 +22,8 @@ interface UiState {
     fin: string;
     groupBy: RapportGroupBy;
   };
+  activitePeriode: SortiePeriode;
+  activiteGroupBy: RapportGroupBy;
   setProduitPanelId: (id: string | null) => void;
   setStockFiltre: (filtre: UiState["stockFiltre"]) => void;
   setSortiePeriode: (periode: SortiePeriode) => void;
@@ -29,6 +31,8 @@ interface UiState {
   setSortieTypeFilter: (type: TypeSortie | null) => void;
   setFeedDensity: (density: FeedDensity) => void;
   setRapportPeriode: (periode: UiState["rapportPeriode"]) => void;
+  setActivitePeriode: (periode: SortiePeriode) => void;
+  setActiviteGroupBy: (groupBy: RapportGroupBy) => void;
 }
 
 const now = new Date();
@@ -49,6 +53,8 @@ export const useUiStore = create<UiState>()(
         fin: now.toISOString(),
         groupBy: "jour",
       },
+      activitePeriode: "30j",
+      activiteGroupBy: "jour",
       setProduitPanelId: (id) => set({ produitPanelId: id }),
       setStockFiltre: (filtre) => set({ stockFiltre: filtre }),
       setSortiePeriode: (periode) => set({ sortiePeriode: periode }),
@@ -56,6 +62,8 @@ export const useUiStore = create<UiState>()(
       setSortieTypeFilter: (type) => set({ sortieTypeFilter: type }),
       setFeedDensity: (feedDensity) => set({ feedDensity }),
       setRapportPeriode: (periode) => set({ rapportPeriode: periode }),
+      setActivitePeriode: (activitePeriode) => set({ activitePeriode }),
+      setActiviteGroupBy: (activiteGroupBy) => set({ activiteGroupBy }),
     }),
   {
     name: "ui-store",

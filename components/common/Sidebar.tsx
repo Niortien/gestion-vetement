@@ -8,6 +8,7 @@ import { useLogout } from "@/features/auth/mutation/auth-mutations";
 
 const ITEMS = [
   { href: "/dashboard", label: "Dashboard" },
+  { href: "/activite", label: "Activité" },
   { href: "/stock", label: "Stock" },
   { href: "/caisse", label: "Caisse" },
   { href: "/entrees", label: "Entrées" },
