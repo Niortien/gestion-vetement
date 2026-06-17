@@ -3,7 +3,14 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import type { AppError } from "@/types";
-import { annulerSortie, createSortie, type CreateSortieBody } from "../api/sorties-api";
+import {
+  annulerSortie,
+  createSortie,
+  deleteSortie,
+  updateSortie,
+  type CreateSortieBody,
+  type UpdateSortieBody,
+} from "../api/sorties-api";
 import { sortieKeys } from "../query/sorties-queries";
 
 function isAppError(e: unknown): e is AppError {
@@ -43,6 +50,35 @@ export function useAnnulerSortie() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => annulerSortie(id),
+    onSuccess: async () => {
+      await qc.invalidateQueries({ queryKey: sortieKeys.all });
+      await qc.invalidateQueries({ queryKey: ["stock"] });
+      await qc.invalidateQueries({ queryKey: ["caisse"] });
+    },
+    onError: (error) => {
+      if (isAppError(error)) toast.error(error.message);
+    },
+  });
+}
+
+export function useUpdateSortie() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, body }: { id: string; body: UpdateSortieBody }) =>
+      updateSortie(id, body),
+    onSuccess: async () => {
+      await qc.invalidateQueries({ queryKey: sortieKeys.all });
+    },
+    onError: (error) => {
+      if (isAppError(error)) toast.error(error.message);
+    },
+  });
+}
+
+export function useDeleteSortie() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => deleteSortie(id),
     onSuccess: async () => {
       await qc.invalidateQueries({ queryKey: sortieKeys.all });
       await qc.invalidateQueries({ queryKey: ["stock"] });

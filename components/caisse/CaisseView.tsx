@@ -32,7 +32,7 @@ export function CaisseView() {
       <PageWrapper>
         <div className="rounded-xl border border-border/80 bg-[linear-gradient(145deg,rgba(143,126,245,0.18),rgba(255,212,71,0.08))] p-4 md:p-5">
           <p className="text-xs uppercase tracking-[0.1em] text-text-muted">Solde du jour</p>
-          <CurrencyDisplay montant={resume?.soldeActuel ?? "0"} size="xl" tone="accent" className="mt-2" />
+          <CurrencyDisplay montant={resume?.totalVentes ?? "0"} size="xl" tone="accent" className="mt-2" />
         </div>
         <div className="flex flex-wrap gap-2">
           {Object.entries(resume?.parModePaiement ?? {}).map(([mode, montant]) => (

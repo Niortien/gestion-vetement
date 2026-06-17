@@ -27,5 +27,7 @@ export interface ResumeJour {
   session: { id: string; statut: StatutSession; montantOuverture: string; dateOuverture: string } | null;
   totalVentes: string;
   totalTransactions: number;
+  totalAchats: string;
+  beneficeNet: string;
   parModePaiement: Partial<Record<ModePaiement, string>>;
 }

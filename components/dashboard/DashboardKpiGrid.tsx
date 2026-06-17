@@ -69,36 +69,50 @@ export function DashboardKpiGrid({ resume, stockValeur, alertesCount, isLoading 
 
   const totalVentes = resume?.totalVentes ?? "0";
   const totalTransactions = resume?.totalTransactions ?? 0;
-  const sessionOpen = resume?.session !== null;
+  const beneficeNet = resume?.beneficeNet ?? "0";
+  const isBenefice = parseFloat(beneficeNet) >= 0;
 
   return (
-    <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-      <KpiCard
-        label="Ventes du jour"
-        value={totalVentes}
-        sub={`${totalTransactions} transaction${totalTransactions !== 1 ? "s" : ""}`}
-        tone="cash"
-        isMontant
-      />
-      <KpiCard
-        label="Valeur stock"
-        value={stockValeur}
-        sub="au prix d'achat"
-        tone="accent"
-        isMontant
-      />
-      <KpiCard
-        label="Session caisse"
-        value={sessionOpen ? "Ouverte" : "Fermée"}
-        sub={sessionOpen ? "Active" : "Ouvre une session"}
-        tone={sessionOpen ? "in" : "out"}
-      />
-      <KpiCard
-        label="Alertes stock"
-        value={alertesCount}
-        sub={alertesCount === 0 ? "Tout est OK" : "à réapprovisionner"}
-        tone={alertesCount === 0 ? "in" : "out"}
-      />
+    <div className="space-y-3">
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+        <KpiCard
+          label="Ventes du jour"
+          value={totalVentes}
+          sub={`${totalTransactions} transaction${totalTransactions !== 1 ? "s" : ""}`}
+          tone="cash"
+          isMontant
+        />
+        <KpiCard
+          label="Valeur stock"
+          value={stockValeur}
+          sub="au prix d'achat"
+          tone="accent"
+          isMontant
+        />
+        <KpiCard
+          label={isBenefice ? "Bénéfice net" : "Perte nette"}
+          value={Math.abs(parseFloat(beneficeNet)).toFixed(0)}
+          sub={isBenefice ? "ventes − achats du jour" : "achats > ventes du jour"}
+          tone={isBenefice ? "in" : "out"}
+          isMontant
+        />
+        <KpiCard
+          label="Alertes stock"
+          value={alertesCount}
+          sub={alertesCount === 0 ? "Tout est OK" : "à réapprovisionner"}
+          tone={alertesCount === 0 ? "in" : "out"}
+        />
+      </div>
+
+      {/* Bannière perte si bénéfice négatif */}
+      {!isBenefice && parseFloat(beneficeNet) !== 0 && (
+        <div className="flex items-center gap-2 rounded-lg border border-[var(--color-out)]/50 bg-[color:rgba(255,77,109,0.10)] px-4 py-2">
+          <span className="text-sm font-semibold text-[var(--color-out)]">⚠ Perte nette aujourd&apos;hui</span>
+          <span className="text-sm text-text-muted">
+            Tes achats ({Number(resume?.totalAchats ?? 0).toLocaleString("fr-FR")} FCFA) dépassent tes ventes ({Number(totalVentes).toLocaleString("fr-FR")} FCFA).
+          </span>
+        </div>
+      )}
     </div>
   );
 }

@@ -97,6 +97,7 @@ export function RecuPrint({
       <Modal
         isOpen={isOpen}
         onClose={onClose}
+        onOpenChange={(open) => { if (!open) onClose(); }}
         size="sm"
         classNames={{
           wrapper: "z-[1000]",

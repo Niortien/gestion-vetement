@@ -36,9 +36,15 @@ export function SessionGuard({ children }: SessionGuardProps) {
         labelPlacement="outside"
         placeholder="Montant d'ouverture"
       />
+      {openMutation.error ? (
+        <p className="mt-2 text-sm text-[var(--color-out)]">
+          {(openMutation.error as { message?: string })?.message ?? "Erreur lors de l'ouverture"}
+        </p>
+      ) : null}
       <Button
         className="mt-4 w-full bg-accent text-black"
-        onPress={() => openMutation.mutate({ montantOuverture })}
+        isLoading={openMutation.isPending}
+        onPress={() => openMutation.mutate({ montantOuverture: montantOuverture || "0" })}
       >
         Ouvrir
       </Button>

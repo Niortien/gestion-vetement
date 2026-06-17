@@ -1,14 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Button, Chip } from "@heroui/react";
-import { FeedDensityToggle } from "@/components/common/FeedDensityToggle";
 import { PageWrapper } from "@/components/common/PageWrapper";
 import { useSortiesList } from "@/features/sorties/query/sorties-queries";
 import { useUiStore, type SortiePeriode } from "@/stores/uiStore";
 import { TypeSortie } from "@/types";
 import { getPeriodeRange } from "@/lib/dateUtils";
-import { SortieFeed } from "./SortieFeed";
+import { SortiesTable } from "./SortiesTable";
 import { SortieCreatePanel } from "./SortieCreatePanel";
 
 const PERIODES: { key: SortiePeriode; label: string }[] = [
@@ -27,12 +26,11 @@ const TYPE_FILTERS: { key: TypeSortie | null; label: string }[] = [
 
 export function SortiesView() {
   const [panelOpen, setPanelOpen] = useState(false);
-  const density = useUiStore((s) => s.feedDensity);
   const periode = useUiStore((s) => s.sortiePeriode);
   const setPeriode = useUiStore((s) => s.setSortiePeriode);
   const typeFilter = useUiStore((s) => s.sortieTypeFilter);
   const setTypeFilter = useUiStore((s) => s.setSortieTypeFilter);
-  const { dateDebut, dateFin } = getPeriodeRange(periode);
+  const { dateDebut, dateFin } = useMemo(() => getPeriodeRange(periode), [periode]);
   const { data } = useSortiesList({
     limit: 20,
     dateDebut,
@@ -99,8 +97,7 @@ export function SortiesView() {
           ))}
         </div>
 
-        <FeedDensityToggle />
-        <SortieFeed items={items} density={density} />
+        <SortiesTable data={items} />
       </PageWrapper>
     </>
   );

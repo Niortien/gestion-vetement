@@ -75,7 +75,7 @@ function ImageGallery({
 
   const handleRemove = (item: GalleryItem) => {
     if (item.kind === "cover") {
-      updateMutation.mutate({ imageUrl: null });
+      updateMutation.mutate({ imageUrl: undefined });
     } else {
       removeMutation.mutate(item.img.id);
     }

@@ -1,14 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Button, Chip } from "@heroui/react";
-import { FeedDensityToggle } from "@/components/common/FeedDensityToggle";
 import { PageWrapper } from "@/components/common/PageWrapper";
 import { useEntreesList } from "@/features/entrees/query/entrees-queries";
-import { useAnnulerEntree } from "@/features/entrees/mutation/entrees-mutations";
 import { useUiStore, type SortiePeriode } from "@/stores/uiStore";
 import { getPeriodeRange } from "@/lib/dateUtils";
-import { EntreeFeed } from "./EntreeFeed";
+import { EntreesTable } from "./EntreesTable";
 import { EntreeCreatePanel } from "./EntreeCreatePanel";
 
 const PERIODES: { key: SortiePeriode; label: string }[] = [
@@ -19,12 +17,10 @@ const PERIODES: { key: SortiePeriode; label: string }[] = [
 
 export function EntreesView() {
   const [panelOpen, setPanelOpen] = useState(false);
-  const density = useUiStore((s) => s.feedDensity);
   const periode = useUiStore((s) => s.entreePeriode);
   const setPeriode = useUiStore((s) => s.setEntreePeriode);
-  const cancelMutation = useAnnulerEntree();
 
-  const { dateDebut, dateFin } = getPeriodeRange(periode);
+  const { dateDebut, dateFin } = useMemo(() => getPeriodeRange(periode), [periode]);
   const { data } = useEntreesList({ limit: 20, dateDebut, dateFin });
   const items = data?.pages.flatMap((page) => page.data) ?? [];
 
@@ -64,8 +60,7 @@ export function EntreesView() {
           ))}
         </div>
 
-        <FeedDensityToggle />
-        <EntreeFeed items={items} density={density} onCancel={(id) => cancelMutation.mutate(id)} />
+        <EntreesTable data={items} />
       </PageWrapper>
     </>
   );

@@ -18,11 +18,18 @@ import {
 import { caisseKeys } from "../query/caisse-queries";
 
 export function useOuvrirSession() {
+  const qc = useQueryClient();
   const setSession = useCaisseStore((s) => s.setSession);
   return useMutation({
     mutationFn: (body: OuvrirSessionBody) => ouvrirSession(body),
-    onSuccess: ({ data }) => {
+    onSuccess: async ({ data }) => {
       setSession(data);
+      await qc.invalidateQueries({ queryKey: caisseKeys.activeSession() });
+      await qc.invalidateQueries({ queryKey: caisseKeys.resumeJour() });
+      toast.success("Session ouverte");
+    },
+    onError: (err: { message?: string }) => {
+      toast.error(err?.message ?? "Impossible d'ouvrir la session");
     },
   });
 }

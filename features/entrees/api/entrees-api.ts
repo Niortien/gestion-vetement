@@ -1,4 +1,4 @@
-import { apiGet, apiPatch, apiPost } from "@/lib/api";
+import { apiDelete, apiGet, apiPatch, apiPost } from "@/lib/api";
 import type { Entree } from "@/types";
 
 export interface EntreesListParams {
@@ -30,5 +30,16 @@ export const getEntreeById = (id: string) =>
 export const createEntree = (body: CreateEntreeBody) =>
   apiPost<Entree, CreateEntreeBody>("/entrees", body);
 
+export interface UpdateEntreeBody {
+  fournisseur?: string;
+  notes?: string;
+}
+
 export const annulerEntree = (id: string) =>
   apiPatch<Entree, Record<string, never>>(`/entrees/${id}/annuler`, {});
+
+export const updateEntree = (id: string, body: UpdateEntreeBody) =>
+  apiPatch<Entree, UpdateEntreeBody>(`/entrees/${id}`, body);
+
+export const deleteEntree = (id: string) =>
+  apiDelete<void>(`/entrees/${id}`);

@@ -13,12 +13,12 @@ export function CaisseSummaryBar({ resume }: CaisseSummaryBarProps) {
         <CurrencyDisplay montant={resume.totalVentes} />
       </div>
       <div>
-        <p className="text-xs text-text-muted">Entrees</p>
-        <CurrencyDisplay montant={resume.totalEntrees} />
+        <p className="text-xs text-text-muted">Achats</p>
+        <CurrencyDisplay montant={resume.totalAchats} />
       </div>
       <div>
-        <p className="text-xs text-text-muted">Sorties</p>
-        <CurrencyDisplay montant={resume.totalSorties} />
+        <p className="text-xs text-text-muted">Bénéfice</p>
+        <CurrencyDisplay montant={resume.beneficeNet} tone={parseFloat(resume.beneficeNet) >= 0 ? "in" : "out"} />
       </div>
     </div>
   );

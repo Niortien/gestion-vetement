@@ -1,4 +1,4 @@
-import type { TypeSortie } from "./enums";
+import type { ModePaiement, TypeSortie } from "./enums";
 import type { Produit, Variante } from "./produit.types";
 
 export interface LigneEntree {
@@ -39,5 +39,6 @@ export interface Sortie {
   userId: string;
   lignes?: LigneSortie[];
   transactionId: string | null;
+  transaction?: { modePaiement: ModePaiement; reference: string | null } | null;
   createdAt: string;
 }

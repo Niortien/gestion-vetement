@@ -1,4 +1,4 @@
-import { apiGet, apiPatch, apiPost } from "@/lib/api";
+import { apiDelete, apiGet, apiPatch, apiPost } from "@/lib/api";
 import type { Sortie, TypeSortie } from "@/types";
 
 export interface SortiesListParams {
@@ -30,6 +30,15 @@ export const getSortieById = (id: string) =>
 export const createSortie = (body: CreateSortieBody) =>
   apiPost<Sortie, CreateSortieBody>("/sorties", body);
 
-// PATCH /sorties/:id/annuler — annule une sortie et restaure le stock
+export interface UpdateSortieBody {
+  notes?: string;
+}
+
 export const annulerSortie = (id: string) =>
   apiPatch<Sortie, Record<string, never>>(`/sorties/${id}/annuler`, {});
+
+export const updateSortie = (id: string, body: UpdateSortieBody) =>
+  apiPatch<Sortie, UpdateSortieBody>(`/sorties/${id}`, body);
+
+export const deleteSortie = (id: string) =>
+  apiDelete<void>(`/sorties/${id}`);

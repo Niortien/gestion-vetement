@@ -188,7 +188,7 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
         },
         {
           onSuccess: () => { toast.success("Produit créé !"); onClose(); },
-          onError: (err) => toast.error((err as AppError).message ?? "Erreur lors de la création"),
+          onError: (err) => toast.error((err as unknown as AppError).message ?? "Erreur lors de la création"),
         }
       );
     } else {

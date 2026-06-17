@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Button, Input, Spinner } from "@heroui/react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
@@ -8,6 +9,7 @@ import { getMotionVariant, panelSlide } from "@/lib/motionVariants";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useCreateSortie } from "@/features/sorties/mutation/sorties-mutations";
 import { useAddTransaction } from "@/features/caisse/mutation/caisse-mutations";
+import { useActiveSession } from "@/features/caisse/query/caisse-queries";
 import { VariantePicker, type VarianteSelection } from "@/components/common/VariantePicker";
 import { ModePaiement, TypeSortie } from "@/types";
 import { RecuPrint, type RecuLigne } from "./RecuPrint";
@@ -33,6 +35,8 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
   const reduced = useReducedMotion();
   const createSortieMutation = useCreateSortie();
   const addTransactionMutation = useAddTransaction();
+  const { data: activeSessionData } = useActiveSession();
+  const hasActiveSession = !!(activeSessionData?.data);
 
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [selectedType, setSelectedType] = useState<TypeSortie | null>(null);
@@ -101,6 +105,10 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
   // Step 1 → 2
   const handleTypeConfirm = () => {
     if (!selectedType) return;
+    if (selectedType === TypeSortie.VENTE && !hasActiveSession) {
+      toast.error("Ouvre une session caisse avant de créer une vente.");
+      return;
+    }
     setStep(2);
   };
 
@@ -270,10 +278,26 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
         <div className="flex-1 space-y-4 overflow-y-auto p-4 pb-6">
           {/* Step 1 — Type */}
           {step === 1 && (
-            <SortieTypeStep
-              selected={selectedType}
-              onSelect={setSelectedType}
-            />
+            <>
+              <SortieTypeStep
+                selected={selectedType}
+                onSelect={setSelectedType}
+              />
+              {selectedType === TypeSortie.VENTE && !hasActiveSession && (
+                <div className="flex items-start gap-3 rounded-lg border border-[var(--color-out)]/50 bg-[color:rgba(255,77,109,0.12)] p-3">
+                  <span className="mt-0.5 text-base">⚠</span>
+                  <div className="text-sm">
+                    <p className="font-semibold text-[var(--color-out)]">Aucune session caisse ouverte</p>
+                    <p className="mt-0.5 text-text-muted">
+                      Une vente nécessite une session active.{" "}
+                      <Link href="/caisse" className="underline text-accent" onClick={onClose}>
+                        Ouvrir la caisse →
+                      </Link>
+                    </p>
+                  </div>
+                </div>
+              )}
+            </>
           )}
 
           {/* Step 2 — Lignes */}
@@ -365,7 +389,10 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
               <Button
                 className="w-full bg-[var(--color-out)] font-semibold text-white"
                 size="lg"
-                isDisabled={!selectedType}
+                isDisabled={
+                  !selectedType ||
+                  (selectedType === TypeSortie.VENTE && !hasActiveSession)
+                }
                 onPress={handleTypeConfirm}
               >
                 Continuer →
