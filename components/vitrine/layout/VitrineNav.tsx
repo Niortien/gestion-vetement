@@ -63,6 +63,22 @@ export function VitrineNav() {
 
           {/* Actions droite */}
           <div className="flex items-center gap-3">
+            {/* Dashboard */}
+            <Link
+              href="/dashboard"
+              className="hidden items-center gap-1.5 rounded-xl border px-3 py-1.5 text-[11px] font-bold uppercase tracking-widest transition-colors hover:border-[var(--v-lime)] hover:text-[var(--v-lime)] md:flex"
+              style={{ borderColor: "var(--v-border)", color: "var(--v-dim)" }}
+              aria-label="Accès dashboard"
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <rect x="3" y="3" width="7" height="7" rx="1" />
+                <rect x="14" y="3" width="7" height="7" rx="1" />
+                <rect x="3" y="14" width="7" height="7" rx="1" />
+                <rect x="14" y="14" width="7" height="7" rx="1" />
+              </svg>
+              Admin
+            </Link>
+
             {/* Panier */}
             <button
               onClick={() => setCartOpen(true)}

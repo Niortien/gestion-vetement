@@ -6,7 +6,7 @@ import { useVitrineProduit } from "@/features/vitrine/query/vitrine-queries";
 import { Taille } from "@/types";
 import { ProduitGallery } from "./ProduitGallery";
 import { ProduitInfo } from "./ProduitInfo";
-import { ProduitVariantPicker } from "./ProduitVariantPicker";
+import { ProduitVariantesSection } from "./ProduitVariantesSection";
 import { ProduitOrderPanel } from "./ProduitOrderPanel";
 import { ProduitCare } from "./ProduitCare";
 import { ProduitRelated } from "./ProduitRelated";
@@ -95,15 +95,13 @@ export function ProduitDetailView({ id }: ProduitDetailViewProps) {
               style={{ backgroundColor: "var(--v-border)" }}
             />
 
-            {variantes.length > 0 && (
-              <ProduitVariantPicker
-                variantes={variantes}
-                selectedTaille={selectedTaille}
-                selectedCouleur={selectedCouleur}
-                onTailleChange={handleTailleChange}
-                onCouleurChange={setSelectedCouleur}
-              />
-            )}
+            <ProduitVariantesSection
+              variantes={variantes}
+              selectedTaille={selectedTaille}
+              selectedCouleur={selectedCouleur}
+              onTailleChange={handleTailleChange}
+              onCouleurChange={setSelectedCouleur}
+            />
 
             <ProduitOrderPanel produit={produit} variante={selectedVariante} />
 
