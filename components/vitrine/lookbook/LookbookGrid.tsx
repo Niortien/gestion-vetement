@@ -1,0 +1,78 @@
+"use client";
+
+import { motion } from "framer-motion";
+
+const GRID_ITEMS = [
+  { id: 1, src: "/lookbook-grid-1.jpg", alt: "Look 1", tall: true },
+  { id: 2, src: "/lookbook-grid-2.jpg", alt: "Look 2", tall: false },
+  { id: 3, src: "/lookbook-grid-3.jpg", alt: "Look 3", tall: false },
+  { id: 4, src: "/lookbook-grid-4.jpg", alt: "Look 4", tall: false },
+  { id: 5, src: "/lookbook-grid-5.jpg", alt: "Look 5", tall: true },
+  { id: 6, src: "/lookbook-grid-6.jpg", alt: "Look 6", tall: false },
+];
+
+function GridCell({
+  item,
+  delay,
+}: {
+  item: (typeof GRID_ITEMS)[number];
+  delay: number;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.97 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay }}
+      whileHover={{ scale: 1.02 }}
+      className={`relative overflow-hidden rounded-xl ${item.tall ? "row-span-2" : ""}`}
+      style={{ aspectRatio: item.tall ? "3/4" : "1/1", backgroundColor: "var(--v-s2)" }}
+    >
+      <img
+        src={item.src}
+        alt={item.alt}
+        className="h-full w-full object-cover"
+        onError={(e) => {
+          (e.target as HTMLImageElement).style.display = "none";
+        }}
+      />
+      {/* Overlay gradient */}
+      <div
+        className="absolute inset-0 opacity-0 transition-opacity duration-300 hover:opacity-100"
+        style={{ background: "rgba(194,255,0,0.08)" }}
+      />
+    </motion.div>
+  );
+}
+
+export function LookbookGrid() {
+  return (
+    <section
+      className="py-16"
+      style={{ backgroundColor: "var(--v-s1)" }}
+    >
+      <div className="mx-auto max-w-7xl px-5 md:px-16">
+        <div className="mb-10 flex items-end justify-between">
+          <h2
+            className="font-black uppercase leading-none tracking-tight"
+            style={{ fontSize: "clamp(32px,6vw,64px)", color: "var(--v-text)" }}
+          >
+            Le
+            <br />
+            <span style={{ color: "var(--v-lime)" }}>Shooting</span>
+          </h2>
+          <p className="max-w-xs text-right text-sm" style={{ color: "var(--v-muted)" }}>
+            Shot à Dakar — Almadies, Ngor, Corniche Ouest
+          </p>
+        </div>
+
+        {/* Grille masonry */}
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4">
+          {GRID_ITEMS.map((item, i) => (
+            <GridCell key={item.id} item={item} delay={i * 0.06} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

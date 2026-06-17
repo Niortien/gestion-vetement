@@ -1,0 +1,122 @@
+"use client";
+
+import { motion } from "framer-motion";
+
+const TIMELINE = [
+  {
+    year: "2020",
+    title: "Les débuts",
+    description:
+      "Un groupe de passionnés dakarois commence à importer des sneakers authentiques pour le cercle proche. Le bouche-à-oreille fait le reste.",
+    img: "/story-2020.jpg",
+  },
+  {
+    year: "2022",
+    title: "La boutique",
+    description:
+      "Riviere ouvre ses portes physiques à Dakar. Le concept se précise : sélection pointue, prix justes, authenticité certifiée.",
+    img: "/story-2022.jpg",
+  },
+  {
+    year: "2024",
+    title: "La vitrine digitale",
+    description:
+      "Lancement de la commande via WhatsApp, puis de la vitrine en ligne. La communauté Riviere dépasse Dakar et touche toute la région.",
+    img: "/story-2024.jpg",
+  },
+  {
+    year: "Aujourd'hui",
+    title: "Toujours en mouvement",
+    description:
+      "Nouvelles collections chaque saison, collaborations locales en cours, et une communauté qui grandit chaque jour. Le flux continue.",
+    img: "/story-now.jpg",
+  },
+];
+
+export function MarqueStory() {
+  return (
+    <section className="mx-auto max-w-5xl px-5 py-24 md:px-16">
+      <motion.p
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="mb-2 text-[10px] font-bold uppercase tracking-[0.4em]"
+        style={{ color: "var(--v-lime)" }}
+      >
+        Notre histoire
+      </motion.p>
+      <motion.h2
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.1 }}
+        className="mb-16 font-black uppercase leading-none tracking-tight"
+        style={{ fontSize: "clamp(32px,6vw,64px)", color: "var(--v-text)" }}
+      >
+        Timeline
+      </motion.h2>
+
+      <div className="relative">
+        {/* Ligne verticale */}
+        <div
+          className="absolute left-[18px] top-0 bottom-0 w-px md:left-1/2"
+          style={{ backgroundColor: "var(--v-border)" }}
+        />
+
+        <div className="space-y-16">
+          {TIMELINE.map((item, i) => (
+            <motion.div
+              key={item.year}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1, duration: 0.5 }}
+              className={`relative flex flex-col gap-6 pl-12 md:pl-0 md:flex-row md:items-center ${
+                i % 2 === 0 ? "" : "md:flex-row-reverse"
+              }`}
+            >
+              {/* Dot sur la ligne */}
+              <div
+                className="absolute left-0 top-2 flex h-9 w-9 items-center justify-center rounded-full border-2 md:left-1/2 md:-translate-x-1/2 md:top-1/2 md:-translate-y-1/2"
+                style={{ borderColor: "var(--v-lime)", backgroundColor: "var(--v-bg)", zIndex: 1 }}
+              >
+                <div className="h-2 w-2 rounded-full" style={{ backgroundColor: "var(--v-lime)" }} />
+              </div>
+
+              {/* Contenu */}
+              <div className={`md:w-[45%] ${i % 2 === 0 ? "md:text-right md:pr-12" : "md:pl-12"}`}>
+                <p
+                  className="mb-1 font-[var(--font-mono)] text-sm font-black"
+                  style={{ color: "var(--v-lime)" }}
+                >
+                  {item.year}
+                </p>
+                <h3 className="mb-2 text-lg font-black uppercase" style={{ color: "var(--v-text)" }}>
+                  {item.title}
+                </h3>
+                <p className="text-sm leading-relaxed" style={{ color: "var(--v-muted)" }}>
+                  {item.description}
+                </p>
+              </div>
+
+              {/* Image */}
+              <div
+                className="h-32 w-full overflow-hidden rounded-xl md:w-[45%] md:h-40"
+                style={{ backgroundColor: "var(--v-s2)" }}
+              >
+                <img
+                  src={item.img}
+                  alt={item.title}
+                  className="h-full w-full object-cover"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = "none";
+                  }}
+                />
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

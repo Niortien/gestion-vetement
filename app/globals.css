@@ -77,6 +77,37 @@ body {
   outline-offset: 2px;
 }
 
+/* ── Vitrine publique — design system ────────────────────────── */
+[data-vitrine] {
+  --v-bg:     #04080F;
+  --v-s1:     #0C1624;
+  --v-s2:     #131F32;
+  --v-s3:     #1A2A42;
+  --v-lime:   #C2FF00;
+  --v-lime-dim: rgba(194, 255, 0, 0.12);
+  --v-red:    #FF2449;
+  --v-purple: #9B7FEA;
+  --v-text:   #EFF6FF;
+  --v-muted:  #7A94B8;
+  --v-dim:    #3D5070;
+  --v-border: rgba(255, 255, 255, 0.07);
+}
+
+[data-vitrine] body,
+[data-vitrine] {
+  background: var(--v-bg);
+  color: var(--v-text);
+}
+
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.vitrine-marquee-track {
+  animation: marquee 22s linear infinite;
+}
+
 /* ── Impression reçu thermique 80mm ──────────────────────────── */
 @media print {
   /* Masque tout sauf le reçu */
