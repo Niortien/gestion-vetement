@@ -76,3 +76,27 @@ body {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
+
+/* ── Impression reçu thermique 80mm ──────────────────────────── */
+@media print {
+  /* Masque tout sauf le reçu */
+  body * {
+    visibility: hidden;
+  }
+  #recu-print-root,
+  #recu-print-root * {
+    visibility: visible;
+  }
+
+  #recu-print-root {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 80mm;
+    font-family: monospace;
+    font-size: 11px;
+    color: #000;
+    background: #fff;
+    padding: 4mm 3mm;
+  }
+}

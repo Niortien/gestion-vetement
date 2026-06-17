@@ -7,9 +7,10 @@ import { cn } from "@/lib/utils";
 import { useLogout } from "@/features/auth/mutation/auth-mutations";
 
 const ITEMS = [
+  { href: "/dashboard", label: "Dashboard" },
   { href: "/stock", label: "Stock" },
   { href: "/caisse", label: "Caisse" },
-  { href: "/entrees", label: "Entrees" },
+  { href: "/entrees", label: "Entrées" },
   { href: "/sorties", label: "Sorties" },
   { href: "/produits", label: "Produits" },
   { href: "/rapports", label: "Rapports" },

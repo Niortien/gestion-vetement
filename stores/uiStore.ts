@@ -1,10 +1,9 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-import type { Taille } from "@/types";
+import type { Taille, TypeSortie } from "@/types";
 
-type SortiePeriode = "7j" | "30j" | "90j";
+export type SortiePeriode = "7j" | "30j" | "90j";
 type FeedDensity = "compact" | "cozy";
-
 type RapportGroupBy = "jour" | "semaine" | "mois";
 
 interface UiState {
@@ -15,6 +14,8 @@ interface UiState {
     alerte?: boolean;
   };
   sortiePeriode: SortiePeriode;
+  entreePeriode: SortiePeriode;
+  sortieTypeFilter: TypeSortie | null;
   feedDensity: FeedDensity;
   rapportPeriode: {
     debut: string;
@@ -24,6 +25,8 @@ interface UiState {
   setProduitPanelId: (id: string | null) => void;
   setStockFiltre: (filtre: UiState["stockFiltre"]) => void;
   setSortiePeriode: (periode: SortiePeriode) => void;
+  setEntreePeriode: (periode: SortiePeriode) => void;
+  setSortieTypeFilter: (type: TypeSortie | null) => void;
   setFeedDensity: (density: FeedDensity) => void;
   setRapportPeriode: (periode: UiState["rapportPeriode"]) => void;
 }
@@ -35,21 +38,25 @@ start.setDate(now.getDate() - 30);
 export const useUiStore = create<UiState>()(
   persist(
     (set) => ({
-  produitPanelId: null,
-  stockFiltre: {},
-  sortiePeriode: "30j",
-  feedDensity: "cozy",
-  rapportPeriode: {
-    debut: start.toISOString(),
-    fin: now.toISOString(),
-    groupBy: "jour",
-  },
-  setProduitPanelId: (id) => set({ produitPanelId: id }),
-    setStockFiltre: (filtre) => set({ stockFiltre: filtre }),
-    setSortiePeriode: (periode) => set({ sortiePeriode: periode }),
-    setFeedDensity: (feedDensity) => set({ feedDensity }),
-    setRapportPeriode: (periode) => set({ rapportPeriode: periode }),
-  }),
+      produitPanelId: null,
+      stockFiltre: {},
+      sortiePeriode: "30j",
+      entreePeriode: "30j",
+      sortieTypeFilter: null,
+      feedDensity: "cozy",
+      rapportPeriode: {
+        debut: start.toISOString(),
+        fin: now.toISOString(),
+        groupBy: "jour",
+      },
+      setProduitPanelId: (id) => set({ produitPanelId: id }),
+      setStockFiltre: (filtre) => set({ stockFiltre: filtre }),
+      setSortiePeriode: (periode) => set({ sortiePeriode: periode }),
+      setEntreePeriode: (periode) => set({ entreePeriode: periode }),
+      setSortieTypeFilter: (type) => set({ sortieTypeFilter: type }),
+      setFeedDensity: (feedDensity) => set({ feedDensity }),
+      setRapportPeriode: (periode) => set({ rapportPeriode: periode }),
+    }),
   {
     name: "ui-store",
     storage: createJSONStorage(() => sessionStorage),
