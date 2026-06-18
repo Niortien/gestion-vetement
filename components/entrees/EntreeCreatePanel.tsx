@@ -70,10 +70,11 @@ export function EntreeCreatePanel({ isOpen, onClose }: EntreeCreatePanelProps) {
     if (replacingIndex !== null) {
       setLines((cur) => cur.map((l, i) => (i === replacingIndex ? line : l)));
       setReplacingIndex(null);
+      setAddMode("idle");
     } else {
       setLines((cur) => [...cur, line]);
+      setAddMode("choosing");
     }
-    setAddMode("idle");
   };
 
   const openReplaceExisting = (index: number) => {

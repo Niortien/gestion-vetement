@@ -18,6 +18,7 @@ export interface NewProduitForEntree {
   taille: string;
   couleur: string;
   seuilAlerte?: number;
+  imageUrl?: string;
 }
 
 export interface CreateEntreeBody {

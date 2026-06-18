@@ -13,6 +13,7 @@ import {
   Spinner,
 } from "@heroui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { useCategoriesList } from "@/features/produits/query/produits-queries";
@@ -30,6 +31,7 @@ const schema = z.object({
   seuilAlerte: z.coerce.number().int().min(0).optional(),
   quantite: z.coerce.number().int().min(1, "Quantité min. 1"),
   prixUnitaire: z.string().regex(/^\d+(\.\d{1,2})?$/, "Prix invalide"),
+  imageUrl: z.string().url("URL invalide").optional().or(z.literal("")),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -64,8 +66,16 @@ export function NewProduitModal({ isOpen, defaultValues, onClose, onAdd }: NewPr
   });
 
   const watchedCategorieId = useWatch({ control, name: "categorieId" });
+  const watchedPrixAchat = useWatch({ control, name: "prixAchat" });
+  const watchedImageUrl = useWatch({ control, name: "imageUrl" });
   const selectedCat = categories.find((c) => c.id === watchedCategorieId);
   const isChaussure = selectedCat?.slug === "chaussures";
+
+  useEffect(() => {
+    if (watchedPrixAchat) {
+      setValue("prixUnitaire", watchedPrixAchat, { shouldValidate: false });
+    }
+  }, [watchedPrixAchat, setValue]);
 
   const onSubmit = handleSubmit((values) => {
     const newProduit: NewProduitForEntree = {
@@ -76,6 +86,7 @@ export function NewProduitModal({ isOpen, defaultValues, onClose, onAdd }: NewPr
       taille: values.taille,
       couleur: values.couleur.trim(),
       seuilAlerte: values.seuilAlerte ?? 0,
+      imageUrl: values.imageUrl?.trim() || undefined,
     };
 
     const line: EntreeFormLineData = {
@@ -175,6 +186,41 @@ export function NewProduitModal({ isOpen, defaultValues, onClose, onAdd }: NewPr
                     classNames={{ label: "text-text-muted text-xs", input: "text-text" }}
                     {...register("prixAchat")}
                   />
+                </div>
+
+                {/* Image */}
+                <div className="flex items-start gap-3">
+                  <div className="flex-1">
+                    <Input
+                      label="URL de l'image (optionnel)"
+                      variant="bordered"
+                      placeholder="https://…"
+                      isInvalid={!!errors.imageUrl}
+                      errorMessage={errors.imageUrl?.message}
+                      classNames={{ label: "text-text-muted text-xs", input: "text-text text-xs" }}
+                      {...register("imageUrl")}
+                    />
+                  </div>
+                  <div className="mt-1 h-14 w-14 shrink-0 overflow-hidden rounded-lg border border-border/60 bg-[var(--color-surface-high)]">
+                    {watchedImageUrl ? (
+                      /* eslint-disable-next-line @next/next/no-img-element */
+                      <img
+                        src={watchedImageUrl}
+                        alt="Aperçu"
+                        className="h-full w-full object-cover"
+                        onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                        onLoad={(e) => { (e.target as HTMLImageElement).style.display = "block"; }}
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-text-dim">
+                          <rect x="3" y="3" width="18" height="18" rx="3" />
+                          <circle cx="8.5" cy="8.5" r="1.5" />
+                          <polyline points="21 15 16 10 5 21" />
+                        </svg>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

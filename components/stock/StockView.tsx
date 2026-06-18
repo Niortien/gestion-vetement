@@ -35,9 +35,9 @@ export function StockView() {
         <Chip variant="flat" className="bg-[var(--color-surface-high)] text-text">Tous</Chip>
         <Chip variant="flat" className="bg-[var(--color-out-dim)] text-out">Alerte</Chip>
       </div>
+      <StockAlertPanel alertes={alertes?.data ?? []} />
       <FeedDensityToggle />
       <StockTimeline items={items} density={density} />
-      <StockAlertPanel alertes={alertes?.data ?? []} />
     </PageWrapper>
   );
 }

@@ -122,15 +122,17 @@ export function VariantePicker({ isOpen, onClose, onSelect, onDone, excludedVari
                         <div className="flex flex-wrap gap-2">
                           {variantes.map((v) => {
                             const excluded = excludedVarianteIds.includes(v.id);
+                            const outOfStock = v.quantiteStock <= 0;
+                            const disabled = excluded || outOfStock;
                             return (
                               <Button
                                 key={v.id}
                                 size="sm"
                                 variant="flat"
-                                isDisabled={excluded}
+                                isDisabled={disabled}
                                 className={[
                                   "flex h-auto flex-col items-start gap-0.5 px-3 py-2",
-                                  excluded
+                                  disabled
                                     ? "opacity-40 cursor-not-allowed"
                                     : "bg-[color:rgba(45,69,103,0.6)] hover:bg-accent/20",
                                 ].join(" ")}
@@ -148,7 +150,11 @@ export function VariantePicker({ isOpen, onClose, onSelect, onDone, excludedVari
                               >
                                 <span className="font-[var(--font-mono)] text-xs text-accent">{v.taille}</span>
                                 <span className="text-xs text-text">{v.couleur}</span>
-                                <StockBadge value={v.quantiteStock} isAlert={v.quantiteStock <= v.seuilAlerte} />
+                                {outOfStock ? (
+                                  <span className="text-[10px] font-semibold text-out">Rupture</span>
+                                ) : (
+                                  <StockBadge value={v.quantiteStock} isAlert={v.quantiteStock <= v.seuilAlerte} />
+                                )}
                               </Button>
                             );
                           })}
