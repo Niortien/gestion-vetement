@@ -28,17 +28,17 @@ export function MarqueManifesto() {
           style={{ color: "var(--v-muted)" }}
         >
           <p>
-            Riviere, c'est né d'un constat simple : à Dakar, la culture streetwear existe depuis
-            longtemps, mais les vraies pièces restaient inaccessibles. On commandait à l'étranger,
+            Riviere, c&apos;est né d&apos;un constat simple : à Dakar, la culture streetwear existe depuis
+            longtemps, mais les vraies pièces restaient inaccessibles. On commandait à l&apos;étranger,
             on payait des prix excessifs, on attendait des semaines pour recevoir des faux.
           </p>
           <p>
             On a décidé de changer ça. Apporter des pièces authentiques — sneakers, cuts, layers —
-            directement à la communauté qui le mérite. Pas de filtre, pas d'intermédiaire inutile.
+            directement à la communauté qui le mérite. Pas de filtre, pas d&apos;intermédiaire inutile.
             Un rapport direct entre ceux qui portent et ceux qui sélectionnent.
           </p>
           <p>
-            Le nom Riviere, c'est le flux. L'idée que la mode se déplace, circule, rejoint
+            Le nom Riviere, c&apos;est le flux. L&apos;idée que la mode se déplace, circule, rejoint
             ceux qui la vivent. Dakar est notre source, notre terrain, notre inspiration première.
           </p>
         </motion.div>
@@ -56,9 +56,9 @@ export function MarqueManifesto() {
             className="font-[var(--font-display)] font-black leading-tight tracking-tight"
             style={{ fontSize: "clamp(22px,4vw,40px)", color: "var(--v-text)" }}
           >
-            "Le streetwear est une langue.
+            &quot;Le streetwear est une langue.
             <br />
-            Riviere t'apprend à la parler couramment."
+            Riviere t&apos;apprend à la parler couramment.&quot;
           </p>
           <footer className="mt-4 text-sm font-semibold" style={{ color: "var(--v-dim)" }}>
             — Équipe Riviere, Dakar

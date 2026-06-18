@@ -275,7 +275,7 @@ export function NewProduitModal({ isOpen, defaultValues, onClose, onAdd }: NewPr
             className="bg-in font-semibold text-black"
             onPress={() => void onSubmit()}
           >
-            Ajouter au bon d'entrée
+            Ajouter au bon d&apos;entrée
           </Button>
         </ModalFooter>
       </ModalContent>

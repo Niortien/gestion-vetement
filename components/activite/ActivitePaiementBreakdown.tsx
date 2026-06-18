@@ -35,7 +35,7 @@ export function ActivitePaiementBreakdown({ resume }: ActivitePaiementBreakdownP
 
   if (entries.length === 0) {
     return (
-      <p className="py-4 text-center text-sm text-text-muted">Aucun paiement enregistré aujourd'hui</p>
+      <p className="py-4 text-center text-sm text-text-muted">Aucun paiement enregistré aujourd&apos;hui</p>
     );
   }
 

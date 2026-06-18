@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { getWhatsappUrl } from "@/lib/whatsapp";
 
 const SOCIALS = [
   {
@@ -157,7 +156,7 @@ export function MarqueSocial() {
                 className="whitespace-nowrap rounded-xl px-6 py-3 text-sm font-black uppercase tracking-wider transition-all hover:opacity-90 sm:rounded-l-none"
                 style={{ backgroundColor: "var(--v-lime)", color: "#000" }}
               >
-                S'inscrire
+                S&apos;inscrire
               </button>
             </form>
           )}

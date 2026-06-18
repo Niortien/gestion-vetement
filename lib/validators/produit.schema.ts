@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { Taille } from "@/types";
 
 export const createProduitSchema = z.object({
   nom: z.string().min(1, "Nom requis"),

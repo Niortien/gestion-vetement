@@ -69,7 +69,7 @@ export function LookbookHero() {
           className="mt-6 max-w-sm text-sm leading-relaxed"
           style={{ color: "var(--v-muted)" }}
         >
-          Une collection qui capture l'énergie de la ville, la nuit tombée.
+          Une collection qui capture l&apos;énergie de la ville, la nuit tombée.
           Pièces sélectionnées pour ceux qui vivent à leur propre rythme.
         </motion.p>
       </motion.div>

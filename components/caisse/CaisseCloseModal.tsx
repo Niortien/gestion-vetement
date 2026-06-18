@@ -16,7 +16,7 @@ export function CaisseCloseModal({ isOpen, onOpenChange, onConfirm }: CaisseClos
         <ModalBody>
           <p className="text-sm text-text-muted">
             La caisse sera fermée et les recettes du jour seront enregistrées.
-            Tu pourras toujours consulter l'historique.
+            Tu pourras toujours consulter l&apos;historique.
           </p>
         </ModalBody>
         <ModalFooter>

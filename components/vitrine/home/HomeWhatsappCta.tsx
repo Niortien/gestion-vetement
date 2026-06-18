@@ -1,19 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { getWhatsappUrl, buildWhatsappMessage } from "@/lib/whatsapp";
+import { getWhatsappUrl } from "@/lib/whatsapp";
 
 export function HomeWhatsappCta() {
-  const url = getWhatsappUrl(
-    buildWhatsappMessage({
-      lignes: [],
-      clientNom: "Client",
-      clientTel: "",
-      livraison: "boutique",
-      notes: "Bonjour, je souhaite passer une commande.",
-    }).split("\n").slice(0, 2).join("\n")
-  );
-
   const waUrl = getWhatsappUrl("Bonjour Riviere ! Je veux passer une commande 🛒");
 
   return (

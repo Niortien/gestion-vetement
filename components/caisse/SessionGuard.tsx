@@ -33,7 +33,7 @@ export function SessionGuard({ children }: SessionGuardProps) {
   if (openMutation.isError) {
     return (
       <div className="rounded-xl border border-out/30 bg-out/8 p-4 text-center">
-        <p className="text-sm text-out">Impossible d'ouvrir la caisse. Vérifie ta connexion.</p>
+        <p className="text-sm text-out">Impossible d&apos;ouvrir la caisse. Vérifie ta connexion.</p>
         <button
           onClick={() => openMutation.mutate({ montantOuverture: "0" })}
           className="mt-3 text-xs font-semibold text-text-muted underline"

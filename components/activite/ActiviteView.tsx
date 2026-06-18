@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
-import { Button, Chip, Spinner } from "@heroui/react";
+import { Chip, Spinner } from "@heroui/react";
 import { PageWrapper } from "@/components/common/PageWrapper";
 import { useVentes } from "@/features/rapports/query/rapports-queries";
 import { useFluxTresorerie } from "@/features/rapports/query/rapports-queries";
@@ -225,7 +225,7 @@ export function ActiviteView() {
             <ActivitePaiementBreakdown resume={resume.data} />
           </div>
         ) : (
-          <p className="py-4 text-center text-sm text-text-muted">Aucune session ouverte aujourd'hui</p>
+          <p className="py-4 text-center text-sm text-text-muted">Aucune session ouverte aujourd&apos;hui</p>
         )}
       </SectionCard>
     </PageWrapper>

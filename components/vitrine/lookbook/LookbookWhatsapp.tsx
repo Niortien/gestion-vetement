@@ -49,7 +49,7 @@ export function LookbookWhatsapp() {
           className="mb-10 text-sm leading-relaxed"
           style={{ color: "var(--v-muted)" }}
         >
-          Envoie-nous un message et on t'aide à assembler le look exact — taille, couleur, disponibilité.
+          Envoie-nous un message et on t&apos;aide à assembler le look exact — taille, couleur, disponibilité.
           Notre équipe répond en moins de 30 minutes.
         </motion.p>
 

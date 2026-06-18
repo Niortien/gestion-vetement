@@ -17,7 +17,7 @@ export function LookbookEditorial() {
             className="mb-6 text-[10px] font-bold uppercase tracking-[0.4em]"
             style={{ color: "var(--v-lime)" }}
           >
-            L'histoire derrière la collection
+            L&apos;histoire derrière la collection
           </p>
           <h2
             className="mb-8 font-black uppercase leading-tight tracking-tight"
@@ -28,13 +28,13 @@ export function LookbookEditorial() {
             les nuits de Dakar
           </h2>
           <p className="mb-5 text-sm leading-relaxed" style={{ color: "var(--v-muted)" }}>
-            Quand la chaleur du jour laisse place à l'électricité de la nuit, Dakar révèle
+            Quand la chaleur du jour laisse place à l&apos;électricité de la nuit, Dakar révèle
             une autre dimension. Les Almadies, Ngor, la Corniche — des spots où la mode se vit
-            sans codes imposés, où chaque look est une déclaration d'identité.
+            sans codes imposés, où chaque look est une déclaration d&apos;identité.
           </p>
           <p className="text-sm leading-relaxed" style={{ color: "var(--v-muted)" }}>
             Riviere a shooté cette collection là où la ville respire : dans les ruelles,
-            sous les néons, au bord de l'eau. Des pièces pensées pour habiter ces moments.
+            sous les néons, au bord de l&apos;eau. Des pièces pensées pour habiter ces moments.
           </p>
 
           {/* Stats éditoriales */}
