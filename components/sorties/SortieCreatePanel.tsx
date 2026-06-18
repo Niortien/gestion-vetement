@@ -249,7 +249,7 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
         initial="hidden"
         animate="visible"
         variants={getMotionVariant(panelSlide, reduced)}
-        className="fixed right-0 top-0 z-[800] flex h-screen w-full max-w-[520px] flex-col border-l border-border bg-[linear-gradient(180deg,rgba(81,34,68,0.95),rgba(23,28,58,0.98))]"
+        className="fixed inset-y-0 right-0 z-[800] flex w-full max-w-[520px] flex-col border-l border-border bg-[linear-gradient(180deg,rgba(81,34,68,0.95),rgba(23,28,58,0.98))]"
         role="dialog"
         aria-modal="true"
         aria-label="Nouvelle sortie"
@@ -384,7 +384,7 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
 
         {/* Footer — only shown on steps 1 and 2 */}
         {step < 3 && (
-          <div className="border-t border-border/60 p-4">
+          <div className="border-t border-border/60 p-4 pb-6">
             {step === 1 ? (
               <Button
                 className="w-full bg-[var(--color-out)] font-semibold text-white"

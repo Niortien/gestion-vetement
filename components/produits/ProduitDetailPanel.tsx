@@ -225,7 +225,7 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
       initial="hidden"
       animate="visible"
       variants={getMotionVariant(panelSlide, reduced)}
-      className="fixed right-0 top-0 z-[800] flex h-screen w-full max-w-[480px] flex-col border-l border-border bg-[linear-gradient(180deg,rgba(34,54,81,0.98),rgba(23,38,58,0.98))]"
+      className="fixed inset-y-0 right-0 z-[800] flex w-full max-w-[480px] flex-col border-l border-border bg-[linear-gradient(180deg,rgba(34,54,81,0.98),rgba(23,38,58,0.98))]"
     >
       {/* header fixe */}
       <div className="flex items-center justify-between border-b border-border/60 px-4 py-3">
@@ -527,7 +527,7 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
       </div>
 
       {/* footer fixe */}
-      <div className="border-t border-border/60 p-4">
+      <div className="border-t border-border/60 p-4 pb-6">
         <Button
           className="w-full bg-accent font-semibold text-black"
           size="lg"

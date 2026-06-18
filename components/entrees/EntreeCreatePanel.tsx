@@ -181,7 +181,7 @@ export function EntreeCreatePanel({ isOpen, onClose }: EntreeCreatePanelProps) {
         initial="hidden"
         animate="visible"
         variants={getMotionVariant(panelSlide, reduced)}
-        className="fixed right-0 top-0 z-[800] flex h-screen w-full max-w-[520px] flex-col border-l border-border bg-[linear-gradient(180deg,rgba(34,81,60,0.95),rgba(23,38,58,0.98))]"
+        className="fixed inset-y-0 right-0 z-[800] flex w-full max-w-[520px] flex-col border-l border-border bg-[linear-gradient(180deg,rgba(34,81,60,0.95),rgba(23,38,58,0.98))]"
         role="dialog"
         aria-modal="true"
         aria-label="Nouvelle entrée"
@@ -302,7 +302,7 @@ export function EntreeCreatePanel({ isOpen, onClose }: EntreeCreatePanelProps) {
         </div>
 
         {/* Footer */}
-        <div className="border-t border-border/60 p-4">
+        <div className="border-t border-border/60 p-4 pb-6">
           <Button
             className="w-full bg-in font-semibold text-black"
             size="lg"
