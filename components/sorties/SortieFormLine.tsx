@@ -1,12 +1,10 @@
 "use client";
 
 import { Button, Input } from "@heroui/react";
-import type { Taille } from "@/types";
-
 export interface SortieFormLineData {
   varianteId: string;
   produitNom: string;
-  taille: Taille;
+  taille: string;
   couleur: string;
   quantiteStock: number;
   quantite: number;
