@@ -31,6 +31,8 @@ interface RecuPrintProps {
   totalMontant: string;
   modePaiement: ModePaiement;
   transactionReference?: string;
+  montantRecu?: string;
+  monnaieRendue?: string;
 }
 
 export function RecuPrint({
@@ -42,8 +44,11 @@ export function RecuPrint({
   totalMontant,
   modePaiement,
   transactionReference,
+  montantRecu,
+  monnaieRendue,
 }: RecuPrintProps) {
-  // Sync reçu DOM hors modal pour @media print
+  const showCash = modePaiement === ModePaiement.CASH && !!montantRecu;
+
   useEffect(() => {
     const el = document.getElementById("recu-print-root");
     if (!el) return;
@@ -53,11 +58,7 @@ export function RecuPrint({
   return (
     <>
       {/* Zone d'impression — hors modal, visible uniquement @media print */}
-      <div
-        id="recu-print-root"
-        aria-hidden="true"
-        style={{ display: "none" }}
-      >
+      <div id="recu-print-root" aria-hidden="true" style={{ display: "none" }}>
         <div style={{ textAlign: "center", marginBottom: 8 }}>
           <div style={{ fontSize: 18, fontWeight: "bold", letterSpacing: 4 }}>RIVIERE</div>
           <div style={{ fontSize: 10 }}>Streetwear · Stock & Caisse</div>
@@ -72,9 +73,7 @@ export function RecuPrint({
         {lignes.map((l, i) => (
           <div key={i} style={{ fontSize: 10, marginBottom: 3 }}>
             <div>{l.produitNom}</div>
-            <div style={{ paddingLeft: 8 }}>
-              {l.taille} · {l.couleur}
-            </div>
+            <div style={{ paddingLeft: 8 }}>{l.taille} · {l.couleur}</div>
             <div style={{ display: "flex", justifyContent: "space-between", paddingLeft: 8 }}>
               <span>{l.quantite} × {Number(l.prixUnitaire).toLocaleString("fr-FR")} FCFA</span>
               <span>{Number(l.sousTotal).toLocaleString("fr-FR")} FCFA</span>
@@ -87,10 +86,20 @@ export function RecuPrint({
           <span>{Number(totalMontant).toLocaleString("fr-FR")} FCFA</span>
         </div>
         <div style={{ fontSize: 10, marginTop: 4 }}>Mode : {MODE_LABELS[modePaiement]}</div>
+        {showCash && (
+          <>
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, marginTop: 2 }}>
+              <span>Reçu</span>
+              <span>{Number(montantRecu).toLocaleString("fr-FR")} FCFA</span>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, marginTop: 2, fontWeight: "bold" }}>
+              <span>Monnaie rendue</span>
+              <span>{Number(monnaieRendue ?? 0).toLocaleString("fr-FR")} FCFA</span>
+            </div>
+          </>
+        )}
         <div style={{ borderTop: "1px dashed #000", margin: "8px 0" }} />
-        <div style={{ textAlign: "center", fontSize: 10 }}>
-          Merci pour votre achat !
-        </div>
+        <div style={{ textAlign: "center", fontSize: 10 }}>Merci pour votre achat !</div>
       </div>
 
       {/* Modal visuelle */}
@@ -110,19 +119,23 @@ export function RecuPrint({
         <ModalContent>
           <ModalHeader className="text-base font-semibold">Reçu client</ModalHeader>
           <ModalBody>
-            {/* Aperçu reçu */}
             <div className="rounded-lg border border-border/60 bg-white p-4 text-black">
+              {/* En-tête */}
               <div className="mb-2 text-center">
                 <p className="text-base font-bold tracking-[0.25em]">RIVIERE</p>
                 <p className="text-[10px] text-gray-500">Streetwear · Stock & Caisse</p>
               </div>
               <div className="my-2 border-t border-dashed border-gray-300" />
+
+              {/* Infos */}
               <div className="space-y-0.5 text-[10px] text-gray-700">
                 <p>Date : {formatDateFr(date)}</p>
                 <p>Réf : {reference}</p>
                 {transactionReference && <p>Pmt : {transactionReference}</p>}
               </div>
               <div className="my-2 border-t border-dashed border-gray-300" />
+
+              {/* Lignes */}
               {lignes.map((l, i) => (
                 <div key={i} className="mb-2 text-[10px]">
                   <p className="font-medium text-black">{l.produitNom}</p>
@@ -134,11 +147,37 @@ export function RecuPrint({
                 </div>
               ))}
               <div className="my-2 border-t border-dashed border-gray-300" />
+
+              {/* Total */}
               <div className="flex justify-between font-bold">
                 <span>TOTAL</span>
                 <span>{Number(totalMontant).toLocaleString("fr-FR")} FCFA</span>
               </div>
-              <p className="mt-1 text-[10px] text-gray-500">Mode : {MODE_LABELS[modePaiement]}</p>
+
+              {/* Paiement */}
+              <div className="mt-2 space-y-1 text-[10px] text-gray-600">
+                <div className="flex justify-between">
+                  <span>Mode</span>
+                  <span className="font-medium text-black">{MODE_LABELS[modePaiement]}</span>
+                </div>
+                {showCash && (
+                  <>
+                    <div className="flex justify-between">
+                      <span>Reçu</span>
+                      <span className="font-medium text-black">
+                        {Number(montantRecu).toLocaleString("fr-FR")} FCFA
+                      </span>
+                    </div>
+                    <div className="flex justify-between border-t border-dashed border-gray-200 pt-1">
+                      <span className="font-semibold text-black">Monnaie rendue</span>
+                      <span className="font-bold text-green-700">
+                        {Number(monnaieRendue ?? 0).toLocaleString("fr-FR")} FCFA
+                      </span>
+                    </div>
+                  </>
+                )}
+              </div>
+
               <div className="my-2 border-t border-dashed border-gray-300" />
               <p className="text-center text-[10px] text-gray-500">Merci pour votre achat !</p>
             </div>

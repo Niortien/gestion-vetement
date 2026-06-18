@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { Button, Input } from "@heroui/react";
+import { Input } from "@heroui/react";
 import { ModePaiement } from "@/types";
 
 interface ModeCard {
@@ -11,27 +10,43 @@ interface ModeCard {
 }
 
 const MODE_CARDS: ModeCard[] = [
-  { mode: ModePaiement.CASH, label: "Cash", icon: "💵" },
+  { mode: ModePaiement.CASH, label: "Espèces", icon: "💵" },
   { mode: ModePaiement.WAVE, label: "Wave", icon: "🌊" },
-  { mode: ModePaiement.ORANGE_MONEY, label: "Orange Money", icon: "🟠" },
+  { mode: ModePaiement.ORANGE_MONEY, label: "Orange", icon: "🟠" },
   { mode: ModePaiement.CARTE, label: "Carte", icon: "💳" },
-  { mode: ModePaiement.MTN_MONEY, label: "MTN Money", icon: "🟡" },
+  { mode: ModePaiement.MTN_MONEY, label: "MTN", icon: "🟡" },
 ];
 
-interface SortiePaiementStepProps {
+export interface SortiePaiementStepProps {
   totalMontant: string;
-  isPending: boolean;
-  onSubmit: (modePaiement: ModePaiement, reference?: string, notes?: string) => void;
-  onBack: () => void;
+  selected: ModePaiement | null;
+  onSelect: (mode: ModePaiement) => void;
+  reference: string;
+  onChangeReference: (v: string) => void;
+  notes: string;
+  onChangeNotes: (v: string) => void;
+  montantRecu: string;
+  onChangeMontantRecu: (v: string) => void;
 }
 
-export function SortiePaiementStep({ totalMontant, isPending, onSubmit, onBack }: SortiePaiementStepProps) {
-  const [selected, setSelected] = useState<ModePaiement | null>(null);
-  const [reference, setReference] = useState("");
-  const [notes, setNotes] = useState("");
+export function SortiePaiementStep({
+  totalMontant,
+  selected,
+  onSelect,
+  reference,
+  onChangeReference,
+  notes,
+  onChangeNotes,
+  montantRecu,
+  onChangeMontantRecu,
+}: SortiePaiementStepProps) {
+  const total = parseFloat(totalMontant || "0");
+  const recu = parseFloat(montantRecu || "0");
+  const montantInsuffisant = montantRecu !== "" && recu < total;
+  const monnaieRendue = recu - total;
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       {/* Total */}
       <div className="rounded-xl border border-[var(--color-cash)]/40 bg-[color:rgba(143,126,245,0.10)] p-4 text-center">
         <p className="text-xs uppercase tracking-wide text-text-muted">Montant à encaisser</p>
@@ -40,61 +55,72 @@ export function SortiePaiementStep({ totalMontant, isPending, onSubmit, onBack }
         </p>
       </div>
 
-      {/* Mode de paiement */}
+      {/* Mode de paiement — 5 colonnes compactes sur mobile */}
       <div>
-        <p className="mb-3 text-xs uppercase tracking-wide text-text-muted">Mode de paiement</p>
-        <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
+        <p className="mb-2.5 text-xs uppercase tracking-wide text-text-muted">Mode de paiement</p>
+        <div className="grid grid-cols-5 gap-1.5">
           {MODE_CARDS.map((card) => (
             <button
               key={card.mode}
               type="button"
-              onClick={() => setSelected(card.mode)}
+              onClick={() => onSelect(card.mode)}
               className={[
-                "flex flex-col items-center gap-1 rounded-xl border-2 p-3 transition-all",
+                "flex flex-col items-center gap-1 rounded-xl border-2 px-1 py-2.5 transition-all",
                 selected === card.mode
                   ? "border-accent bg-[color:rgba(255,212,71,0.15)] ring-2 ring-accent ring-offset-1 ring-offset-[var(--color-surface)]"
                   : "border-border/60 bg-[var(--color-surface-high)] hover:border-accent/40",
               ].join(" ")}
               aria-pressed={selected === card.mode}
             >
-              <span className="text-xl">{card.icon}</span>
-              <span className="text-[10px] font-medium text-text">{card.label}</span>
+              <span className="text-lg leading-none">{card.icon}</span>
+              <span className="text-[9px] font-medium leading-tight text-text">{card.label}</span>
             </button>
           ))}
         </div>
       </div>
 
-      {/* Optionnel */}
-      <div className="space-y-3">
+      {/* Champs espèces — montant reçu + monnaie rendue */}
+      {selected === ModePaiement.CASH && (
+        <div className="space-y-2 rounded-xl border border-border/60 bg-[var(--color-surface-high)] p-3">
+          <Input
+            variant="bordered"
+            label="Montant reçu du client"
+            placeholder="0"
+            value={montantRecu}
+            onValueChange={onChangeMontantRecu}
+            inputMode="numeric"
+            size="sm"
+            endContent={<span className="shrink-0 text-xs text-text-dim">FCFA</span>}
+            isInvalid={montantInsuffisant}
+            errorMessage={montantInsuffisant ? "Montant insuffisant" : undefined}
+          />
+          {montantRecu !== "" && !montantInsuffisant && (
+            <div className="flex items-center justify-between rounded-lg bg-[var(--color-surface)] px-3 py-2">
+              <span className="text-xs text-text-muted">Monnaie à rendre</span>
+              <span className="[font-family:var(--font-mono)] text-sm font-bold text-[var(--color-in)]">
+                {monnaieRendue.toLocaleString("fr-FR")} FCFA
+              </span>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Champs optionnels */}
+      <div className="space-y-2">
         <Input
           variant="bordered"
-          placeholder="Référence (optionnel)"
+          placeholder="Référence transaction (optionnel)"
           value={reference}
-          onValueChange={setReference}
+          onValueChange={onChangeReference}
           size="sm"
         />
         <Input
           variant="bordered"
           placeholder="Notes (optionnel)"
           value={notes}
-          onValueChange={setNotes}
+          onValueChange={onChangeNotes}
           size="sm"
         />
-      </div>
-
-      {/* Actions */}
-      <div className="flex gap-3">
-        <Button variant="flat" className="flex-1 text-text-muted" onPress={onBack} isDisabled={isPending}>
-          ← Retour
-        </Button>
-        <Button
-          className="flex-1 bg-accent font-semibold text-black"
-          isDisabled={!selected || isPending}
-          isLoading={isPending}
-          onPress={() => selected && onSubmit(selected, reference || undefined, notes || undefined)}
-        >
-          Enregistrer la vente
-        </Button>
       </div>
     </div>
   );

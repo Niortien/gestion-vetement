@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Button, Input } from "@heroui/react";
 export interface SortieFormLineData {
   varianteId: string;
@@ -22,6 +23,30 @@ interface SortieFormLineProps {
 export function SortieFormLine({ line, index, onPickVariante, onChange, onRemove }: SortieFormLineProps) {
   const sousTotal = (line.quantite * parseFloat(line.prixUnitaire || "0")).toFixed(0);
 
+  const [qtyInput, setQtyInput] = useState(String(line.quantite));
+
+  useEffect(() => {
+    setQtyInput(String(line.quantite));
+  }, [line.quantite]);
+
+  const handleQtyChange = (val: string) => {
+    if (/^\d*$/.test(val)) setQtyInput(val);
+  };
+
+  const handleQtyBlur = () => {
+    const n = parseInt(qtyInput, 10);
+    if (isNaN(n) || n < 1) {
+      onChange(index, "quantite", 1);
+      setQtyInput("1");
+    } else if (n > line.quantiteStock) {
+      onChange(index, "quantite", line.quantiteStock);
+      setQtyInput(String(line.quantiteStock));
+    } else {
+      onChange(index, "quantite", n);
+      setQtyInput(String(n));
+    }
+  };
+
   return (
     <div className="grid grid-cols-[1fr_80px_100px_80px_32px] items-center gap-2 rounded-lg border border-border/60 bg-[var(--color-surface-high)] px-3 py-2">
       {/* Produit / variante */}
@@ -38,16 +63,15 @@ export function SortieFormLine({ line, index, onPickVariante, onChange, onRemove
         </span>
       </button>
 
-      {/* Quantité */}
+      {/* Quantité — saisie libre, validation au blur */}
       <Input
-        type="number"
         size="sm"
         variant="bordered"
-        min={1}
-        max={line.quantiteStock}
-        value={String(line.quantite)}
-        onChange={(e) => onChange(index, "quantite", Math.max(1, Number(e.target.value)))}
-        classNames={{ input: "text-center font-[var(--font-mono)] text-sm" }}
+        inputMode="numeric"
+        value={qtyInput}
+        onValueChange={handleQtyChange}
+        onBlur={handleQtyBlur}
+        classNames={{ input: "text-center [font-family:var(--font-mono)] text-sm" }}
         aria-label={`Quantité ligne ${index + 1}`}
       />
 

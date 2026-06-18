@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Button, Input, Spinner } from "@heroui/react";
+import { Button, Spinner } from "@heroui/react";
+import { Input } from "@heroui/react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import { getMotionVariant, panelSlide } from "@/lib/motionVariants";
@@ -24,6 +25,8 @@ interface RecuData {
   totalMontant: string;
   modePaiement: ModePaiement;
   transactionReference?: string;
+  montantRecu?: string;
+  monnaieRendue?: string;
 }
 
 interface SortieCreatePanelProps {
@@ -47,11 +50,22 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
   const [recuOpen, setRecuOpen] = useState(false);
   const [recuData, setRecuData] = useState<RecuData | null>(null);
 
+  // Paiement state (step 3) — lifted here so footer button can trigger submit
+  const [paiementMode, setPaiementMode] = useState<ModePaiement | null>(null);
+  const [paiementRef, setPaiementRef] = useState("");
+  const [paiementNotes, setPaiementNotes] = useState("");
+  const [paiementMontantRecu, setPaiementMontantRecu] = useState("");
+
   const isPending = createSortieMutation.isPending || addTransactionMutation.isPending;
 
   const totalMontant = lines
     .reduce((sum, l) => sum + l.quantite * parseFloat(l.prixUnitaire || "0"), 0)
     .toFixed(0);
+
+  const montantInsuffisant =
+    paiementMode === ModePaiement.CASH &&
+    paiementMontantRecu !== "" &&
+    parseFloat(paiementMontantRecu) < parseFloat(totalMontant);
 
   const handleReset = () => {
     setStep(1);
@@ -61,6 +75,10 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
     setPickerOpen(false);
     setReplacingIndex(null);
     setRecuData(null);
+    setPaiementMode(null);
+    setPaiementRef("");
+    setPaiementNotes("");
+    setPaiementMontantRecu("");
   };
 
   const addLine = (sel: VarianteSelection) => {
@@ -142,12 +160,17 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
     }
   };
 
-  // Step 3 — VENTE payment + receipt
-  const handleVenteSubmit = async (
-    modePaiement: ModePaiement,
-    txReference?: string,
-    txNotes?: string
-  ) => {
+  // Step 3 — submit vente depuis le footer
+  const handleVenteSubmit = async () => {
+    if (!paiementMode || montantInsuffisant) return;
+
+    const recuNum = parseFloat(paiementMontantRecu || "0");
+    const totalNum = parseFloat(totalMontant || "0");
+    const monnaieRendue =
+      paiementMode === ModePaiement.CASH && paiementMontantRecu !== ""
+        ? (recuNum - totalNum).toFixed(0)
+        : undefined;
+
     try {
       const { data: sortie } = await createSortieMutation.mutateAsync({
         type: TypeSortie.VENTE,
@@ -163,10 +186,10 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
       try {
         const { data: tx } = await addTransactionMutation.mutateAsync({
           montant: sortie.totalMontant,
-          modePaiement,
+          modePaiement: paiementMode,
           sortieId: sortie.id,
-          reference: txReference,
-          notes: txNotes,
+          reference: paiementRef || undefined,
+          notes: paiementNotes || undefined,
         });
         transactionRef = tx.reference ?? undefined;
       } catch {
@@ -187,13 +210,15 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
         date: sortie.createdAt,
         lignes: recuLignes,
         totalMontant: sortie.totalMontant,
-        modePaiement,
+        modePaiement: paiementMode,
         transactionReference: transactionRef,
+        montantRecu: paiementMontantRecu || undefined,
+        monnaieRendue,
       });
       setRecuOpen(true);
       toast.success("Vente enregistrée !");
     } catch {
-      // Error toast already shown by useCreateSortie onError
+      // Error toast shown by mutation onError
     }
   };
 
@@ -235,6 +260,8 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
           totalMontant={recuData.totalMontant}
           modePaiement={recuData.modePaiement}
           transactionReference={recuData.transactionReference}
+          montantRecu={recuData.montantRecu}
+          monnaieRendue={recuData.monnaieRendue}
         />
       )}
 
@@ -255,7 +282,7 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
         aria-label="Nouvelle sortie"
       >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-border/60 px-4 py-3">
+        <div className="flex shrink-0 items-center justify-between border-b border-border/60 px-4 py-3">
           <div className="flex items-center gap-3">
             <h3 className="font-[var(--font-display)] text-xl text-[var(--color-out)]">
               Nouvelle sortie
@@ -264,25 +291,17 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
               {STEP_LABELS[step]} {step}/3
             </span>
           </div>
-          <Button
-            isIconOnly
-            variant="light"
-            onPress={onClose}
-            aria-label="Fermer"
-          >
+          <Button isIconOnly variant="light" onPress={onClose} aria-label="Fermer">
             ✕
           </Button>
         </div>
 
-        {/* Body */}
-        <div className="flex-1 space-y-4 overflow-y-auto p-4 pb-6">
+        {/* Body — scrollable */}
+        <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-4">
           {/* Step 1 — Type */}
           {step === 1 && (
             <>
-              <SortieTypeStep
-                selected={selectedType}
-                onSelect={setSelectedType}
-              />
+              <SortieTypeStep selected={selectedType} onSelect={setSelectedType} />
               {selectedType === TypeSortie.VENTE && !hasActiveSession && (
                 <div className="flex items-start gap-3 rounded-lg border border-[var(--color-out)]/50 bg-[color:rgba(255,77,109,0.12)] p-3">
                   <span className="mt-0.5 text-base">⚠</span>
@@ -290,7 +309,7 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
                     <p className="font-semibold text-[var(--color-out)]">Aucune session caisse ouverte</p>
                     <p className="mt-0.5 text-text-muted">
                       Une vente nécessite une session active.{" "}
-                      <Link href="/caisse" className="underline text-accent" onClick={onClose}>
+                      <Link href="/caisse" className="text-accent underline" onClick={onClose}>
                         Ouvrir la caisse →
                       </Link>
                     </p>
@@ -306,13 +325,9 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
               {selectedType && (
                 <p className="text-xs uppercase tracking-wide text-text-muted">
                   Type :{" "}
-                  <span className="font-semibold text-[var(--color-out)]">
-                    {selectedType}
-                  </span>
+                  <span className="font-semibold text-[var(--color-out)]">{selectedType}</span>
                 </p>
               )}
-
-              {/* Notes */}
               <Input
                 variant="underlined"
                 placeholder="Notes (optionnel)"
@@ -321,20 +336,15 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
                 size="sm"
                 classNames={{ input: "text-sm text-text-muted" }}
               />
-
-              {/* Lignes */}
               <section className="rounded-lg border border-border/80 bg-[color:rgba(81,34,68,0.25)] p-4">
                 <div className="mb-3 flex items-center justify-between">
-                  <p className="text-xs uppercase tracking-wide text-text-muted">
-                    Produits
-                  </p>
+                  <p className="text-xs uppercase tracking-wide text-text-muted">Produits</p>
                   {lines.length > 0 && (
-                    <span className="font-[var(--font-mono)] text-xs text-[var(--color-out)]">
+                    <span className="[font-family:var(--font-mono)] text-xs text-[var(--color-out)]">
                       Total : {Number(totalMontant).toLocaleString("fr-FR")} FCFA
                     </span>
                   )}
                 </div>
-
                 {lines.length > 0 && (
                   <div className="mb-1 grid grid-cols-[1fr_80px_100px_80px_32px] gap-2 px-3">
                     <span className="text-[10px] text-text-muted">Produit</span>
@@ -343,7 +353,6 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
                     <span className="text-right text-[10px] text-text-muted">S/Total</span>
                   </div>
                 )}
-
                 <div className="space-y-2">
                   {lines.map((line, i) => (
                     <SortieFormLine
@@ -356,7 +365,6 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
                     />
                   ))}
                 </div>
-
                 <Button
                   variant="flat"
                   className="mt-3 w-full border border-dashed border-[var(--color-out)]/40 bg-[color:rgba(255,77,109,0.08)] text-[var(--color-out)]"
@@ -371,61 +379,94 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
             </>
           )}
 
-          {/* Step 3 — Paiement (VENTE only) */}
+          {/* Step 3 — Paiement */}
           {step === 3 && (
             <SortiePaiementStep
               totalMontant={totalMontant}
-              isPending={isPending}
-              onSubmit={handleVenteSubmit}
-              onBack={() => setStep(2)}
+              selected={paiementMode}
+              onSelect={setPaiementMode}
+              reference={paiementRef}
+              onChangeReference={setPaiementRef}
+              notes={paiementNotes}
+              onChangeNotes={setPaiementNotes}
+              montantRecu={paiementMontantRecu}
+              onChangeMontantRecu={setPaiementMontantRecu}
             />
           )}
         </div>
 
-        {/* Footer — only shown on steps 1 and 2 */}
-        {step < 3 && (
-          <div className="border-t border-border/60 p-4 pb-6">
-            {step === 1 ? (
+        {/* Footer — toujours visible */}
+        <div className="shrink-0 border-t border-border/60 p-4 pb-6">
+          {step === 1 && (
+            <Button
+              className="w-full bg-[var(--color-out)] font-semibold text-white"
+              size="lg"
+              isDisabled={
+                !selectedType ||
+                (selectedType === TypeSortie.VENTE && !hasActiveSession)
+              }
+              onPress={handleTypeConfirm}
+            >
+              Continuer →
+            </Button>
+          )}
+
+          {step === 2 && (
+            <div className="flex gap-3">
               <Button
-                className="w-full bg-[var(--color-out)] font-semibold text-white"
-                size="lg"
-                isDisabled={
-                  !selectedType ||
-                  (selectedType === TypeSortie.VENTE && !hasActiveSession)
-                }
-                onPress={handleTypeConfirm}
+                variant="flat"
+                className="flex-1 text-text-muted"
+                onPress={() => setStep(1)}
+                isDisabled={isPending}
               >
-                Continuer →
+                ← Retour
               </Button>
-            ) : (
-              <div className="flex gap-3">
-                <Button
-                  variant="flat"
-                  className="flex-1 text-text-muted"
-                  onPress={() => setStep(1)}
-                  isDisabled={isPending}
-                >
-                  ← Retour
-                </Button>
-                <Button
-                  className="flex-1 bg-[var(--color-out)] font-semibold text-white"
-                  size="lg"
-                  isDisabled={lines.length === 0 || isPending}
-                  isLoading={isPending && selectedType !== TypeSortie.VENTE}
-                  onPress={handleLignesConfirm}
-                >
-                  {isPending ? (
-                    <Spinner size="sm" color="current" />
-                  ) : selectedType === TypeSortie.VENTE ? (
-                    "Continuer → Paiement"
-                  ) : (
-                    "Enregistrer"
-                  )}
-                </Button>
-              </div>
-            )}
-          </div>
-        )}
+              <Button
+                className="flex-1 bg-[var(--color-out)] font-semibold text-white"
+                size="lg"
+                isDisabled={lines.length === 0 || isPending}
+                isLoading={isPending && selectedType !== TypeSortie.VENTE}
+                onPress={handleLignesConfirm}
+              >
+                {isPending ? (
+                  <Spinner size="sm" color="current" />
+                ) : selectedType === TypeSortie.VENTE ? (
+                  "Continuer → Paiement"
+                ) : (
+                  "Enregistrer"
+                )}
+              </Button>
+            </div>
+          )}
+
+          {step === 3 && (
+            <div className="flex gap-3">
+              <Button
+                variant="flat"
+                className="flex-1 text-text-muted"
+                onPress={() => {
+                  setPaiementMode(null);
+                  setPaiementRef("");
+                  setPaiementNotes("");
+                  setPaiementMontantRecu("");
+                  setStep(2);
+                }}
+                isDisabled={isPending}
+              >
+                ← Retour
+              </Button>
+              <Button
+                className="flex-1 bg-accent font-semibold text-black"
+                size="lg"
+                isDisabled={!paiementMode || montantInsuffisant || isPending}
+                isLoading={isPending}
+                onPress={() => void handleVenteSubmit()}
+              >
+                {isPending ? <Spinner size="sm" color="current" /> : "Enregistrer la vente"}
+              </Button>
+            </div>
+          )}
+        </div>
       </motion.aside>
     </>
   );
