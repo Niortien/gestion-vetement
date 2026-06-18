@@ -30,11 +30,10 @@ export function SortiesView() {
   const setPeriode = useUiStore((s) => s.setSortiePeriode);
   const typeFilter = useUiStore((s) => s.sortieTypeFilter);
   const setTypeFilter = useUiStore((s) => s.setSortieTypeFilter);
-  const { dateDebut, dateFin } = useMemo(() => getPeriodeRange(periode), [periode]);
+  const { dateDebut } = useMemo(() => getPeriodeRange(periode), [periode]);
   const { data } = useSortiesList({
-    limit: 20,
+    limit: 50,
     dateDebut,
-    dateFin,
     ...(typeFilter ? { type: typeFilter } : {}),
   });
   const items = data?.pages.flatMap((page) => page.data) ?? [];

@@ -20,8 +20,8 @@ export function EntreesView() {
   const periode = useUiStore((s) => s.entreePeriode);
   const setPeriode = useUiStore((s) => s.setEntreePeriode);
 
-  const { dateDebut, dateFin } = useMemo(() => getPeriodeRange(periode), [periode]);
-  const { data } = useEntreesList({ limit: 20, dateDebut, dateFin });
+  const { dateDebut } = useMemo(() => getPeriodeRange(periode), [periode]);
+  const { data } = useEntreesList({ limit: 50, dateDebut });
   const items = data?.pages.flatMap((page) => page.data) ?? [];
 
   return (
