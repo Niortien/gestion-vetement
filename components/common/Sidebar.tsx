@@ -43,20 +43,20 @@ export function Sidebar() {
         <Select
           size="sm"
           label="Boutique"
-          selectedKeys={[currentBoutiqueId]}
+          selectedKeys={new Set([currentBoutiqueId])}
           onSelectionChange={(keys) => {
-            const val = Array.from(keys)[0] as string;
+            const val = Array.from(keys)[0] as string | undefined;
             setCurrentBoutique(val ?? "all");
           }}
           classNames={{ trigger: "bg-surface/60 border border-border" }}
           aria-label="Sélectionner une boutique"
         >
-          <>
-            <SelectItem key="all">Toutes les boutiques</SelectItem>
-            {boutiques.map((b) => (
+          {[
+            <SelectItem key="all">Toutes les boutiques</SelectItem>,
+            ...boutiques.map((b) => (
               <SelectItem key={b.id}>{b.nom}{b.ville ? ` · ${b.ville}` : ""}</SelectItem>
-            ))}
-          </>
+            )),
+          ]}
         </Select>
       )}
 

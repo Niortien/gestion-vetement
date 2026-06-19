@@ -213,7 +213,7 @@ export function ProduitOrderPanel({ produit, variante }: ProduitOrderPanelProps)
                 </label>
                 <input
                   {...register("clientNom")}
-                  placeholder="Mamadou Diallo"
+                  placeholder="Konan Yao"
                   className="w-full rounded-xl border bg-transparent px-3 py-2.5 text-sm outline-none transition-colors focus:border-[var(--v-lime)] placeholder:text-[var(--v-dim)]"
                   style={{ borderColor: "var(--v-border)", color: "var(--v-text)" }}
                 />
@@ -228,7 +228,7 @@ export function ProduitOrderPanel({ produit, variante }: ProduitOrderPanelProps)
                 </label>
                 <input
                   {...register("clientTel")}
-                  placeholder="+221 77 000 00 00"
+                  placeholder="+225 07 00 00 00 00"
                   type="tel"
                   className="w-full rounded-xl border bg-transparent px-3 py-2.5 text-sm outline-none transition-colors focus:border-[var(--v-lime)] placeholder:text-[var(--v-dim)]"
                   style={{ borderColor: "var(--v-border)", color: "var(--v-text)" }}
@@ -273,7 +273,7 @@ export function ProduitOrderPanel({ produit, variante }: ProduitOrderPanelProps)
                     </label>
                     <input
                       {...register("adresse")}
-                      placeholder="Rue 10, Médina, Dakar"
+                      placeholder="Quartier, Commune, Abidjan"
                       className="w-full rounded-xl border bg-transparent px-3 py-2.5 text-sm outline-none transition-colors focus:border-[var(--v-lime)] placeholder:text-[var(--v-dim)]"
                       style={{ borderColor: "var(--v-border)", color: "var(--v-text)" }}
                     />

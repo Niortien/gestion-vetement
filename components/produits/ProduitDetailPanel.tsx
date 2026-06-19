@@ -13,6 +13,9 @@ import { getMotionVariant, panelSlide } from "@/lib/motionVariants";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useCategoriesList } from "@/features/produits/query/produits-queries";
 import { useCreateProduit, useUpdateProduit } from "@/features/produits/mutation/produits-mutations";
+import { useBoutiqueId } from "@/hooks/useBoutiqueId";
+import { useBoutiques } from "@/features/boutiques/query/boutiques-queries";
+import { useAuthStore } from "@/stores/authStore";
 import type { Produit } from "@/types";
 
 interface ProduitDetailPanelProps {
@@ -27,6 +30,13 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
   /* ── mutations ─────────────────────────────────────────── */
   const createMutation = useCreateProduit();
   const updateMutation = useUpdateProduit(produit?.id ?? "");
+  const user = useAuthStore((s) => s.user);
+  const boutiqueId = useBoutiqueId();
+  const { data: boutiquesRes } = useBoutiques();
+  const boutiques = boutiquesRes?.data ?? [];
+  const boutiqueLabel = boutiqueId
+    ? (boutiques.find((b) => b.id === boutiqueId)?.nom ?? "Boutique sélectionnée")
+    : "Toutes les boutiques (sans boutique)";
   const isPending = createMutation.isPending || updateMutation.isPending;
 
   /* ── categories ─────────────────────────────────────────── */
@@ -239,6 +249,23 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
 
       {/* corps scrollable */}
       <div className="flex-1 space-y-4 overflow-y-auto p-4 pb-6">
+
+        {/* BANDEAU BOUTIQUE (admin uniquement, création uniquement) */}
+        {isNew && user?.role === "ADMIN" && (
+          <div className={[
+            "flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-semibold",
+            boutiqueId
+              ? "border-accent/40 bg-accent/10 text-accent"
+              : "border-out/40 bg-out/10 text-out",
+          ].join(" ")}>
+            <span className="shrink-0">🏪</span>
+            <span>
+              {boutiqueId
+                ? <>Stock attribué à <strong>{boutiqueLabel}</strong></>
+                : <>Aucune boutique sélectionnée — les variantes n&apos;auront pas de boutique</>}
+            </span>
+          </div>
+        )}
 
         {/* IMAGE */}
         <section className="rounded-lg border border-border/80 bg-[color:rgba(45,69,103,0.4)] p-4">
