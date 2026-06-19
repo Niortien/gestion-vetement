@@ -9,6 +9,7 @@ export interface ProduitListParams {
   isActif?: boolean;
   enPromo?: boolean;
   sortOrder?: "asc" | "desc";
+  boutiqueId?: string;
 }
 
 export interface ProduitMouvementsParams {
