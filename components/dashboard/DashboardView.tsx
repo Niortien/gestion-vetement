@@ -38,7 +38,8 @@ export function DashboardView() {
   const { data: sortiesData, isLoading: sortiesLoading } = useSortiesList({ limit: 5 });
 
   const resume = resumeData?.data;
-  const stockValeur = stockValeurData?.data?.valeurTotaleAchat ?? "0";
+  const stockValeurRaw = stockValeurData?.data?.valeurTotaleAchat ?? "0";
+  const nombreProduits = stockValeurData?.data?.nombreProduits ?? 0;
   const alertesCount = alertesData?.data?.length ?? 0;
   const ventes7j = ventesData?.data ?? [];
   const topProduits = topProduitsData?.data ?? [];
@@ -58,7 +59,8 @@ export function DashboardView() {
       {/* KPIs */}
       <DashboardKpiGrid
         resume={resume}
-        stockValeur={stockValeur}
+        stockValeur={stockValeurRaw}
+        nombreProduits={nombreProduits}
         alertesCount={alertesCount}
         isLoading={resumeLoading}
         isError={resumeError || stockValeurError}

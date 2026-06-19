@@ -30,9 +30,12 @@ export function DashboardSparkline({ data, isError }: DashboardSparklineProps) {
 
   if (chartData.length === 0) {
     return (
-      <div className="flex h-40 flex-col items-center justify-center gap-1 rounded-xl border border-border/60 bg-[var(--color-surface-high)]">
-        <p className="text-sm text-text-muted">Aucune vente sur 7 jours</p>
-        <p className="text-[11px] text-text-muted/60">Effectue une vente pour voir la courbe</p>
+      <div className="flex h-40 flex-col items-center justify-center gap-2 rounded-xl border border-border/60 bg-[var(--color-surface-high)] p-4">
+        <p className="text-sm font-medium text-text-muted">Aucune vente sur 7 jours</p>
+        <div className="rounded-md border border-accent/20 bg-accent/5 px-3 py-1.5 text-center">
+          <p className="text-[11px] text-accent">Pour voir la courbe :</p>
+          <p className="text-[11px] text-text-muted">Crée une sortie de type <span className="font-semibold text-text">VENTE</span> dans le menu Sorties</p>
+        </div>
       </div>
     );
   }

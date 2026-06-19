@@ -30,9 +30,16 @@ export function DashboardTopProduits({ produits, isLoading, isError }: Dashboard
           <p className="mt-0.5 text-[11px] text-text-muted">Vérifie la connexion au serveur</p>
         </div>
       ) : produits.length === 0 ? (
-        <div>
+        <div className="space-y-2">
           <p className="text-sm text-text-muted">Aucune vente sur les 7 derniers jours</p>
-          <p className="mt-0.5 text-[11px] text-text-muted/60">Enregistre une sortie de type VENTE pour voir apparaître les produits</p>
+          <div className="rounded-md border border-accent/20 bg-accent/5 px-3 py-2">
+            <p className="text-[11px] text-accent font-medium">Flux requis :</p>
+            <ol className="mt-1 list-decimal pl-3 text-[11px] text-text-muted space-y-0.5">
+              <li>Crée des <span className="font-semibold text-text">Entrées de stock</span> (réception fournisseur)</li>
+              <li>Ouvre une <span className="font-semibold text-text">session Caisse</span></li>
+              <li>Crée une <span className="font-semibold text-text">Sortie → VENTE</span></li>
+            </ol>
+          </div>
         </div>
       ) : (
         <ol className="space-y-2">

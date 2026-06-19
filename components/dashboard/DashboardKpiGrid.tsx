@@ -6,6 +6,7 @@ import type { ResumeJour } from "@/types";
 interface DashboardKpiGridProps {
   resume: ResumeJour | undefined;
   stockValeur: string;
+  nombreProduits: number;
   alertesCount: number;
   isLoading: boolean;
   isError?: boolean;
@@ -17,6 +18,7 @@ interface KpiCardProps {
   sub?: string;
   tone: "accent" | "in" | "out" | "cash";
   isMontant?: boolean;
+  hint?: string;
 }
 
 const TONE_CLASSES: Record<KpiCardProps["tone"], { border: string; bg: string; text: string }> = {
@@ -42,7 +44,7 @@ const TONE_CLASSES: Record<KpiCardProps["tone"], { border: string; bg: string; t
   },
 };
 
-function KpiCard({ label, value, sub, tone, isMontant = false }: KpiCardProps) {
+function KpiCard({ label, value, sub, tone, isMontant = false, hint }: KpiCardProps) {
   const t = TONE_CLASSES[tone];
   return (
     <div className={`rounded-xl border ${t.border} ${t.bg} p-4`}>
@@ -53,11 +55,19 @@ function KpiCard({ label, value, sub, tone, isMontant = false }: KpiCardProps) {
         <p className={`mt-2 font-[var(--font-display)] text-3xl ${t.text}`}>{value}</p>
       )}
       {sub && <p className="mt-1 text-xs text-text-muted">{sub}</p>}
+      {hint && <p className="mt-1.5 text-[10px] text-text-muted/50 italic">{hint}</p>}
     </div>
   );
 }
 
-export function DashboardKpiGrid({ resume, stockValeur, alertesCount, isLoading, isError }: DashboardKpiGridProps) {
+export function DashboardKpiGrid({
+  resume,
+  stockValeur,
+  nombreProduits,
+  alertesCount,
+  isLoading,
+  isError,
+}: DashboardKpiGridProps) {
   if (isLoading) {
     return (
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
@@ -81,6 +91,8 @@ export function DashboardKpiGrid({ resume, stockValeur, alertesCount, isLoading,
   const totalTransactions = resume?.totalTransactions ?? 0;
   const beneficeNet = resume?.beneficeNet ?? "0";
   const isBenefice = parseFloat(beneficeNet) >= 0;
+  const hasStock = parseFloat(stockValeur) > 0;
+  const hasSession = !!resume?.session;
 
   return (
     <div className="space-y-3">
@@ -88,16 +100,30 @@ export function DashboardKpiGrid({ resume, stockValeur, alertesCount, isLoading,
         <KpiCard
           label="Ventes du jour"
           value={totalVentes}
-          sub={`${totalTransactions} transaction${totalTransactions !== 1 ? "s" : ""}`}
+          sub={
+            totalTransactions > 0
+              ? `${totalTransactions} transaction${totalTransactions !== 1 ? "s" : ""}`
+              : hasSession
+              ? "Aucune transaction encore"
+              : "Ouvre une session caisse"
+          }
           tone="cash"
           isMontant
+          hint={!hasSession ? "Menu → Caisse → Ouvrir session" : undefined}
         />
         <KpiCard
           label="Valeur stock"
           value={stockValeur}
-          sub="au prix d'achat"
+          sub={
+            hasStock
+              ? "au prix d'achat"
+              : nombreProduits > 0
+              ? `${nombreProduits} produit${nombreProduits > 1 ? "s" : ""} · aucun stock reçu`
+              : "Aucun produit dans le catalogue"
+          }
           tone="accent"
           isMontant
+          hint={!hasStock && nombreProduits > 0 ? "Ajoute une entrée de stock → Entrées" : undefined}
         />
         <KpiCard
           label={isBenefice ? "Bénéfice net" : "Perte nette"}
