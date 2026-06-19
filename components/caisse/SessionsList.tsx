@@ -1,90 +1,93 @@
 "use client";
 
-import { Button, Chip, Spinner } from "@heroui/react";
+import { Button, DateRangePicker, Spinner } from "@heroui/react";
 import { useMemo, useState } from "react";
+import {
+  getLocalTimeZone,
+  today,
+  type DateValue,
+} from "@internationalized/date";
 import { useSessionsList } from "@/features/caisse/query/caisse-queries";
 import type { Session } from "@/types";
 import { SessionCard } from "./SessionCard";
 import { SessionDetailDrawer } from "./SessionDetailDrawer";
 
-type DatePreset = "all" | "today" | "week" | "month";
+type DateRange = { start: DateValue; end: DateValue };
 
-const PRESETS: { key: DatePreset; label: string }[] = [
-  { key: "all", label: "Tout" },
-  { key: "today", label: "Aujourd'hui" },
-  { key: "week", label: "Cette semaine" },
-  { key: "month", label: "Ce mois" },
-];
-
-function getDateRange(preset: DatePreset): { dateDebut?: string; dateFin?: string } {
-  if (preset === "all") return {};
-  const now = new Date();
-  const end = new Date(now);
-  end.setHours(23, 59, 59, 999);
-
-  if (preset === "today") {
-    const start = new Date(now);
-    start.setHours(0, 0, 0, 0);
-    return { dateDebut: start.toISOString(), dateFin: end.toISOString() };
-  }
-  if (preset === "week") {
-    const start = new Date(now);
-    const day = start.getDay() || 7;
-    start.setDate(start.getDate() - day + 1);
-    start.setHours(0, 0, 0, 0);
-    return { dateDebut: start.toISOString(), dateFin: end.toISOString() };
-  }
-  if (preset === "month") {
-    const start = new Date(now.getFullYear(), now.getMonth(), 1);
-    return { dateDebut: start.toISOString(), dateFin: end.toISOString() };
-  }
-  return {};
+function dvToISO(dv: DateValue, endOfDay: boolean): string {
+  const d = dv.toDate(getLocalTimeZone());
+  if (endOfDay) d.setHours(23, 59, 59, 0);
+  else d.setHours(0, 0, 0, 0);
+  return d.toISOString();
 }
 
 export function SessionsList() {
   const [selectedSession, setSelectedSession] = useState<Session | null>(null);
-  const [preset, setPreset] = useState<DatePreset>("all");
+  const now = useMemo(() => today(getLocalTimeZone()), []);
+  const [dateRange, setDateRange] = useState<DateRange | null>(null);
 
-  const dateRange = useMemo(() => getDateRange(preset), [preset]);
+  const queryParams = useMemo(
+    () => ({
+      limit: 10,
+      sortOrder: "desc" as const,
+      ...(dateRange
+        ? {
+            dateDebut: dvToISO(dateRange.start, false),
+            dateFin: dvToISO(dateRange.end, true),
+          }
+        : {}),
+    }),
+    [dateRange]
+  );
 
-  const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } = useSessionsList({
-    limit: 10,
-    sortOrder: "desc",
-    ...dateRange,
-  });
+  const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
+    useSessionsList(queryParams);
 
   const sessions = (data?.pages ?? []).flatMap((p) => p.data as Session[]);
 
   return (
     <>
       <div>
-        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-sm font-semibold uppercase tracking-[0.08em] text-text-muted">
             Historique des sessions
           </h2>
           {data && (
             <span className="text-xs text-text-dim">
-              {data.pages[0]?.meta?.total ?? 0} session{(data.pages[0]?.meta?.total ?? 0) !== 1 ? "s" : ""}
+              {data.pages[0]?.meta?.total ?? 0} session
+              {(data.pages[0]?.meta?.total ?? 0) !== 1 ? "s" : ""}
             </span>
           )}
         </div>
 
-        {/* Filtre date */}
-        <div className="mb-4 flex flex-wrap gap-1.5">
-          {PRESETS.map((p) => (
-            <Chip
-              key={p.key}
-              variant="flat"
-              className={
-                preset === p.key
-                  ? "cursor-pointer bg-[var(--color-cash)] font-semibold text-black"
-                  : "cursor-pointer bg-[var(--color-surface-high)] text-text-muted hover:text-text"
-              }
-              onClick={() => setPreset(p.key)}
+        {/* Filtre plage de date */}
+        <div className="mb-4 flex flex-wrap items-center gap-2">
+          <DateRangePicker
+            aria-label="Filtrer par période"
+            value={dateRange}
+            onChange={(val) => setDateRange(val)}
+            maxValue={now}
+            size="sm"
+            classNames={{
+              base: "max-w-[300px]",
+              inputWrapper:
+                "border border-border/60 bg-[var(--color-surface-high)] shadow-none hover:border-[var(--color-cash)]/50 focus-within:!border-[var(--color-cash)]/70 h-9",
+              segment: "text-text focus:bg-[var(--color-cash)]/20",
+              separator: "text-text-dim",
+              calendarContent:
+                "bg-[var(--color-surface)] border border-border/60 rounded-xl shadow-xl",
+            }}
+          />
+          {dateRange && (
+            <Button
+              size="sm"
+              variant="light"
+              className="text-xs text-text-dim hover:text-text-muted"
+              onPress={() => setDateRange(null)}
             >
-              {p.label}
-            </Chip>
-          ))}
+              Réinitialiser
+            </Button>
+          )}
         </div>
 
         {isLoading ? (
@@ -94,7 +97,9 @@ export function SessionsList() {
         ) : sessions.length === 0 ? (
           <div className="rounded-xl border border-border/60 bg-surface p-8 text-center">
             <p className="text-sm text-text-dim">
-              {preset === "all" ? "Aucune session enregistrée" : "Aucune session sur cette période"}
+              {dateRange
+                ? "Aucune session sur cette période"
+                : "Aucune session enregistrée"}
             </p>
           </div>
         ) : (
