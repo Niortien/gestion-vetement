@@ -19,6 +19,7 @@ export interface VitrineProduitParams {
   limit?: number;
   categorieId?: string;
   search?: string;
+  enPromo?: boolean;
 }
 
 // Forme réelle de l'enveloppe backend (TransformInterceptor)

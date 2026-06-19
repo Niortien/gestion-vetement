@@ -20,6 +20,12 @@ export function CatalogueProductCard({ produit, priority }: CatalogueProductCard
   const totalStock = (produit.variantes ?? []).reduce((s, v) => s + v.quantiteStock, 0);
   const firstVariante = produit.variantes?.[0];
 
+  const isPromo = produit.enPromo && !!produit.prixPromo;
+  const prixPromo = isPromo ? parseFloat(produit.prixPromo!) : null;
+  const tauxReduction = isPromo && prixPromo !== null
+    ? Math.round(((prix - prixPromo) / prix) * 100)
+    : null;
+
   return (
     <motion.article
       className="group relative"
@@ -49,6 +55,14 @@ export function CatalogueProductCard({ produit, priority }: CatalogueProductCard
             className="absolute inset-0 transition-opacity"
             style={{ background: "linear-gradient(to top, rgba(4,8,15,0.7) 0%, transparent 50%)" }}
           />
+
+          {/* Badge promo */}
+          {isPromo && (
+            <div className="absolute left-2 top-2 rounded-full px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-white"
+              style={{ backgroundColor: "#f97316" }}>
+              -{tauxReduction}%
+            </div>
+          )}
 
           {/* Rupture badge */}
           {totalStock === 0 && (
@@ -111,14 +125,31 @@ export function CatalogueProductCard({ produit, priority }: CatalogueProductCard
           </div>
         )}
 
-        <div className="mt-2 flex items-center justify-between">
-          <span
-            className="font-[var(--font-mono)] text-sm font-black"
-            style={{ color: "var(--v-lime)" }}
-          >
-            {prix.toLocaleString("fr-FR")} <span className="text-[10px] font-normal" style={{ color: "var(--v-dim)" }}>FCFA</span>
-          </span>
-          {priority && (
+        <div className="mt-2 flex items-end justify-between gap-2">
+          {isPromo && prixPromo !== null ? (
+            <div className="flex flex-col gap-0.5">
+              <span
+                className="[font-family:var(--font-mono)] text-xs line-through"
+                style={{ color: "var(--v-dim)" }}
+              >
+                {prix.toLocaleString("fr-FR")} FCFA
+              </span>
+              <span
+                className="[font-family:var(--font-mono)] text-sm font-black"
+                style={{ color: "var(--v-lime)" }}
+              >
+                {prixPromo.toLocaleString("fr-FR")} <span className="text-[10px] font-normal" style={{ color: "var(--v-dim)" }}>FCFA</span>
+              </span>
+            </div>
+          ) : (
+            <span
+              className="[font-family:var(--font-mono)] text-sm font-black"
+              style={{ color: "var(--v-lime)" }}
+            >
+              {prix.toLocaleString("fr-FR")} <span className="text-[10px] font-normal" style={{ color: "var(--v-dim)" }}>FCFA</span>
+            </span>
+          )}
+          {priority && !isPromo && (
             <span
               className="rounded-full px-2 py-0.5 text-[9px] font-black uppercase tracking-wider"
               style={{ backgroundColor: "var(--v-lime)", color: "#000" }}

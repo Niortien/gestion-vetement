@@ -25,6 +25,12 @@ export function ProduitCard({ produit, rank, large = false }: ProduitCardProps) 
   const firstVariante = produit.variantes?.[0];
   const hasNew = isNew(produit.createdAt);
 
+  const isPromo = produit.enPromo && !!produit.prixPromo;
+  const prixPromo = isPromo ? parseFloat(produit.prixPromo!) : null;
+  const tauxReduction = isPromo && prixPromo !== null
+    ? Math.round(((prix - prixPromo) / prix) * 100)
+    : null;
+
   const handleQuickAdd = (e: React.MouseEvent) => {
     e.preventDefault();
     if (!firstVariante) return;
@@ -64,7 +70,15 @@ export function ProduitCard({ produit, rank, large = false }: ProduitCardProps) 
 
         {/* Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-1.5">
-          {hasNew && (
+          {isPromo && (
+            <span
+              className="rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-white"
+              style={{ backgroundColor: "#f97316" }}
+            >
+              PROMO -{tauxReduction}%
+            </span>
+          )}
+          {hasNew && !isPromo && (
             <span
               className="rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider"
               style={{ backgroundColor: "var(--v-lime)", color: "#000" }}
@@ -116,12 +130,29 @@ export function ProduitCard({ produit, rank, large = false }: ProduitCardProps) 
             variants={{ rest: { y: 8, opacity: 0 }, hovered: { y: 0, opacity: 1 } }}
             transition={{ duration: 0.25, delay: 0.05 }}
           >
-            <span
-              className="font-[var(--font-mono)] text-base font-black"
-              style={{ color: "var(--v-lime)" }}
-            >
-              {prix.toLocaleString("fr-FR")} <span className="text-xs font-normal">FCFA</span>
-            </span>
+            {isPromo && prixPromo !== null ? (
+              <div className="flex flex-col gap-0.5">
+                <span
+                  className="[font-family:var(--font-mono)] text-xs line-through"
+                  style={{ color: "var(--v-dim)" }}
+                >
+                  {prix.toLocaleString("fr-FR")} FCFA
+                </span>
+                <span
+                  className="[font-family:var(--font-mono)] text-base font-black"
+                  style={{ color: "var(--v-lime)" }}
+                >
+                  {prixPromo.toLocaleString("fr-FR")} <span className="text-xs font-normal">FCFA</span>
+                </span>
+              </div>
+            ) : (
+              <span
+                className="[font-family:var(--font-mono)] text-base font-black"
+                style={{ color: "var(--v-lime)" }}
+              >
+                {prix.toLocaleString("fr-FR")} <span className="text-xs font-normal">FCFA</span>
+              </span>
+            )}
             <span
               className="text-xs font-semibold uppercase tracking-wider"
               style={{ color: "var(--v-lime)" }}

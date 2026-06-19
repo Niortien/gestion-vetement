@@ -34,6 +34,8 @@ export interface Sortie {
   id: string;
   reference: string;
   type: TypeSortie;
+  totalAvantRemise?: string | null;
+  remiseMontant?: string | null;
   totalMontant: string;
   notes: string | null;
   userId: string;

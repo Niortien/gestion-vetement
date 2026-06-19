@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Button, Spinner } from "@heroui/react";
-import { Input } from "@heroui/react";
+import { Button, Input, Spinner } from "@heroui/react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import { getMotionVariant, panelSlide } from "@/lib/motionVariants";
@@ -27,6 +26,8 @@ interface RecuData {
   transactionReference?: string;
   montantRecu?: string;
   monnaieRendue?: string;
+  remiseMontant?: string;
+  totalAvantRemise?: string;
 }
 
 interface SortieCreatePanelProps {
@@ -50,7 +51,11 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
   const [recuOpen, setRecuOpen] = useState(false);
   const [recuData, setRecuData] = useState<RecuData | null>(null);
 
-  // Paiement state (step 3) — lifted here so footer button can trigger submit
+  // Remise (uniquement pour VENTE)
+  const [remiseMontant, setRemiseMontant] = useState("");
+  const [remiseTaux, setRemiseTaux] = useState("");
+
+  // Paiement state (step 3) — lifted here pour le footer
   const [paiementMode, setPaiementMode] = useState<ModePaiement | null>(null);
   const [paiementRef, setPaiementRef] = useState("");
   const [paiementNotes, setPaiementNotes] = useState("");
@@ -58,9 +63,13 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
 
   const isPending = createSortieMutation.isPending || addTransactionMutation.isPending;
 
-  const totalMontant = lines
-    .reduce((sum, l) => sum + l.quantite * parseFloat(l.prixUnitaire || "0"), 0)
-    .toFixed(0);
+  const totalAvantRemise = lines
+    .reduce((sum, l) => sum + l.quantite * parseFloat(l.prixUnitaire || "0"), 0);
+
+  const remiseNum = parseFloat(remiseMontant || "0");
+  const remiseDepasse = remiseNum > totalAvantRemise;
+  const totalMontant = Math.max(0, totalAvantRemise - remiseNum).toFixed(0);
+  const hasRemise = selectedType === TypeSortie.VENTE && remiseNum > 0 && !remiseDepasse;
 
   const montantInsuffisant =
     paiementMode === ModePaiement.CASH &&
@@ -75,10 +84,32 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
     setPickerOpen(false);
     setReplacingIndex(null);
     setRecuData(null);
+    setRemiseMontant("");
+    setRemiseTaux("");
     setPaiementMode(null);
     setPaiementRef("");
     setPaiementNotes("");
     setPaiementMontantRecu("");
+  };
+
+  const handleRemiseMontant = (val: string) => {
+    if (!/^\d*$/.test(val)) return;
+    setRemiseMontant(val);
+    if (val !== "" && totalAvantRemise > 0) {
+      setRemiseTaux(((parseFloat(val) / totalAvantRemise) * 100).toFixed(1));
+    } else {
+      setRemiseTaux("");
+    }
+  };
+
+  const handleRemiseTaux = (val: string) => {
+    if (!/^\d*\.?\d{0,1}$/.test(val)) return;
+    setRemiseTaux(val);
+    if (val !== "" && totalAvantRemise > 0) {
+      setRemiseMontant(((parseFloat(val) / 100) * totalAvantRemise).toFixed(0));
+    } else {
+      setRemiseMontant("");
+    }
   };
 
   const addLine = (sel: VarianteSelection) => {
@@ -120,7 +151,6 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
     setPickerOpen(true);
   };
 
-  // Step 1 → 2
   const handleTypeConfirm = () => {
     if (!selectedType) return;
     if (selectedType === TypeSortie.VENTE && !hasActiveSession) {
@@ -130,10 +160,13 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
     setStep(2);
   };
 
-  // Step 2 → 3 (VENTE) or submit (non-VENTE)
   const handleLignesConfirm = () => {
     if (lines.length === 0) {
       toast.error("Ajoute au moins une variante.");
+      return;
+    }
+    if (remiseDepasse) {
+      toast.error("La remise dépasse le total.");
       return;
     }
     if (selectedType === TypeSortie.VENTE) {
@@ -160,7 +193,6 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
     }
   };
 
-  // Step 3 — submit vente depuis le footer
   const handleVenteSubmit = async () => {
     if (!paiementMode || montantInsuffisant) return;
 
@@ -175,6 +207,7 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
       const { data: sortie } = await createSortieMutation.mutateAsync({
         type: TypeSortie.VENTE,
         notes: sortieNotes.trim() || undefined,
+        remiseMontant: hasRemise ? parseFloat(remiseMontant).toFixed(2) : undefined,
         lignes: lines.map((l) => ({
           varianteId: l.varianteId,
           quantite: l.quantite,
@@ -214,6 +247,8 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
         transactionReference: transactionRef,
         montantRecu: paiementMontantRecu || undefined,
         monnaieRendue,
+        remiseMontant: sortie.remiseMontant ?? undefined,
+        totalAvantRemise: sortie.totalAvantRemise ?? undefined,
       });
       setRecuOpen(true);
       toast.success("Vente enregistrée !");
@@ -228,11 +263,7 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
     onClose();
   };
 
-  const STEP_LABELS: Record<number, string> = {
-    1: "Type",
-    2: "Articles",
-    3: "Paiement",
-  };
+  const STEP_LABELS: Record<number, string> = { 1: "Type", 2: "Articles", 3: "Paiement" };
 
   if (!isOpen) return null;
 
@@ -240,14 +271,9 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
     <>
       <VariantePicker
         isOpen={pickerOpen}
-        onClose={() => {
-          setPickerOpen(false);
-          setReplacingIndex(null);
-        }}
+        onClose={() => { setPickerOpen(false); setReplacingIndex(null); }}
         onSelect={addLine}
-        excludedVarianteIds={
-          replacingIndex !== null ? [] : lines.map((l) => l.varianteId)
-        }
+        excludedVarianteIds={replacingIndex !== null ? [] : lines.map((l) => l.varianteId)}
       />
 
       {recuData && (
@@ -262,15 +288,12 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
           transactionReference={recuData.transactionReference}
           montantRecu={recuData.montantRecu}
           monnaieRendue={recuData.monnaieRendue}
+          remiseMontant={recuData.remiseMontant}
+          totalAvantRemise={recuData.totalAvantRemise}
         />
       )}
 
-      {/* Overlay */}
-      <div
-        className="fixed inset-0 z-[700] bg-black/40 backdrop-blur-sm"
-        onClick={onClose}
-        aria-hidden="true"
-      />
+      <div className="fixed inset-0 z-[700] bg-black/40 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
 
       <motion.aside
         initial="hidden"
@@ -284,21 +307,17 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
         {/* Header */}
         <div className="flex shrink-0 items-center justify-between border-b border-border/60 px-4 py-3">
           <div className="flex items-center gap-3">
-            <h3 className="font-[var(--font-display)] text-xl text-[var(--color-out)]">
-              Nouvelle sortie
-            </h3>
+            <h3 className="font-[var(--font-display)] text-xl text-[var(--color-out)]">Nouvelle sortie</h3>
             <span className="rounded-full bg-[var(--color-surface-high)] px-2 py-0.5 text-[10px] uppercase text-text-muted">
               {STEP_LABELS[step]} {step}/3
             </span>
           </div>
-          <Button isIconOnly variant="light" onPress={onClose} aria-label="Fermer">
-            ✕
-          </Button>
+          <Button isIconOnly variant="light" onPress={onClose} aria-label="Fermer">✕</Button>
         </div>
 
-        {/* Body — scrollable */}
+        {/* Body */}
         <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-4">
-          {/* Step 1 — Type */}
+          {/* Step 1 */}
           {step === 1 && (
             <>
               <SortieTypeStep selected={selectedType} onSelect={setSelectedType} />
@@ -309,9 +328,7 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
                     <p className="font-semibold text-[var(--color-out)]">Aucune session caisse ouverte</p>
                     <p className="mt-0.5 text-text-muted">
                       Une vente nécessite une session active.{" "}
-                      <Link href="/caisse" className="text-accent underline" onClick={onClose}>
-                        Ouvrir la caisse →
-                      </Link>
+                      <Link href="/caisse" className="text-accent underline" onClick={onClose}>Ouvrir la caisse →</Link>
                     </p>
                   </div>
                 </div>
@@ -319,13 +336,12 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
             </>
           )}
 
-          {/* Step 2 — Lignes */}
+          {/* Step 2 */}
           {step === 2 && (
             <>
               {selectedType && (
                 <p className="text-xs uppercase tracking-wide text-text-muted">
-                  Type :{" "}
-                  <span className="font-semibold text-[var(--color-out)]">{selectedType}</span>
+                  Type : <span className="font-semibold text-[var(--color-out)]">{selectedType}</span>
                 </p>
               )}
               <Input
@@ -341,7 +357,7 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
                   <p className="text-xs uppercase tracking-wide text-text-muted">Produits</p>
                   {lines.length > 0 && (
                     <span className="[font-family:var(--font-mono)] text-xs text-[var(--color-out)]">
-                      Total : {Number(totalMontant).toLocaleString("fr-FR")} FCFA
+                      Sous-total : {totalAvantRemise.toLocaleString("fr-FR")} FCFA
                     </span>
                   )}
                 </div>
@@ -368,21 +384,63 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
                 <Button
                   variant="flat"
                   className="mt-3 w-full border border-dashed border-[var(--color-out)]/40 bg-[color:rgba(255,77,109,0.08)] text-[var(--color-out)]"
-                  onPress={() => {
-                    setReplacingIndex(null);
-                    setPickerOpen(true);
-                  }}
+                  onPress={() => { setReplacingIndex(null); setPickerOpen(true); }}
                 >
                   + Ajouter une variante
                 </Button>
               </section>
+
+              {/* Section remise — uniquement pour VENTE */}
+              {selectedType === TypeSortie.VENTE && lines.length > 0 && (
+                <section className="rounded-lg border border-border/60 bg-[var(--color-surface-high)] p-3">
+                  <p className="mb-2.5 text-xs font-semibold uppercase tracking-wide text-text-muted">
+                    Réduction (optionnel)
+                  </p>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Input
+                      size="sm"
+                      variant="bordered"
+                      label="Montant"
+                      placeholder="0"
+                      value={remiseMontant}
+                      onValueChange={handleRemiseMontant}
+                      inputMode="numeric"
+                      endContent={<span className="shrink-0 text-xs text-text-dim">FCFA</span>}
+                      isInvalid={remiseDepasse}
+                      errorMessage={remiseDepasse ? "Dépasse le total" : undefined}
+                    />
+                    <Input
+                      size="sm"
+                      variant="bordered"
+                      label="Taux"
+                      placeholder="0"
+                      value={remiseTaux}
+                      onValueChange={handleRemiseTaux}
+                      inputMode="decimal"
+                      endContent={<span className="shrink-0 text-xs text-text-dim">%</span>}
+                    />
+                  </div>
+                  {hasRemise && (
+                    <div className="mt-2.5 flex items-center justify-between rounded-lg bg-[var(--color-surface)] px-3 py-2 text-xs">
+                      <span className="text-text-muted">
+                        {totalAvantRemise.toLocaleString("fr-FR")} − {remiseNum.toLocaleString("fr-FR")}
+                      </span>
+                      <span className="[font-family:var(--font-mono)] font-bold text-[var(--color-cash)]">
+                        = {Number(totalMontant).toLocaleString("fr-FR")} FCFA
+                      </span>
+                    </div>
+                  )}
+                </section>
+              )}
             </>
           )}
 
-          {/* Step 3 — Paiement */}
+          {/* Step 3 */}
           {step === 3 && (
             <SortiePaiementStep
               totalMontant={totalMontant}
+              totalAvantRemise={hasRemise ? totalAvantRemise.toFixed(0) : undefined}
+              remiseMontant={hasRemise ? remiseMontant : undefined}
               selected={paiementMode}
               onSelect={setPaiementMode}
               reference={paiementRef}
@@ -401,10 +459,7 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
             <Button
               className="w-full bg-[var(--color-out)] font-semibold text-white"
               size="lg"
-              isDisabled={
-                !selectedType ||
-                (selectedType === TypeSortie.VENTE && !hasActiveSession)
-              }
+              isDisabled={!selectedType || (selectedType === TypeSortie.VENTE && !hasActiveSession)}
               onPress={handleTypeConfirm}
             >
               Continuer →
@@ -412,30 +467,35 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
           )}
 
           {step === 2 && (
-            <div className="flex gap-3">
-              <Button
-                variant="flat"
-                className="flex-1 text-text-muted"
-                onPress={() => setStep(1)}
-                isDisabled={isPending}
-              >
-                ← Retour
-              </Button>
-              <Button
-                className="flex-1 bg-[var(--color-out)] font-semibold text-white"
-                size="lg"
-                isDisabled={lines.length === 0 || isPending}
-                isLoading={isPending && selectedType !== TypeSortie.VENTE}
-                onPress={handleLignesConfirm}
-              >
-                {isPending ? (
-                  <Spinner size="sm" color="current" />
-                ) : selectedType === TypeSortie.VENTE ? (
-                  "Continuer → Paiement"
-                ) : (
-                  "Enregistrer"
-                )}
-              </Button>
+            <div className="space-y-2">
+              {hasRemise && (
+                <div className="flex justify-between px-1 text-xs text-text-muted">
+                  <span>Sous-total {totalAvantRemise.toLocaleString("fr-FR")} · Remise −{remiseNum.toLocaleString("fr-FR")}</span>
+                  <span className="[font-family:var(--font-mono)] font-semibold text-[var(--color-cash)]">
+                    {Number(totalMontant).toLocaleString("fr-FR")} FCFA
+                  </span>
+                </div>
+              )}
+              <div className="flex gap-3">
+                <Button variant="flat" className="flex-1 text-text-muted" onPress={() => setStep(1)} isDisabled={isPending}>
+                  ← Retour
+                </Button>
+                <Button
+                  className="flex-1 bg-[var(--color-out)] font-semibold text-white"
+                  size="lg"
+                  isDisabled={lines.length === 0 || isPending || remiseDepasse}
+                  isLoading={isPending && selectedType !== TypeSortie.VENTE}
+                  onPress={handleLignesConfirm}
+                >
+                  {isPending ? (
+                    <Spinner size="sm" color="current" />
+                  ) : selectedType === TypeSortie.VENTE ? (
+                    "Continuer → Paiement"
+                  ) : (
+                    "Enregistrer"
+                  )}
+                </Button>
+              </div>
             </div>
           )}
 

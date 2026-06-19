@@ -7,6 +7,7 @@ export interface ProduitListParams {
   categorieId?: string;
   search?: string;
   isActif?: boolean;
+  enPromo?: boolean;
   sortOrder?: "asc" | "desc";
 }
 
@@ -38,6 +39,10 @@ export interface UpdateProduitBody {
   prixAchat?: string;
   imageUrl?: string;
   isActif?: boolean;
+  enPromo?: boolean;
+  prixPromo?: string | null;
+  dateDebutPromo?: string | null;
+  dateFinPromo?: string | null;
 }
 
 export interface UpdateVarianteBody {

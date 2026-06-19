@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import type { Produit } from "@/types";
 
 interface ProduitInfoProps {
@@ -41,6 +42,11 @@ function StockBadge({ stock }: { stock: number }) {
 
 export function ProduitInfo({ produit, totalStock }: ProduitInfoProps) {
   const prix = parseFloat(produit.prixVente || "0");
+  const isPromo = produit.enPromo && !!produit.prixPromo;
+  const prixPromo = isPromo ? parseFloat(produit.prixPromo!) : null;
+  const tauxReduction = isPromo && prixPromo !== null
+    ? Math.round(((prix - prixPromo) / prix) * 100)
+    : null;
 
   return (
     <div>
@@ -65,28 +71,62 @@ export function ProduitInfo({ produit, totalStock }: ProduitInfoProps) {
       {/* SKU + Stock */}
       <div className="mt-3 flex flex-wrap items-center gap-3">
         <span
-          className="font-[var(--font-mono)] text-xs"
+          className="[font-family:var(--font-mono)] text-xs"
           style={{ color: "var(--v-dim)" }}
         >
           REF: {produit.sku}
         </span>
         <StockBadge stock={totalStock} />
+        {isPromo && (
+          <motion.span
+            initial={{ opacity: 0, scale: 0.85 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+            className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-black uppercase tracking-wider text-white"
+            style={{ backgroundColor: "#f97316" }}
+          >
+            EN PROMOTION -{tauxReduction}%
+          </motion.span>
+        )}
       </div>
 
       {/* Prix */}
       <div className="mt-5">
-        <span
-          className="font-[var(--font-mono)] font-black"
-          style={{ fontSize: "clamp(28px, 4vw, 40px)", color: "var(--v-lime)" }}
-        >
-          {prix.toLocaleString("fr-FR")}
+        {isPromo && prixPromo !== null ? (
+          <div className="flex flex-col gap-1">
+            <span
+              className="[font-family:var(--font-mono)] text-lg line-through"
+              style={{ color: "var(--v-dim)" }}
+            >
+              {prix.toLocaleString("fr-FR")} FCFA
+            </span>
+            <span
+              className="[font-family:var(--font-mono)] font-black"
+              style={{ fontSize: "clamp(28px, 4vw, 40px)", color: "var(--v-lime)" }}
+            >
+              {prixPromo.toLocaleString("fr-FR")}
+              <span
+                className="ml-1.5 [font-family:var(--font-body)] text-lg font-normal"
+                style={{ color: "var(--v-muted)" }}
+              >
+                FCFA
+              </span>
+            </span>
+          </div>
+        ) : (
           <span
-            className="ml-1.5 font-[var(--font-body)] text-lg font-normal"
-            style={{ color: "var(--v-muted)" }}
+            className="[font-family:var(--font-mono)] font-black"
+            style={{ fontSize: "clamp(28px, 4vw, 40px)", color: "var(--v-lime)" }}
           >
-            FCFA
+            {prix.toLocaleString("fr-FR")}
+            <span
+              className="ml-1.5 [font-family:var(--font-body)] text-lg font-normal"
+              style={{ color: "var(--v-muted)" }}
+            >
+              FCFA
+            </span>
           </span>
-        </span>
+        )}
       </div>
 
       {/* Description */}

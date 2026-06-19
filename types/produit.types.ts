@@ -35,6 +35,10 @@ export interface Produit {
   prixAchat: string;
   imageUrl: string | null;
   isActif: boolean;
+  enPromo: boolean;
+  prixPromo: string | null;
+  dateDebutPromo: string | null;
+  dateFinPromo: string | null;
   createdAt: string;
   updatedAt: string;
   variantes?: Variante[];

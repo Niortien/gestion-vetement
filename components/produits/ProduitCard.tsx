@@ -14,6 +14,11 @@ interface ProduitCardProps {
 export function ProduitCard({ produit, onPress }: ProduitCardProps) {
   const [imgError, setImgError] = useState(false);
   const totalStock = produit.variantes?.reduce((sum, v) => sum + v.quantiteStock, 0) ?? 0;
+  const isPromo = produit.enPromo && !!produit.prixPromo;
+  const prixVente = parseFloat(produit.prixVente);
+  const tauxReduction = isPromo
+    ? Math.round(((prixVente - parseFloat(produit.prixPromo!)) / prixVente) * 100)
+    : null;
 
   return (
     <Card
@@ -34,13 +39,29 @@ export function ProduitCard({ produit, onPress }: ProduitCardProps) {
           <div className="h-full w-full bg-gradient-to-br from-[var(--color-surface-high)] via-[color:rgba(143,126,245,0.22)] to-border" />
         )}
         <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgba(23,38,58,0.85)_0%,transparent_70%)]" />
+        {isPromo && (
+          <div className="absolute left-2 top-2 rounded-full bg-orange-500 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
+            -{tauxReduction}%
+          </div>
+        )}
       </div>
       <CardBody className="p-3">
         <p className="truncate text-sm font-semibold text-text">{produit.nom}</p>
         <p className="font-[var(--font-mono)] text-xs text-text-muted">{produit.sku}</p>
         <div className="mt-2 flex items-center justify-between">
           <StockBadge value={totalStock} />
-          <CurrencyDisplay montant={produit.prixVente} size="sm" />
+          {isPromo ? (
+            <div className="flex flex-col items-end gap-0.5">
+              <span className="text-[10px] text-text-dim line-through">
+                {prixVente.toLocaleString("fr-FR")} FCFA
+              </span>
+              <span className="[font-family:var(--font-mono)] text-sm font-bold text-orange-400">
+                {Number(produit.prixPromo).toLocaleString("fr-FR")} FCFA
+              </span>
+            </div>
+          ) : (
+            <CurrencyDisplay montant={produit.prixVente} size="sm" />
+          )}
         </div>
       </CardBody>
     </Card>

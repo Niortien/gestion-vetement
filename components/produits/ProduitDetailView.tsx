@@ -18,6 +18,7 @@ import {
   useAdjustStock,
 } from "@/features/produits/mutation/produits-mutations";
 import { ProduitDetailPanel } from "./ProduitDetailPanel";
+import { PromoInlineForm, type PromoFormData } from "@/components/promotions/PromoInlineForm";
 import type { ProduitImage, TypeMouvement, Variante } from "@/types";
 
 interface ProduitDetailViewProps {
@@ -236,6 +237,8 @@ export function ProduitDetailView({ id }: ProduitDetailViewProps) {
   const deleteMutation = useDeleteProduit(id);
   const updateMutation = useUpdateProduit(id);
 
+  const [promoExpanded, setPromoExpanded] = useState(false);
+
   const produit = data?.data;
   const mouvements = mouvData?.data ?? [];
 
@@ -318,6 +321,71 @@ export function ProduitDetailView({ id }: ProduitDetailViewProps) {
                   <CurrencyDisplay montant={produit.prixAchat} size="lg" />
                 </div>
               </div>
+            </div>
+
+            {/* Promotion */}
+            <div className="rounded-xl border border-border/80 bg-surface p-4">
+              <div className="flex items-center justify-between">
+                <p className="text-xs uppercase tracking-[0.08em] text-text-muted">Promotion</p>
+                {produit.enPromo && produit.prixPromo && (
+                  <span className="rounded-full bg-orange-500/20 px-2 py-0.5 text-[10px] font-bold text-orange-400">
+                    -{Math.round(((parseFloat(produit.prixVente) - parseFloat(produit.prixPromo)) / parseFloat(produit.prixVente)) * 100)}%
+                  </span>
+                )}
+              </div>
+              <div className="mt-2 flex items-center gap-3">
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={produit.enPromo || promoExpanded}
+                  onClick={() => {
+                    if (produit.enPromo || promoExpanded) {
+                      if (produit.enPromo) updateMutation.mutate({ enPromo: false });
+                      setPromoExpanded(false);
+                    } else {
+                      setPromoExpanded(true);
+                    }
+                  }}
+                  className={[
+                    "relative h-5 w-9 shrink-0 rounded-full transition-colors",
+                    produit.enPromo || promoExpanded ? "bg-orange-500" : "bg-border",
+                  ].join(" ")}
+                >
+                  <span
+                    className={[
+                      "absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform",
+                      produit.enPromo || promoExpanded ? "translate-x-4" : "translate-x-0.5",
+                    ].join(" ")}
+                  />
+                </button>
+                <span className="text-sm text-text-muted">
+                  {produit.enPromo ? (
+                    <>
+                      En promotion à{" "}
+                      <span className="font-semibold text-orange-400">
+                        {Number(produit.prixPromo).toLocaleString("fr-FR")} FCFA
+                      </span>
+                    </>
+                  ) : promoExpanded ? (
+                    "Définir le prix promotionnel"
+                  ) : (
+                    "Pas en promotion"
+                  )}
+                </span>
+              </div>
+              {(promoExpanded || produit.enPromo) && (
+                <PromoInlineForm
+                  produit={produit}
+                  onSave={(data: PromoFormData) => {
+                    updateMutation.mutate(
+                      { enPromo: true, prixPromo: data.prixPromo, dateDebutPromo: data.dateDebutPromo, dateFinPromo: data.dateFinPromo },
+                      { onSuccess: () => setPromoExpanded(false) }
+                    );
+                  }}
+                  onCancel={() => setPromoExpanded(false)}
+                  isSaving={updateMutation.isPending}
+                />
+              )}
             </div>
 
             <div className="rounded-xl border border-border/80 bg-surface p-4">

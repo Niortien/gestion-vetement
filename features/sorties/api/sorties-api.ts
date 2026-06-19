@@ -13,6 +13,7 @@ export interface SortiesListParams {
 export interface CreateSortieBody {
   type: TypeSortie;
   notes?: string;
+  remiseMontant?: string;
   lignes: Array<{
     varianteId: string;
     quantite: number;

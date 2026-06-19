@@ -33,6 +33,8 @@ interface RecuPrintProps {
   transactionReference?: string;
   montantRecu?: string;
   monnaieRendue?: string;
+  remiseMontant?: string;
+  totalAvantRemise?: string;
 }
 
 export function RecuPrint({
@@ -46,8 +48,11 @@ export function RecuPrint({
   transactionReference,
   montantRecu,
   monnaieRendue,
+  remiseMontant,
+  totalAvantRemise,
 }: RecuPrintProps) {
   const showCash = modePaiement === ModePaiement.CASH && !!montantRecu;
+  const showRemise = !!remiseMontant && parseFloat(remiseMontant) > 0;
 
   useEffect(() => {
     const el = document.getElementById("recu-print-root");
@@ -81,7 +86,19 @@ export function RecuPrint({
           </div>
         ))}
         <div style={{ borderTop: "1px dashed #000", margin: "6px 0" }} />
-        <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", fontSize: 13 }}>
+        {showRemise && (
+          <>
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10 }}>
+              <span>Sous-total</span>
+              <span>{Number(totalAvantRemise).toLocaleString("fr-FR")} FCFA</span>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, marginTop: 2 }}>
+              <span>Réduction</span>
+              <span>- {Number(remiseMontant).toLocaleString("fr-FR")} FCFA</span>
+            </div>
+          </>
+        )}
+        <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", fontSize: 13, marginTop: showRemise ? 4 : 0 }}>
           <span>TOTAL</span>
           <span>{Number(totalMontant).toLocaleString("fr-FR")} FCFA</span>
         </div>
@@ -147,6 +164,20 @@ export function RecuPrint({
                 </div>
               ))}
               <div className="my-2 border-t border-dashed border-gray-300" />
+
+              {/* Remise */}
+              {showRemise && (
+                <div className="mb-1 space-y-0.5 text-[10px] text-gray-600">
+                  <div className="flex justify-between">
+                    <span>Sous-total</span>
+                    <span>{Number(totalAvantRemise).toLocaleString("fr-FR")} FCFA</span>
+                  </div>
+                  <div className="flex justify-between text-red-600">
+                    <span>Réduction</span>
+                    <span>− {Number(remiseMontant).toLocaleString("fr-FR")} FCFA</span>
+                  </div>
+                </div>
+              )}
 
               {/* Total */}
               <div className="flex justify-between font-bold">

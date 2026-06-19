@@ -19,6 +19,8 @@ const MODE_CARDS: ModeCard[] = [
 
 export interface SortiePaiementStepProps {
   totalMontant: string;
+  totalAvantRemise?: string;
+  remiseMontant?: string;
   selected: ModePaiement | null;
   onSelect: (mode: ModePaiement) => void;
   reference: string;
@@ -31,6 +33,8 @@ export interface SortiePaiementStepProps {
 
 export function SortiePaiementStep({
   totalMontant,
+  totalAvantRemise,
+  remiseMontant,
   selected,
   onSelect,
   reference,
@@ -44,15 +48,33 @@ export function SortiePaiementStep({
   const recu = parseFloat(montantRecu || "0");
   const montantInsuffisant = montantRecu !== "" && recu < total;
   const monnaieRendue = recu - total;
+  const showRemise = !!remiseMontant && parseFloat(remiseMontant) > 0;
 
   return (
     <div className="space-y-4">
-      {/* Total */}
+      {/* Total — avec ou sans remise */}
       <div className="rounded-xl border border-[var(--color-cash)]/40 bg-[color:rgba(143,126,245,0.10)] p-4 text-center">
-        <p className="text-xs uppercase tracking-wide text-text-muted">Montant à encaisser</p>
-        <p className="mt-1 font-[var(--font-display)] text-3xl text-[var(--color-cash)]">
-          {Number(totalMontant).toLocaleString("fr-FR")} FCFA
-        </p>
+        {showRemise ? (
+          <>
+            <p className="text-xs text-text-dim line-through">
+              {Number(totalAvantRemise).toLocaleString("fr-FR")} FCFA
+            </p>
+            <p className="text-xs text-[var(--color-in)]">
+              − {Number(remiseMontant).toLocaleString("fr-FR")} FCFA de réduction
+            </p>
+            <p className="mt-1 font-[var(--font-display)] text-3xl text-[var(--color-cash)]">
+              {Number(totalMontant).toLocaleString("fr-FR")} FCFA
+            </p>
+            <p className="mt-0.5 text-[10px] uppercase tracking-wide text-text-muted">À encaisser</p>
+          </>
+        ) : (
+          <>
+            <p className="text-xs uppercase tracking-wide text-text-muted">Montant à encaisser</p>
+            <p className="mt-1 font-[var(--font-display)] text-3xl text-[var(--color-cash)]">
+              {Number(totalMontant).toLocaleString("fr-FR")} FCFA
+            </p>
+          </>
+        )}
       </div>
 
       {/* Mode de paiement — 5 colonnes compactes sur mobile */}
