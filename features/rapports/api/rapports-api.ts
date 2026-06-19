@@ -30,6 +30,30 @@ export interface ExportParams {
   boutiqueId?: string;
 }
 
+export interface ResumeDashboardParams {
+  dateDebut?: string;
+  dateFin?: string;
+  boutiqueId?: string;
+}
+
+export interface ResumeDashboardData {
+  periode: { debut: string; fin: string };
+  ventes: Array<{ periode: string; totalVentes: string; nombreSorties: number }>;
+  topProduits: Array<{ produitId: string; nom: string; sku: string; quantiteTotale: number; montantTotal: string }>;
+  diagnostic: {
+    totalProduits: number;
+    totalVariantes: number;
+    totalEntrees: number;
+    totalVentesAllTime: number;
+    totalVentes7j: number;
+    sessionsOuvertes: number;
+    hasData: boolean;
+  };
+}
+
+export const getResumeDashboard = (params: ResumeDashboardParams) =>
+  apiGet<ResumeDashboardData>("/rapports/resume-dashboard", params as unknown as Record<string, unknown>);
+
 export const getVentes = (params: RapportVentesParams) =>
   apiGet<Array<{ periode: string; totalVentes: string; nombreTransactions: number; nombreSorties: number }>>(
     "/rapports/ventes",

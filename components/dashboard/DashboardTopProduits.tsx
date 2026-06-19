@@ -1,5 +1,7 @@
 "use client";
 
+import type { ResumeDashboardData } from "@/features/rapports/api/rapports-api";
+
 interface TopProduit {
   produitId: string;
   nom: string;
@@ -11,9 +13,10 @@ interface DashboardTopProduitsProps {
   produits: TopProduit[];
   isLoading: boolean;
   isError?: boolean;
+  diagnostic?: ResumeDashboardData["diagnostic"];
 }
 
-export function DashboardTopProduits({ produits, isLoading, isError }: DashboardTopProduitsProps) {
+export function DashboardTopProduits({ produits, isLoading, isError, diagnostic }: DashboardTopProduitsProps) {
   return (
     <div className="rounded-xl border border-border/60 bg-[var(--color-surface-high)] p-4">
       <p className="mb-3 text-xs uppercase tracking-wide text-text-muted">Top 5 produits — 7j</p>
@@ -32,14 +35,34 @@ export function DashboardTopProduits({ produits, isLoading, isError }: Dashboard
       ) : produits.length === 0 ? (
         <div className="space-y-2">
           <p className="text-sm text-text-muted">Aucune vente sur les 7 derniers jours</p>
-          <div className="rounded-md border border-accent/20 bg-accent/5 px-3 py-2">
-            <p className="text-[11px] text-accent font-medium">Flux requis :</p>
-            <ol className="mt-1 list-decimal pl-3 text-[11px] text-text-muted space-y-0.5">
-              <li>Crée des <span className="font-semibold text-text">Entrées de stock</span> (réception fournisseur)</li>
-              <li>Ouvre une <span className="font-semibold text-text">session Caisse</span></li>
-              <li>Crée une <span className="font-semibold text-text">Sortie → VENTE</span></li>
-            </ol>
-          </div>
+          {diagnostic && (
+            <div className="rounded-md border border-border/40 bg-[var(--color-surface)] px-3 py-2.5 text-[11px]">
+              <div className="flex items-center justify-between">
+                <span className="text-text-muted">Produits catalogue</span>
+                <span className={`font-mono font-semibold ${diagnostic.totalProduits > 0 ? "text-in" : "text-out"}`}>
+                  {diagnostic.totalProduits}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-text-muted">Entrées de stock</span>
+                <span className={`font-mono font-semibold ${diagnostic.totalEntrees > 0 ? "text-in" : "text-out"}`}>
+                  {diagnostic.totalEntrees}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-text-muted">Ventes (tous temps)</span>
+                <span className={`font-mono font-semibold ${diagnostic.totalVentesAllTime > 0 ? "text-in" : "text-out"}`}>
+                  {diagnostic.totalVentesAllTime}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-text-muted">Session caisse ouverte</span>
+                <span className={`font-mono font-semibold ${diagnostic.sessionsOuvertes > 0 ? "text-in" : "text-out"}`}>
+                  {diagnostic.sessionsOuvertes > 0 ? "Oui" : "Non"}
+                </span>
+              </div>
+            </div>
+          )}
         </div>
       ) : (
         <ol className="space-y-2">

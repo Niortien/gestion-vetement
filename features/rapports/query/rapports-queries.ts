@@ -7,22 +7,36 @@ import {
   exportExcel,
   exportPdf,
   getFluxTresorerie,
+  getResumeDashboard,
   getStockValeur,
   getTopProduits,
   getVentes,
   type ExportParams,
   type FluxTresorerieParams,
   type RapportVentesParams,
+  type ResumeDashboardParams,
   type TopProduitsParams,
 } from "../api/rapports-api";
 
 export const rapportKeys = {
   all: ["rapports"] as const,
+  resumeDashboard: (params: ResumeDashboardParams) => ["rapports", "resume-dashboard", params] as const,
   ventes: (params: RapportVentesParams) => ["rapports", "ventes", params] as const,
   stockValeur: (boutiqueId?: string) => ["rapports", "stock-valeur", boutiqueId] as const,
   topProduits: (params: TopProduitsParams) => ["rapports", "top-produits", params] as const,
   fluxTresorerie: (params: FluxTresorerieParams) => ["rapports", "flux-tresorerie", params] as const,
 };
+
+export function useResumeDashboard(params: ResumeDashboardParams = {}) {
+  const token = useAuthStore((s) => s.accessToken);
+  const boutiqueId = useBoutiqueId();
+  const effectiveParams = { ...params, boutiqueId };
+  return useQuery({
+    queryKey: rapportKeys.resumeDashboard(effectiveParams),
+    queryFn: () => getResumeDashboard(effectiveParams),
+    enabled: !!token,
+  });
+}
 
 export function useVentes(params: RapportVentesParams) {
   const token = useAuthStore((s) => s.accessToken);

@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { PageWrapper } from "@/components/common/PageWrapper";
 import { useResumeJour } from "@/features/caisse/query/caisse-queries";
-import { useVentes, useTopProduits, useStockValeur } from "@/features/rapports/query/rapports-queries";
+import { useResumeDashboard, useStockValeur } from "@/features/rapports/query/rapports-queries";
 import { useStockAlertes } from "@/features/stock/query/stock-queries";
 import { useEntreesList } from "@/features/entrees/query/entrees-queries";
 import { useSortiesList } from "@/features/sorties/query/sorties-queries";
@@ -19,21 +19,15 @@ const DashboardSparkline = dynamic(
 
 export function DashboardView() {
   const { dateDebut, dateFin } = getPeriodeRange("7j");
-  const params7j = { dateDebut, dateFin };
 
   const { data: resumeData, isLoading: resumeLoading, isError: resumeError } = useResumeJour();
   const { data: stockValeurData, isError: stockValeurError } = useStockValeur();
   const { data: alertesData } = useStockAlertes();
   const {
-    data: ventesData,
-    isLoading: ventesLoading,
-    isError: ventesError,
-  } = useVentes({ ...params7j, groupBy: "jour" });
-  const {
-    data: topProduitsData,
-    isLoading: topLoading,
-    isError: topError,
-  } = useTopProduits({ ...params7j });
+    data: dashboardData,
+    isLoading: dashboardLoading,
+    isError: dashboardError,
+  } = useResumeDashboard({ dateDebut, dateFin });
   const { data: entreesData, isLoading: entreesLoading } = useEntreesList({ limit: 5 });
   const { data: sortiesData, isLoading: sortiesLoading } = useSortiesList({ limit: 5 });
 
@@ -41,8 +35,12 @@ export function DashboardView() {
   const stockValeurRaw = stockValeurData?.data?.valeurTotaleAchat ?? "0";
   const nombreProduits = stockValeurData?.data?.nombreProduits ?? 0;
   const alertesCount = alertesData?.data?.length ?? 0;
-  const ventes7j = ventesData?.data ?? [];
-  const topProduits = topProduitsData?.data ?? [];
+
+  const dashboard = dashboardData?.data;
+  const ventes7j = dashboard?.ventes ?? [];
+  const topProduits = dashboard?.topProduits ?? [];
+  const diagnostic = dashboard?.diagnostic;
+
   const entrees = entreesData?.pages.flatMap((p) => p.data) ?? [];
   const sorties = sortiesData?.pages.flatMap((p) => p.data) ?? [];
 
@@ -68,13 +66,22 @@ export function DashboardView() {
 
       {/* Sparkline + Top produits */}
       <div className="grid gap-4 md:grid-cols-2">
-        {!ventesLoading && (
-          <DashboardSparkline data={ventes7j} isError={ventesError} />
+        {!dashboardLoading && (
+          <DashboardSparkline
+            data={ventes7j}
+            isError={dashboardError}
+            diagnostic={diagnostic}
+          />
         )}
-        {ventesLoading && (
+        {dashboardLoading && (
           <div className="h-40 animate-pulse rounded-xl border border-border/40 bg-[var(--color-surface-high)]" />
         )}
-        <DashboardTopProduits produits={topProduits} isLoading={topLoading} isError={topError} />
+        <DashboardTopProduits
+          produits={topProduits}
+          isLoading={dashboardLoading}
+          isError={dashboardError}
+          diagnostic={diagnostic}
+        />
       </div>
 
       {/* Activity feed */}
