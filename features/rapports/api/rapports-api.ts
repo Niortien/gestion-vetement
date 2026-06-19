@@ -5,6 +5,7 @@ export interface RapportVentesParams {
   dateDebut: string;
   dateFin: string;
   groupBy?: "jour" | "semaine" | "mois";
+  boutiqueId?: string;
 }
 
 export interface TopProduitsParams {
@@ -12,18 +13,21 @@ export interface TopProduitsParams {
   dateFin: string;
   limit?: number;
   groupBy?: "jour" | "semaine" | "mois";
+  boutiqueId?: string;
 }
 
 export interface FluxTresorerieParams {
   dateDebut: string;
   dateFin: string;
   groupBy?: "jour" | "semaine" | "mois";
+  boutiqueId?: string;
 }
 
 export interface ExportParams {
   dateDebut?: string;
   dateFin?: string;
   groupBy?: "jour" | "semaine" | "mois";
+  boutiqueId?: string;
 }
 
 export const getVentes = (params: RapportVentesParams) =>
@@ -32,9 +36,10 @@ export const getVentes = (params: RapportVentesParams) =>
     params as unknown as Record<string, unknown>
   );
 
-export const getStockValeur = () =>
+export const getStockValeur = (boutiqueId?: string) =>
   apiGet<{ valeurTotaleAchat: string; valeurTotaleVente: string; nombreVariantes: number; nombreProduits: number }>(
-    "/rapports/stock-valeur"
+    "/rapports/stock-valeur",
+    boutiqueId ? { boutiqueId } : undefined
   );
 
 export const getTopProduits = (params: TopProduitsParams) =>

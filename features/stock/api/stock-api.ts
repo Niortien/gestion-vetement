@@ -9,6 +9,7 @@ export interface StockListParams {
   couleur?: string;
   categorieId?: string;
   sortOrder?: "asc" | "desc";
+  boutiqueId?: string;
 }
 
 export interface StockMouvementsParams {
@@ -19,13 +20,14 @@ export interface StockMouvementsParams {
   dateFin?: string;
   produitId?: string;
   sortOrder?: "asc" | "desc";
+  boutiqueId?: string;
 }
 
 export const getStock = (params?: StockListParams) =>
   apiGet<StockItem[]>("/stock", params as Record<string, unknown> | undefined);
 
-export const getStockAlertes = () =>
-  apiGet<StockAlerte[]>("/stock/alertes");
+export const getStockAlertes = (boutiqueId?: string) =>
+  apiGet<StockAlerte[]>("/stock/alertes", boutiqueId ? { boutiqueId } : undefined);
 
 export const getStockMouvements = (params?: StockMouvementsParams) =>
   apiGet<MouvementStock[]>("/stock/mouvements", params as Record<string, unknown> | undefined);

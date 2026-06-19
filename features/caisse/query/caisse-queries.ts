@@ -1,6 +1,7 @@
 "use client";
 
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useBoutiqueId } from "@/hooks/useBoutiqueId";
 import {
   getActiveSession,
   getResumeJour,
@@ -13,33 +14,37 @@ import {
 export const caisseKeys = {
   all: ["caisse"] as const,
   sessions: (params: SessionsListParams) => ["caisse", "sessions", params] as const,
-  activeSession: () => ["caisse", "active-session"] as const,
-  resumeJour: () => ["caisse", "resume-jour"] as const,
+  activeSession: (boutiqueId?: string) => ["caisse", "active-session", boutiqueId] as const,
+  resumeJour: (boutiqueId?: string) => ["caisse", "resume-jour", boutiqueId] as const,
   transactions: (sessionId: string, params: SessionTransactionsParams) =>
     ["caisse", "transactions", sessionId, params] as const,
 };
 
 export function useActiveSession() {
+  const boutiqueId = useBoutiqueId();
   return useQuery({
-    queryKey: caisseKeys.activeSession(),
-    queryFn: getActiveSession,
+    queryKey: caisseKeys.activeSession(boutiqueId),
+    queryFn: () => getActiveSession(boutiqueId),
     refetchInterval: 10_000,
   });
 }
 
 export function useResumeJour() {
+  const boutiqueId = useBoutiqueId();
   return useQuery({
-    queryKey: caisseKeys.resumeJour(),
-    queryFn: getResumeJour,
+    queryKey: caisseKeys.resumeJour(boutiqueId),
+    queryFn: () => getResumeJour(boutiqueId),
     refetchInterval: 5_000,
   });
 }
 
 // GET /caisse/sessions — liste paginée de toutes les sessions
 export function useSessionsList(params: SessionsListParams = {}) {
+  const boutiqueId = useBoutiqueId();
+  const effectiveParams = { ...params, boutiqueId };
   return useInfiniteQuery({
-    queryKey: caisseKeys.sessions(params),
-    queryFn: ({ pageParam = 1 }) => listSessions({ ...params, page: pageParam as number }),
+    queryKey: caisseKeys.sessions(effectiveParams),
+    queryFn: ({ pageParam = 1 }) => listSessions({ ...effectiveParams, page: pageParam as number }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
       const current = lastPage.meta.page ?? 1;

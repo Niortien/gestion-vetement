@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { useBoutiqueId } from "@/hooks/useBoutiqueId";
 import {
   exportExcel,
   exportPdf,
@@ -17,36 +18,43 @@ import {
 export const rapportKeys = {
   all: ["rapports"] as const,
   ventes: (params: RapportVentesParams) => ["rapports", "ventes", params] as const,
-  stockValeur: () => ["rapports", "stock-valeur"] as const,
+  stockValeur: (boutiqueId?: string) => ["rapports", "stock-valeur", boutiqueId] as const,
   topProduits: (params: TopProduitsParams) => ["rapports", "top-produits", params] as const,
   fluxTresorerie: (params: FluxTresorerieParams) => ["rapports", "flux-tresorerie", params] as const,
 };
 
 export function useVentes(params: RapportVentesParams) {
+  const boutiqueId = useBoutiqueId();
+  const effectiveParams = { ...params, boutiqueId };
   return useQuery({
-    queryKey: rapportKeys.ventes(params),
-    queryFn: () => getVentes(params),
+    queryKey: rapportKeys.ventes(effectiveParams),
+    queryFn: () => getVentes(effectiveParams),
   });
 }
 
 export function useStockValeur() {
+  const boutiqueId = useBoutiqueId();
   return useQuery({
-    queryKey: rapportKeys.stockValeur(),
-    queryFn: getStockValeur,
+    queryKey: rapportKeys.stockValeur(boutiqueId),
+    queryFn: () => getStockValeur(boutiqueId),
   });
 }
 
 export function useTopProduits(params: TopProduitsParams) {
+  const boutiqueId = useBoutiqueId();
+  const effectiveParams = { ...params, boutiqueId };
   return useQuery({
-    queryKey: rapportKeys.topProduits(params),
-    queryFn: () => getTopProduits(params),
+    queryKey: rapportKeys.topProduits(effectiveParams),
+    queryFn: () => getTopProduits(effectiveParams),
   });
 }
 
 export function useFluxTresorerie(params: FluxTresorerieParams) {
+  const boutiqueId = useBoutiqueId();
+  const effectiveParams = { ...params, boutiqueId };
   return useQuery({
-    queryKey: rapportKeys.fluxTresorerie(params),
-    queryFn: () => getFluxTresorerie(params),
+    queryKey: rapportKeys.fluxTresorerie(effectiveParams),
+    queryFn: () => getFluxTresorerie(effectiveParams),
   });
 }
 

@@ -2,6 +2,7 @@
 
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useAuthStore } from "@/stores/authStore";
+import { useBoutiqueId } from "@/hooks/useBoutiqueId";
 import {
   getSortieById,
   getSorties,
@@ -16,9 +17,11 @@ export const sortieKeys = {
 
 export function useSortiesList(params: SortiesListParams = {}) {
   const token = useAuthStore((s) => s.accessToken);
+  const boutiqueId = useBoutiqueId();
+  const effectiveParams = { ...params, boutiqueId };
   return useInfiniteQuery({
-    queryKey: sortieKeys.list(params),
-    queryFn: ({ pageParam = 1 }) => getSorties({ ...params, page: pageParam as number }),
+    queryKey: sortieKeys.list(effectiveParams),
+    queryFn: ({ pageParam = 1 }) => getSorties({ ...effectiveParams, page: pageParam as number }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
       const current = lastPage.meta.page ?? 1;

@@ -34,7 +34,7 @@ export function LoginView() {
     setIsSubmitting(true);
 
     try {
-      const response = await apiPost<{ accessToken: string; refreshToken: string; user: { id: string; email: string; role: string } }, LoginInput>(
+      const response = await apiPost<{ accessToken: string; refreshToken: string; user: { id: string; email: string; role: string; boutiqueId?: string | null } }, LoginInput>(
         "/auth/login",
         values
       );
@@ -43,7 +43,7 @@ export function LoginView() {
       const role = user.role as Role;
 
       setTokens(accessToken, refreshToken);
-      setUser({ id: user.id, email: user.email, role });
+      setUser({ id: user.id, email: user.email, role, boutiqueId: user.boutiqueId ?? null });
       toast.success("Connexion réussie");
       router.push("/stock");
     } catch (error) {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useBoutiqueId } from "@/hooks/useBoutiqueId";
 import {
   getStock,
   getStockAlertes,
@@ -12,14 +13,16 @@ import {
 export const stockKeys = {
   all: ["stock"] as const,
   list: (params: StockListParams) => ["stock", "list", params] as const,
-  alertes: () => ["stock", "alertes"] as const,
+  alertes: (boutiqueId?: string) => ["stock", "alertes", boutiqueId] as const,
   mouvements: (params: StockMouvementsParams) => ["stock", "mouvements", params] as const,
 };
 
 export function useStockList(params: StockListParams = {}) {
+  const boutiqueId = useBoutiqueId();
+  const effectiveParams = { ...params, boutiqueId };
   return useInfiniteQuery({
-    queryKey: stockKeys.list(params),
-    queryFn: ({ pageParam = 1 }) => getStock({ ...params, page: pageParam as number }),
+    queryKey: stockKeys.list(effectiveParams),
+    queryFn: ({ pageParam = 1 }) => getStock({ ...effectiveParams, page: pageParam as number }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
       const current = lastPage.meta.page ?? 1;
@@ -30,15 +33,18 @@ export function useStockList(params: StockListParams = {}) {
 }
 
 export function useStockAlertes() {
+  const boutiqueId = useBoutiqueId();
   return useQuery({
-    queryKey: stockKeys.alertes(),
-    queryFn: getStockAlertes,
+    queryKey: stockKeys.alertes(boutiqueId),
+    queryFn: () => getStockAlertes(boutiqueId),
   });
 }
 
 export function useStockMouvements(params: StockMouvementsParams = {}) {
+  const boutiqueId = useBoutiqueId();
+  const effectiveParams = { ...params, boutiqueId };
   return useQuery({
-    queryKey: stockKeys.mouvements(params),
-    queryFn: () => getStockMouvements(params),
+    queryKey: stockKeys.mouvements(effectiveParams),
+    queryFn: () => getStockMouvements(effectiveParams),
   });
 }

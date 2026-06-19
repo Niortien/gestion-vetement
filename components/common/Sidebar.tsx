@@ -2,9 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Button } from "@heroui/react";
+import { Button, Select, SelectItem } from "@heroui/react";
 import { cn } from "@/lib/utils";
 import { useLogout } from "@/features/auth/mutation/auth-mutations";
+import { useAuthStore } from "@/stores/authStore";
+import { useAdminStore } from "@/stores/adminStore";
+import { useBoutiques } from "@/features/boutiques/query/boutiques-queries";
 
 const ITEMS = [
   { href: "/dashboard", label: "Dashboard" },
@@ -17,13 +20,52 @@ const ITEMS = [
   { href: "/promotions", label: "Promotions" },
 ];
 
+const ADMIN_ITEMS = [
+  { href: "/admin/boutiques", label: "Boutiques" },
+  { href: "/admin/utilisateurs", label: "Utilisateurs" },
+];
+
 export function Sidebar() {
   const pathname = usePathname();
   const logout = useLogout();
+  const user = useAuthStore((s) => s.user);
+  const { currentBoutiqueId, setCurrentBoutique } = useAdminStore();
+  const { data: boutiquesRes } = useBoutiques();
+  const boutiques = boutiquesRes?.data ?? [];
+
+  const isAdmin = user?.role === "ADMIN";
 
   return (
     <aside className="hidden h-full w-56 flex-col gap-3 overflow-y-auto border-r border-border bg-surface p-4 lg:flex">
       <h2 className="font-[var(--font-display)] text-xl text-text">Riviere</h2>
+
+      {isAdmin && boutiques.length > 0 && (
+        <Select
+          size="sm"
+          label="Boutique"
+          selectedKeys={[currentBoutiqueId]}
+          onSelectionChange={(keys) => {
+            const val = Array.from(keys)[0] as string;
+            setCurrentBoutique(val ?? "all");
+          }}
+          classNames={{ trigger: "bg-surface/60 border border-border" }}
+          aria-label="Sélectionner une boutique"
+        >
+          <>
+            <SelectItem key="all">Toutes les boutiques</SelectItem>
+            {boutiques.map((b) => (
+              <SelectItem key={b.id}>{b.nom}{b.ville ? ` · ${b.ville}` : ""}</SelectItem>
+            ))}
+          </>
+        </Select>
+      )}
+
+      {!isAdmin && user?.boutiqueId && boutiques.length > 0 && (
+        <div className="rounded-md border border-accent/30 bg-accent/10 px-3 py-1.5 text-xs text-accent">
+          {boutiques.find((b) => b.id === user.boutiqueId)?.nom ?? "Ma boutique"}
+        </div>
+      )}
+
       <nav className="flex flex-col gap-2">
         {ITEMS.map((item) => {
           const active = pathname === item.href;
@@ -39,7 +81,30 @@ export function Sidebar() {
             </Button>
           );
         })}
+
+        {isAdmin && (
+          <>
+            <p className="mt-2 px-2 text-[10px] font-semibold uppercase tracking-widest text-text-muted/60">
+              Administration
+            </p>
+            {ADMIN_ITEMS.map((item) => {
+              const active = pathname === item.href;
+              return (
+                <Button
+                  key={item.href}
+                  as={Link}
+                  href={item.href}
+                  variant={active ? "solid" : "light"}
+                  className={cn("justify-start", active ? "bg-accent text-black" : "text-text-muted")}
+                >
+                  {item.label}
+                </Button>
+              );
+            })}
+          </>
+        )}
       </nav>
+
       <div className="mt-auto flex flex-col gap-2">
         <Button
           as={Link}

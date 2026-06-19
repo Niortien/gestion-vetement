@@ -8,6 +8,7 @@ export interface SessionsListParams {
   modePaiement?: ModePaiement;
   dateDebut?: string;
   dateFin?: string;
+  boutiqueId?: string;
 }
 
 export interface SessionTransactionsParams {
@@ -37,11 +38,11 @@ export interface CreateTransactionBody {
 export const listSessions = (params?: SessionsListParams) =>
   apiGet<Session[]>("/caisse/sessions", params as Record<string, unknown> | undefined);
 
-export const getActiveSession = () =>
-  apiGet<Session | null>("/caisse/sessions/active");
+export const getActiveSession = (boutiqueId?: string) =>
+  apiGet<Session | null>("/caisse/sessions/active", boutiqueId ? { boutiqueId } : undefined);
 
-export const ouvrirSession = (body: OuvrirSessionBody) =>
-  apiPost<Session, OuvrirSessionBody>("/caisse/sessions/ouvrir", body);
+export const ouvrirSession = (body: OuvrirSessionBody, boutiqueId?: string) =>
+  apiPost<Session, OuvrirSessionBody>("/caisse/sessions/ouvrir", body, boutiqueId ? { boutiqueId } : undefined);
 
 export const fermerSession = (id: string, body: FermerSessionBody) =>
   apiPost<Session, FermerSessionBody>(`/caisse/sessions/${id}/fermer`, body);
@@ -53,5 +54,5 @@ export const listSessionTransactions = (sessionId: string, params?: SessionTrans
 export const createTransaction = (body: CreateTransactionBody) =>
   apiPost<Transaction, CreateTransactionBody>("/caisse/transactions", body);
 
-export const getResumeJour = () =>
-  apiGet<ResumeJour>("/caisse/resume-jour");
+export const getResumeJour = (boutiqueId?: string) =>
+  apiGet<ResumeJour>("/caisse/resume-jour", boutiqueId ? { boutiqueId } : undefined);

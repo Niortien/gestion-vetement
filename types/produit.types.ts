@@ -13,6 +13,13 @@ export interface Categorie {
   description: string | null;
 }
 
+export interface VarianteBoutique {
+  id: string;
+  nom: string;
+  ville: string | null;
+  whatsapp: string | null;
+}
+
 export interface Variante {
   id: string;
   produitId: string;
@@ -20,6 +27,8 @@ export interface Variante {
   couleur: string;
   quantiteStock: number;
   seuilAlerte: number;
+  boutiqueId: string | null;
+  boutique?: VarianteBoutique | null;
   createdAt: string;
   updatedAt: string;
 }

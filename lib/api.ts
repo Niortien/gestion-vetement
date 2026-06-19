@@ -146,17 +146,19 @@ export async function apiGet<T, P extends object = Record<string, unknown>>(
 
 export async function apiPost<T, B extends object = Record<string, unknown>>(
   url: string,
-  body: B
+  body: B,
+  params?: Record<string, unknown>
 ): Promise<{ data: T; meta: PageMeta }> {
-  const response = await api.post<ApiResponse<T>>(url, body);
+  const response = await api.post<ApiResponse<T>>(url, body, { params });
   return unwrapResponse(response.data);
 }
 
 export async function apiPatch<T, B extends object = Record<string, unknown>>(
   url: string,
-  body: B
+  body: B,
+  params?: Record<string, unknown>
 ): Promise<{ data: T; meta: PageMeta }> {
-  const response = await api.patch<ApiResponse<T>>(url, body);
+  const response = await api.patch<ApiResponse<T>>(url, body, { params });
   return unwrapResponse(response.data);
 }
 

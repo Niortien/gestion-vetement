@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { disconnectCaisseSocket, getCaisseSocket } from "@/lib/socket";
 import { useAuthStore } from "@/stores/authStore";
+import { useBoutiqueId } from "@/hooks/useBoutiqueId";
 import { useCaisseStore } from "@/stores/caisseStore";
 import type { Transaction } from "@/types";
 import {
@@ -19,13 +20,13 @@ import { caisseKeys } from "../query/caisse-queries";
 
 export function useOuvrirSession() {
   const qc = useQueryClient();
+  const boutiqueId = useBoutiqueId();
   const setSession = useCaisseStore((s) => s.setSession);
   return useMutation({
-    mutationFn: (body: OuvrirSessionBody) => ouvrirSession(body),
+    mutationFn: (body: OuvrirSessionBody) => ouvrirSession(body, boutiqueId),
     onSuccess: async ({ data }) => {
       setSession(data);
-      await qc.invalidateQueries({ queryKey: caisseKeys.activeSession() });
-      await qc.invalidateQueries({ queryKey: caisseKeys.resumeJour() });
+      await qc.invalidateQueries({ queryKey: ["caisse"] });
       toast.success("Session ouverte");
     },
     onError: (err: { message?: string }) => {

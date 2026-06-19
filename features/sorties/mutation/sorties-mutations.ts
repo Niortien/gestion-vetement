@@ -3,6 +3,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import type { AppError } from "@/types";
+import { useBoutiqueId } from "@/hooks/useBoutiqueId";
 import {
   annulerSortie,
   createSortie,
@@ -20,8 +21,9 @@ function isAppError(e: unknown): e is AppError {
 
 export function useCreateSortie() {
   const qc = useQueryClient();
+  const boutiqueId = useBoutiqueId();
   return useMutation({
-    mutationFn: (body: CreateSortieBody) => createSortie(body),
+    mutationFn: (body: CreateSortieBody) => createSortie(body, boutiqueId),
     onError: (error) => {
       if (!isAppError(error)) {
         toast.error("Erreur inattendue");

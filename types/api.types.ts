@@ -23,3 +23,13 @@ export interface AppError {
   message: string;
   details?: Record<string, unknown>;
 }
+
+export interface Boutique {
+  id: string;
+  nom: string;
+  adresse: string | null;
+  ville: string | null;
+  whatsapp: string | null;
+  createdAt: string;
+  updatedAt: string;
+}

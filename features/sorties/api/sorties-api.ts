@@ -8,6 +8,7 @@ export interface SortiesListParams {
   dateDebut?: string;
   dateFin?: string;
   sortOrder?: "asc" | "desc";
+  boutiqueId?: string;
 }
 
 export interface CreateSortieBody {
@@ -28,8 +29,8 @@ export const getSorties = (params?: SortiesListParams) =>
 export const getSortieById = (id: string) =>
   apiGet<Sortie>(`/sorties/${id}`);
 
-export const createSortie = (body: CreateSortieBody) =>
-  apiPost<Sortie, CreateSortieBody>("/sorties", body);
+export const createSortie = (body: CreateSortieBody, boutiqueId?: string) =>
+  apiPost<Sortie, CreateSortieBody>("/sorties", body, boutiqueId ? { boutiqueId } : undefined);
 
 export interface UpdateSortieBody {
   notes?: string;

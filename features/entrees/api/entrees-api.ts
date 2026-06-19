@@ -8,6 +8,7 @@ export interface EntreesListParams {
   dateFin?: string;
   fournisseur?: string;
   sortOrder?: "asc" | "desc";
+  boutiqueId?: string;
 }
 
 export interface NewProduitForEntree {
@@ -39,8 +40,8 @@ export const getEntrees = (params?: EntreesListParams) =>
 export const getEntreeById = (id: string) =>
   apiGet<Entree>(`/entrees/${id}`);
 
-export const createEntree = (body: CreateEntreeBody) =>
-  apiPost<Entree, CreateEntreeBody>("/entrees", body);
+export const createEntree = (body: CreateEntreeBody, boutiqueId?: string) =>
+  apiPost<Entree, CreateEntreeBody>("/entrees", body, boutiqueId ? { boutiqueId } : undefined);
 
 export interface UpdateEntreeBody {
   fournisseur?: string;

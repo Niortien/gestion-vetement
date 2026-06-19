@@ -1,6 +1,7 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useBoutiqueId } from "@/hooks/useBoutiqueId";
 import {
   annulerEntree,
   createEntree,
@@ -14,8 +15,9 @@ import { produitKeys } from "@/features/produits/query/produits-queries";
 
 export function useCreateEntree() {
   const qc = useQueryClient();
+  const boutiqueId = useBoutiqueId();
   return useMutation({
-    mutationFn: (body: CreateEntreeBody) => createEntree(body),
+    mutationFn: (body: CreateEntreeBody) => createEntree(body, boutiqueId),
     onSuccess: async () => {
       await qc.invalidateQueries({ queryKey: entreeKeys.all });
       await qc.invalidateQueries({ queryKey: ["stock"] });
