@@ -2,12 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Button, Select, SelectItem } from "@heroui/react";
+import { Button } from "@heroui/react";
 import { cn } from "@/lib/utils";
 import { useLogout } from "@/features/auth/mutation/auth-mutations";
 import { useAuthStore } from "@/stores/authStore";
-import { useAdminStore } from "@/stores/adminStore";
-import { useBoutiques } from "@/features/boutiques/query/boutiques-queries";
+import { AdminBoutiqueSelect } from "./AdminBoutiqueSelect";
 
 const ITEMS = [
   { href: "/dashboard", label: "Dashboard" },
@@ -24,41 +23,6 @@ const ADMIN_ITEMS = [
   { href: "/admin/boutiques", label: "Boutiques" },
   { href: "/admin/utilisateurs", label: "Utilisateurs" },
 ];
-
-// Composant isolé — useBoutiques() n'est exécuté que pour les admins
-function AdminBoutiqueSelect() {
-  const { currentBoutiqueId, setCurrentBoutique } = useAdminStore();
-  const { data: boutiquesRes } = useBoutiques();
-  const boutiques = boutiquesRes?.data ?? [];
-
-  const items = [
-    { key: "all", label: "Toutes les boutiques" },
-    ...boutiques.map((b) => ({
-      key: b.id,
-      label: b.nom + (b.ville ? ` · ${b.ville}` : ""),
-    })),
-  ];
-
-  return (
-    <Select
-      size="sm"
-      label="Boutique active"
-      items={items}
-      selectedKeys={new Set([currentBoutiqueId])}
-      onSelectionChange={(keys) => {
-        const val = Array.from(keys)[0] as string | undefined;
-        setCurrentBoutique(val ?? "all");
-      }}
-      classNames={{
-        trigger: "bg-surface/60 border border-border",
-        value: "text-text text-sm font-semibold",
-      }}
-      aria-label="Sélectionner une boutique"
-    >
-      {(item) => <SelectItem key={item.key}>{item.label}</SelectItem>}
-    </Select>
-  );
-}
 
 export function Sidebar() {
   const pathname = usePathname();
