@@ -122,7 +122,7 @@ export function ActiviteView() {
 
   const { data: ventesData, isLoading: ventesLoading } = useVentes(params);
   const { data: fluxData, isLoading: fluxLoading } = useFluxTresorerie(params);
-  const { data: topData, isLoading: topLoading } = useTopProduits({ ...params, limit: 10 });
+  const { data: topData, isLoading: topLoading } = useTopProduits(params);
   const { data: stockValeur } = useStockValeur();
   const { data: alertes } = useStockAlertes();
   const { data: resume } = useResumeJour();

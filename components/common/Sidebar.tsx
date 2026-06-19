@@ -15,7 +15,6 @@ const ITEMS = [
   { href: "/sorties", label: "Sorties" },
   { href: "/produits", label: "Produits" },
   { href: "/promotions", label: "Promotions" },
-  { href: "/rapports", label: "Rapports" },
 ];
 
 export function Sidebar() {
