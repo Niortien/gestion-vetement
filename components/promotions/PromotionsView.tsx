@@ -117,7 +117,7 @@ export function PromotionsView() {
   const [filterMode, setFilterMode] = useState<FilterMode>("tous");
   const [search, setSearch] = useState("");
 
-  const { data, isLoading } = useProduitsList({ limit: 200, isActif: true });
+  const { data, isLoading } = useProduitsList({ limit: 100, isActif: true });
   const allProduits = data?.data ?? [];
 
   const filtered = allProduits.filter((p) => {
