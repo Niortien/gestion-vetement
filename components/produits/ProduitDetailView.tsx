@@ -376,11 +376,12 @@ export function ProduitDetailView({ id }: ProduitDetailViewProps) {
               {(promoExpanded || produit.enPromo) && (
                 <PromoInlineForm
                   produit={produit}
-                  onSave={(data: PromoFormData) => {
-                    updateMutation.mutate(
-                      { enPromo: true, prixPromo: data.prixPromo, dateDebutPromo: data.dateDebutPromo, dateFinPromo: data.dateFinPromo },
-                      { onSuccess: () => setPromoExpanded(false) }
-                    );
+                  onSave={async (data: PromoFormData) => {
+                    await updateMutation.mutateAsync({
+                      enPromo: true, prixPromo: data.prixPromo,
+                      dateDebutPromo: data.dateDebutPromo, dateFinPromo: data.dateFinPromo,
+                    });
+                    setPromoExpanded(false);
                   }}
                   onCancel={() => setPromoExpanded(false)}
                   isSaving={updateMutation.isPending}

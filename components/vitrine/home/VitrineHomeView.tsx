@@ -7,6 +7,7 @@ import { HomeBrandStatement } from "./HomeBrandStatement";
 import { HomeCategoryGrid } from "./HomeCategoryGrid";
 import { HomeBestSellers } from "./HomeBestSellers";
 import { HomeWhatsappCta } from "./HomeWhatsappCta";
+import { HomePromoSection } from "./HomePromoSection";
 
 export function VitrineHomeView() {
   return (
@@ -14,6 +15,7 @@ export function VitrineHomeView() {
       <HomeHero />
       <HomeTicker />
       <HomeFeaturedDrops />
+      <HomePromoSection />
       <HomeBrandStatement />
       <HomeCategoryGrid />
       <HomeBestSellers />
