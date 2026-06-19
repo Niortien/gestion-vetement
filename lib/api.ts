@@ -116,10 +116,6 @@ api.interceptors.response.use(
       }
     }
 
-    if (statusCode === 403 && typeof window !== "undefined") {
-      window.location.href = "/login";
-    }
-
     return Promise.reject(toAppError(error));
   }
 );

@@ -3,7 +3,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import type { AppError } from "@/types";
-import { useBoutiqueId } from "@/hooks/useBoutiqueId";
 import {
   addProduitImage,
   adjustVarianteStock,
@@ -22,9 +21,9 @@ import { produitKeys } from "../query/produits-queries";
 
 export function useCreateProduit() {
   const qc = useQueryClient();
-  const boutiqueId = useBoutiqueId();
   return useMutation({
-    mutationFn: (body: CreateProduitBody) => createProduit(body, boutiqueId),
+    mutationFn: ({ body, boutiqueId }: { body: CreateProduitBody; boutiqueId?: string }) =>
+      createProduit(body, boutiqueId),
     onSuccess: async () => {
       await qc.invalidateQueries({ queryKey: produitKeys.all });
     },

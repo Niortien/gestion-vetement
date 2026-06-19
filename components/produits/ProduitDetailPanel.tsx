@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Chip, Input, Skeleton, Slider, Spinner } from "@heroui/react";
+import { Button, Chip, Input, Select, SelectItem, Skeleton, Slider, Spinner } from "@heroui/react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import type { AppError } from "@/types";
@@ -31,12 +31,11 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
   const createMutation = useCreateProduit();
   const updateMutation = useUpdateProduit(produit?.id ?? "");
   const user = useAuthStore((s) => s.user);
-  const boutiqueId = useBoutiqueId();
+  const defaultBoutiqueId = useBoutiqueId();
   const { data: boutiquesRes } = useBoutiques();
   const boutiques = boutiquesRes?.data ?? [];
-  const boutiqueLabel = boutiqueId
-    ? (boutiques.find((b) => b.id === boutiqueId)?.nom ?? "Boutique sélectionnée")
-    : "Toutes les boutiques (sans boutique)";
+  // Sélection locale de boutique pour la création — indépendante de la sidebar
+  const [localBoutiqueId, setLocalBoutiqueId] = useState<string | undefined>(defaultBoutiqueId);
   const isPending = createMutation.isPending || updateMutation.isPending;
 
   /* ── categories ─────────────────────────────────────────── */
@@ -199,14 +198,17 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
     if (isNew) {
       createMutation.mutate(
         {
-          nom: fields.nom.trim(),
-          sku: fields.sku?.trim() || undefined,
-          description: fields.description?.trim() || undefined,
-          categorieId: fields.categorieId,
-          prixVente,
-          prixAchat,
-          imageUrl: fields.imageUrl?.trim() || undefined,
-          variantes,
+          body: {
+            nom: fields.nom.trim(),
+            sku: fields.sku?.trim() || undefined,
+            description: fields.description?.trim() || undefined,
+            categorieId: fields.categorieId,
+            prixVente,
+            prixAchat,
+            imageUrl: fields.imageUrl?.trim() || undefined,
+            variantes,
+          },
+          boutiqueId: localBoutiqueId,
         },
         {
           onSuccess: () => { toast.success("Produit créé !"); onClose(); },
@@ -250,21 +252,30 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
       {/* corps scrollable */}
       <div className="flex-1 space-y-4 overflow-y-auto p-4 pb-6">
 
-        {/* BANDEAU BOUTIQUE (admin uniquement, création uniquement) */}
+        {/* SÉLECTEUR BOUTIQUE (admin uniquement, création uniquement) */}
         {isNew && user?.role === "ADMIN" && (
-          <div className={[
-            "flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-semibold",
-            boutiqueId
-              ? "border-accent/40 bg-accent/10 text-accent"
-              : "border-out/40 bg-out/10 text-out",
-          ].join(" ")}>
-            <span className="shrink-0">🏪</span>
-            <span>
-              {boutiqueId
-                ? <>Stock attribué à <strong>{boutiqueLabel}</strong></>
-                : <>Aucune boutique sélectionnée — les variantes n&apos;auront pas de boutique</>}
-            </span>
-          </div>
+          <section className="rounded-lg border border-border/80 bg-[color:rgba(45,69,103,0.4)] p-4">
+            <p className="mb-3 text-xs uppercase tracking-[0.08em] text-text-muted">Boutique</p>
+            <Select
+              variant="bordered"
+              placeholder="Aucune boutique"
+              selectedKeys={localBoutiqueId ? new Set([localBoutiqueId]) : new Set()}
+              onSelectionChange={(keys) => {
+                const val = Array.from(keys)[0] as string | undefined;
+                setLocalBoutiqueId(val ?? undefined);
+              }}
+              aria-label="Boutique du produit"
+            >
+              {boutiques.map((b) => (
+                <SelectItem key={b.id}>{b.nom}{b.ville ? ` · ${b.ville}` : ""}</SelectItem>
+              ))}
+            </Select>
+            {!localBoutiqueId && (
+              <p className="mt-2 text-[11px] text-text-muted/70">
+                Sans boutique — le produit existera dans le catalogue sans stock attribué
+              </p>
+            )}
+          </section>
         )}
 
         {/* IMAGE */}

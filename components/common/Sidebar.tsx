@@ -25,13 +25,45 @@ const ADMIN_ITEMS = [
   { href: "/admin/utilisateurs", label: "Utilisateurs" },
 ];
 
+// Composant isolé — useBoutiques() n'est exécuté que pour les admins
+function AdminBoutiqueSelect() {
+  const { currentBoutiqueId, setCurrentBoutique } = useAdminStore();
+  const { data: boutiquesRes } = useBoutiques();
+  const boutiques = boutiquesRes?.data ?? [];
+
+  const items = [
+    { key: "all", label: "Toutes les boutiques" },
+    ...boutiques.map((b) => ({
+      key: b.id,
+      label: b.nom + (b.ville ? ` · ${b.ville}` : ""),
+    })),
+  ];
+
+  return (
+    <Select
+      size="sm"
+      label="Boutique active"
+      items={items}
+      selectedKeys={new Set([currentBoutiqueId])}
+      onSelectionChange={(keys) => {
+        const val = Array.from(keys)[0] as string | undefined;
+        setCurrentBoutique(val ?? "all");
+      }}
+      classNames={{
+        trigger: "bg-surface/60 border border-border",
+        value: "text-text text-sm font-semibold",
+      }}
+      aria-label="Sélectionner une boutique"
+    >
+      {(item) => <SelectItem key={item.key}>{item.label}</SelectItem>}
+    </Select>
+  );
+}
+
 export function Sidebar() {
   const pathname = usePathname();
   const logout = useLogout();
   const user = useAuthStore((s) => s.user);
-  const { currentBoutiqueId, setCurrentBoutique } = useAdminStore();
-  const { data: boutiquesRes } = useBoutiques();
-  const boutiques = boutiquesRes?.data ?? [];
 
   const isAdmin = user?.role === "ADMIN";
 
@@ -39,30 +71,13 @@ export function Sidebar() {
     <aside className="hidden h-full w-56 flex-col gap-3 overflow-y-auto border-r border-border bg-surface p-4 lg:flex">
       <h2 className="font-[var(--font-display)] text-xl text-text">Riviere</h2>
 
-      {isAdmin && boutiques.length > 0 && (
-        <Select
-          size="sm"
-          label="Boutique"
-          selectedKeys={new Set([currentBoutiqueId])}
-          onSelectionChange={(keys) => {
-            const val = Array.from(keys)[0] as string | undefined;
-            setCurrentBoutique(val ?? "all");
-          }}
-          classNames={{ trigger: "bg-surface/60 border border-border" }}
-          aria-label="Sélectionner une boutique"
-        >
-          {[
-            <SelectItem key="all">Toutes les boutiques</SelectItem>,
-            ...boutiques.map((b) => (
-              <SelectItem key={b.id}>{b.nom}{b.ville ? ` · ${b.ville}` : ""}</SelectItem>
-            )),
-          ]}
-        </Select>
-      )}
+      {/* Sélecteur boutique admin — isolé pour éviter l'appel API pour les vendeurs */}
+      {isAdmin && <AdminBoutiqueSelect />}
 
-      {!isAdmin && user?.boutiqueId && boutiques.length > 0 && (
-        <div className="rounded-md border border-accent/30 bg-accent/10 px-3 py-1.5 text-xs text-accent">
-          {boutiques.find((b) => b.id === user.boutiqueId)?.nom ?? "Ma boutique"}
+      {/* Badge boutique vendeur */}
+      {!isAdmin && user?.boutiqueId && (
+        <div className="rounded-md border border-accent/30 bg-accent/10 px-3 py-1.5 text-xs font-semibold text-accent">
+          Ma boutique
         </div>
       )}
 
