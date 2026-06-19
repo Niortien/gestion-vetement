@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { Chip, Input, Spinner, Switch } from "@heroui/react";
 import { PageWrapper } from "@/components/common/PageWrapper";
 import { useProduitsList } from "@/features/produits/query/produits-queries";
@@ -37,6 +38,8 @@ function ProduitPromoRow({ produit }: { produit: Produit }) {
       dateDebutPromo: data.dateDebutPromo,
       dateFinPromo: data.dateFinPromo,
     });
+    setExpanded(false);
+    toast.success("Produit mis en promotion");
   }
 
   function handleCancel() {

@@ -36,6 +36,7 @@ export function useUpdateProduit(id: string) {
     onSuccess: async () => {
       await qc.invalidateQueries({ queryKey: produitKeys.all });
     },
+    onError: (err) => toast.error((err as unknown as AppError).message ?? "Erreur lors de la mise à jour"),
   });
 }
 

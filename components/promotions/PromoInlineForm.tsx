@@ -12,7 +12,7 @@ export interface PromoFormData {
 
 interface PromoInlineFormProps {
   produit: Produit;
-  onSave: (data: PromoFormData) => void;
+  onSave: (data: PromoFormData) => Promise<void>;
   onCancel: () => void;
   isSaving?: boolean;
 }
@@ -63,9 +63,9 @@ export function PromoInlineForm({ produit, onSave, onCancel, isSaving }: PromoIn
     }
   }
 
-  function handleSave() {
+  async function handleSave() {
     if (isInvalid || !prixPromoInput) return;
-    onSave({
+    await onSave({
       prixPromo: prixPromoNum.toFixed(2),
       dateDebutPromo: dateDebut || null,
       dateFinPromo: dateFin || null,
