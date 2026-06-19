@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { useAuthStore } from "@/stores/authStore";
 import { useBoutiqueId } from "@/hooks/useBoutiqueId";
 import {
   exportExcel,
@@ -24,37 +25,45 @@ export const rapportKeys = {
 };
 
 export function useVentes(params: RapportVentesParams) {
+  const token = useAuthStore((s) => s.accessToken);
   const boutiqueId = useBoutiqueId();
   const effectiveParams = { ...params, boutiqueId };
   return useQuery({
     queryKey: rapportKeys.ventes(effectiveParams),
     queryFn: () => getVentes(effectiveParams),
+    enabled: !!token,
   });
 }
 
 export function useStockValeur() {
+  const token = useAuthStore((s) => s.accessToken);
   const boutiqueId = useBoutiqueId();
   return useQuery({
     queryKey: rapportKeys.stockValeur(boutiqueId),
     queryFn: () => getStockValeur(boutiqueId),
+    enabled: !!token,
   });
 }
 
 export function useTopProduits(params: TopProduitsParams) {
+  const token = useAuthStore((s) => s.accessToken);
   const boutiqueId = useBoutiqueId();
   const effectiveParams = { ...params, boutiqueId };
   return useQuery({
     queryKey: rapportKeys.topProduits(effectiveParams),
     queryFn: () => getTopProduits(effectiveParams),
+    enabled: !!token,
   });
 }
 
 export function useFluxTresorerie(params: FluxTresorerieParams) {
+  const token = useAuthStore((s) => s.accessToken);
   const boutiqueId = useBoutiqueId();
   const effectiveParams = { ...params, boutiqueId };
   return useQuery({
     queryKey: rapportKeys.fluxTresorerie(effectiveParams),
     queryFn: () => getFluxTresorerie(effectiveParams),
+    enabled: !!token,
   });
 }
 

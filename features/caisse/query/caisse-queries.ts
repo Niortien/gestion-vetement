@@ -1,6 +1,7 @@
 "use client";
 
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useAuthStore } from "@/stores/authStore";
 import { useBoutiqueId } from "@/hooks/useBoutiqueId";
 import {
   getActiveSession,
@@ -21,19 +22,23 @@ export const caisseKeys = {
 };
 
 export function useActiveSession() {
+  const token = useAuthStore((s) => s.accessToken);
   const boutiqueId = useBoutiqueId();
   return useQuery({
     queryKey: caisseKeys.activeSession(boutiqueId),
     queryFn: () => getActiveSession(boutiqueId),
+    enabled: !!token,
     refetchInterval: 10_000,
   });
 }
 
 export function useResumeJour() {
+  const token = useAuthStore((s) => s.accessToken);
   const boutiqueId = useBoutiqueId();
   return useQuery({
     queryKey: caisseKeys.resumeJour(boutiqueId),
     queryFn: () => getResumeJour(boutiqueId),
+    enabled: !!token,
     refetchInterval: 5_000,
   });
 }

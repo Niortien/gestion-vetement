@@ -21,14 +21,19 @@ export function DashboardView() {
   const { dateDebut, dateFin } = getPeriodeRange("7j");
   const params7j = { dateDebut, dateFin };
 
-  const { data: resumeData, isLoading: resumeLoading } = useResumeJour();
-  const { data: stockValeurData } = useStockValeur();
+  const { data: resumeData, isLoading: resumeLoading, isError: resumeError } = useResumeJour();
+  const { data: stockValeurData, isError: stockValeurError } = useStockValeur();
   const { data: alertesData } = useStockAlertes();
-  const { data: ventesData, isLoading: ventesLoading } = useVentes({
-    ...params7j,
-    groupBy: "jour",
-  });
-  const { data: topProduitsData, isLoading: topLoading } = useTopProduits({ ...params7j });
+  const {
+    data: ventesData,
+    isLoading: ventesLoading,
+    isError: ventesError,
+  } = useVentes({ ...params7j, groupBy: "jour" });
+  const {
+    data: topProduitsData,
+    isLoading: topLoading,
+    isError: topError,
+  } = useTopProduits({ ...params7j });
   const { data: entreesData, isLoading: entreesLoading } = useEntreesList({ limit: 5 });
   const { data: sortiesData, isLoading: sortiesLoading } = useSortiesList({ limit: 5 });
 
@@ -56,15 +61,18 @@ export function DashboardView() {
         stockValeur={stockValeur}
         alertesCount={alertesCount}
         isLoading={resumeLoading}
+        isError={resumeError || stockValeurError}
       />
 
       {/* Sparkline + Top produits */}
       <div className="grid gap-4 md:grid-cols-2">
-        {!ventesLoading && <DashboardSparkline data={ventes7j} />}
+        {!ventesLoading && (
+          <DashboardSparkline data={ventes7j} isError={ventesError} />
+        )}
         {ventesLoading && (
           <div className="h-40 animate-pulse rounded-xl border border-border/40 bg-[var(--color-surface-high)]" />
         )}
-        <DashboardTopProduits produits={topProduits} isLoading={topLoading} />
+        <DashboardTopProduits produits={topProduits} isLoading={topLoading} isError={topError} />
       </div>
 
       {/* Activity feed */}

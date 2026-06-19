@@ -8,6 +8,7 @@ interface DashboardKpiGridProps {
   stockValeur: string;
   alertesCount: number;
   isLoading: boolean;
+  isError?: boolean;
 }
 
 interface KpiCardProps {
@@ -56,13 +57,22 @@ function KpiCard({ label, value, sub, tone, isMontant = false }: KpiCardProps) {
   );
 }
 
-export function DashboardKpiGrid({ resume, stockValeur, alertesCount, isLoading }: DashboardKpiGridProps) {
+export function DashboardKpiGrid({ resume, stockValeur, alertesCount, isLoading, isError }: DashboardKpiGridProps) {
   if (isLoading) {
     return (
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         {[...Array(4)].map((_, i) => (
           <div key={i} className="h-28 animate-pulse rounded-xl border border-border/40 bg-[var(--color-surface-high)]" />
         ))}
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="rounded-xl border border-out/30 bg-out/5 px-4 py-3">
+        <p className="text-sm font-semibold text-out">Impossible de charger les KPIs</p>
+        <p className="mt-0.5 text-xs text-text-muted">Vérifie que le serveur backend est démarré et que tu es connecté.</p>
       </div>
     );
   }

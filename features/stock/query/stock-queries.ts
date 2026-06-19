@@ -1,6 +1,7 @@
 "use client";
 
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useAuthStore } from "@/stores/authStore";
 import { useBoutiqueId } from "@/hooks/useBoutiqueId";
 import {
   getStock,
@@ -33,10 +34,12 @@ export function useStockList(params: StockListParams = {}) {
 }
 
 export function useStockAlertes() {
+  const token = useAuthStore((s) => s.accessToken);
   const boutiqueId = useBoutiqueId();
   return useQuery({
     queryKey: stockKeys.alertes(boutiqueId),
     queryFn: () => getStockAlertes(boutiqueId),
+    enabled: !!token,
   });
 }
 

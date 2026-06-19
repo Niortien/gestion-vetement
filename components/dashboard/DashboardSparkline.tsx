@@ -10,9 +10,19 @@ interface SparklinePoint {
 
 interface DashboardSparklineProps {
   data: SparklinePoint[];
+  isError?: boolean;
 }
 
-export function DashboardSparkline({ data }: DashboardSparklineProps) {
+export function DashboardSparkline({ data, isError }: DashboardSparklineProps) {
+  if (isError) {
+    return (
+      <div className="flex h-40 flex-col items-center justify-center gap-1 rounded-xl border border-out/30 bg-[var(--color-surface-high)]">
+        <p className="text-xs font-semibold text-out">Impossible de charger les ventes</p>
+        <p className="text-[11px] text-text-muted">Vérifie la connexion au serveur</p>
+      </div>
+    );
+  }
+
   const chartData = data.map((d) => ({
     name: formatDateShort(d.periode),
     value: Number(d.totalVentes),
@@ -20,8 +30,9 @@ export function DashboardSparkline({ data }: DashboardSparklineProps) {
 
   if (chartData.length === 0) {
     return (
-      <div className="flex h-40 items-center justify-center rounded-xl border border-border/60 bg-[var(--color-surface-high)]">
-        <p className="text-sm text-text-muted">Aucune donnée de vente sur 7 jours</p>
+      <div className="flex h-40 flex-col items-center justify-center gap-1 rounded-xl border border-border/60 bg-[var(--color-surface-high)]">
+        <p className="text-sm text-text-muted">Aucune vente sur 7 jours</p>
+        <p className="text-[11px] text-text-muted/60">Effectue une vente pour voir la courbe</p>
       </div>
     );
   }
