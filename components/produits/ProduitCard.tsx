@@ -13,6 +13,7 @@ interface ProduitCardProps {
 
 export function ProduitCard({ produit, onPress }: ProduitCardProps) {
   const [imgError, setImgError] = useState(false);
+  const imageUrl = produit.imageUrl ?? produit.images?.[0]?.url ?? null;
   const totalStock = produit.variantes?.reduce((sum, v) => sum + v.quantiteStock, 0) ?? 0;
   const isPromo = produit.enPromo && !!produit.prixPromo;
   const prixVente = parseFloat(produit.prixVente);
@@ -27,10 +28,10 @@ export function ProduitCard({ produit, onPress }: ProduitCardProps) {
       className="group mb-3 w-full overflow-hidden border border-border/80 bg-[linear-gradient(145deg,rgba(45,69,103,0.32),rgba(34,54,81,0.8))] text-left transition hover:scale-[1.02] hover:border-accent/40 hover:shadow-glow-yellow"
     >
       <div className="relative h-36 w-full overflow-hidden">
-        {produit.imageUrl && !imgError ? (
+        {imageUrl && !imgError ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={produit.imageUrl}
+            src={imageUrl}
             alt={produit.nom}
             className="h-full w-full object-cover"
             onError={() => setImgError(true)}

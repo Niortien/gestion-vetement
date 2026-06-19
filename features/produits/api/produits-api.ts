@@ -37,7 +37,7 @@ export interface UpdateProduitBody {
   description?: string;
   prixVente?: string;
   prixAchat?: string;
-  imageUrl?: string;
+  imageUrl?: string | null;
   isActif?: boolean;
   enPromo?: boolean;
   prixPromo?: string | null;
