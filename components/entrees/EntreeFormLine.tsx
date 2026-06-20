@@ -35,7 +35,7 @@ export function EntreeFormLine({ line, index, onPickVariante, onEditNew, onChang
   };
 
   return (
-    <div className="grid grid-cols-[1fr_80px_100px_80px_32px] items-center gap-2 rounded-lg border border-border/60 bg-[var(--color-surface-high)] px-3 py-2">
+    <div className="grid grid-cols-[1fr_70px_90px_32px] items-center gap-1.5 rounded-lg border border-border/60 bg-[var(--color-surface-high)] px-3 py-2 sm:grid-cols-[1fr_80px_100px_80px_32px] sm:gap-2">
       {/* Produit / variante */}
       <button
         type="button"
@@ -82,8 +82,8 @@ export function EntreeFormLine({ line, index, onPickVariante, onEditNew, onChang
         aria-label={`Prix unitaire ligne ${index + 1}`}
       />
 
-      {/* Sous-total */}
-      <span className="text-right font-[var(--font-mono)] text-xs text-text-muted">
+      {/* Sous-total — masqué sur mobile */}
+      <span className="hidden text-right font-[var(--font-mono)] text-xs text-text-muted sm:block">
         {Number(sousTotal).toLocaleString("fr-FR")}
       </span>
 

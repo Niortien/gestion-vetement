@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import dynamic from "next/dynamic";
 import { PageWrapper } from "@/components/common/PageWrapper";
 import { useResumeJour } from "@/features/caisse/query/caisse-queries";
@@ -18,7 +19,7 @@ const DashboardSparkline = dynamic(
 );
 
 export function DashboardView() {
-  const { dateDebut, dateFin } = getPeriodeRange("7j");
+  const { dateDebut, dateFin } = useMemo(() => getPeriodeRange("7j"), []);
 
   const { data: resumeData, isLoading: resumeLoading, isError: resumeError } = useResumeJour();
   const { data: stockValeurData, isError: stockValeurError } = useStockValeur();

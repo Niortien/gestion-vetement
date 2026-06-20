@@ -77,6 +77,17 @@ body {
   outline-offset: 2px;
 }
 
+/* Supprimer les flèches increment/decrement des inputs numériques */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
 /* ── Vitrine publique — design system ────────────────────────── */
 [data-vitrine] {
   --v-bg:     #04080F;

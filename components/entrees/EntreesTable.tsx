@@ -47,6 +47,7 @@ export function EntreesTable({ data }: EntreesTableProps) {
       }),
       columnHelper.accessor("reference", {
         header: "Référence",
+        meta: { mobileHidden: true },
         cell: (info) => (
           <span className="font-[var(--font-mono)] text-xs text-text-muted">
             {info.getValue()}
@@ -117,8 +118,10 @@ export function EntreesTable({ data }: EntreesTableProps) {
                     className="min-w-0 bg-[color:rgba(255,77,109,0.10)] text-[var(--color-out)]"
                     isLoading={annulerMutation.isPending && annulerMutation.variables === entree.id}
                     onPress={() => annulerMutation.mutate(entree.id)}
+                    aria-label="Annuler l'entrée"
                   >
-                    Annuler
+                    <span className="hidden sm:inline">Annuler</span>
+                    <span className="sm:hidden">✕</span>
                   </Button>
                 </>
               )}
@@ -180,6 +183,7 @@ export function EntreesTable({ data }: EntreesTableProps) {
                     className={[
                       "px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-text-muted",
                       header.column.getCanSort() ? "cursor-pointer select-none hover:text-text" : "",
+                      header.column.columnDef.meta?.mobileHidden ? "hidden sm:table-cell" : "",
                     ].join(" ")}
                     onClick={header.column.getToggleSortingHandler()}
                   >
@@ -212,7 +216,13 @@ export function EntreesTable({ data }: EntreesTableProps) {
                     ].join(" ")}
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <td key={cell.id} className="px-4 py-3">
+                      <td
+                        key={cell.id}
+                        className={[
+                          "px-4 py-3",
+                          cell.column.columnDef.meta?.mobileHidden ? "hidden sm:table-cell" : "",
+                        ].join(" ")}
+                      >
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </td>
                     ))}

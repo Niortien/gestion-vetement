@@ -362,11 +362,11 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
                   )}
                 </div>
                 {lines.length > 0 && (
-                  <div className="mb-1 grid grid-cols-[1fr_80px_100px_80px_32px] gap-2 px-3">
+                  <div className="mb-1 grid grid-cols-[1fr_70px_90px_32px] gap-1.5 px-3 sm:grid-cols-[1fr_80px_100px_80px_32px] sm:gap-2">
                     <span className="text-[10px] text-text-muted">Produit</span>
                     <span className="text-[10px] text-text-muted">Qté</span>
                     <span className="text-[10px] text-text-muted">Prix unit.</span>
-                    <span className="text-right text-[10px] text-text-muted">S/Total</span>
+                    <span className="hidden text-right text-[10px] text-text-muted sm:block">S/Total</span>
                   </div>
                 )}
                 <div className="space-y-2">
