@@ -7,8 +7,15 @@ import { Button, Checkbox, Chip, Input, Skeleton, Slider, Spinner } from "@herou
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import type { AppError } from "@/types";
-import { Taille } from "@/types";
 import { createProduitSchema, type CreateProduitInput } from "@/lib/validators/produit.schema";
+import {
+  CATEGORY_GROUPS,
+  DEFAULT_COLORS,
+  SHOE_SLUGS,
+  SLUG_COULEUR_CONFIG,
+  getTaillesForSlug,
+  groupCategories,
+} from "@/lib/categoryConfig";
 import { getMotionVariant, panelSlide } from "@/lib/motionVariants";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useCategoriesList } from "@/features/produits/query/produits-queries";
@@ -34,15 +41,15 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
   const defaultBoutiqueId = useBoutiqueId();
   const { data: boutiquesRes } = useBoutiques();
   const boutiques = boutiquesRes?.data ?? [];
-  // Sélection locale multi-boutique pour la création
   const [selectedBoutiqueIds, setSelectedBoutiqueIds] = useState<string[]>(
     defaultBoutiqueId ? [defaultBoutiqueId] : []
   );
   const isPending = createMutation.isPending || updateMutation.isPending;
 
-  /* ── categories ─────────────────────────────────────────── */
+  /* ── catégories ─────────────────────────────────────────── */
   const { data: categoriesData, isLoading: catsLoading } = useCategoriesList();
   const categories = categoriesData?.data ?? [];
+  const categoryGroups = useMemo(() => groupCategories(categories), [categories]);
 
   /* ── RHF ───────────────────────────────────────────────── */
   const {
@@ -65,6 +72,18 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
     },
   });
 
+  const selectedCategorieId = watch("categorieId");
+
+  /* ── logique catégorie → tailles / couleurs ────────────── */
+  const selectedCat = categories.find((c) => c.id === selectedCategorieId);
+  const taillePresets = getTaillesForSlug(selectedCat?.slug);     // null = chaussures
+  const isChaussure = selectedCat ? SHOE_SLUGS.has(selectedCat.slug) : false;
+  const couleurConfig = selectedCat ? (SLUG_COULEUR_CONFIG[selectedCat.slug] ?? null) : null;
+  const couleurLabel = couleurConfig?.label ?? "Couleur";
+  // null config = catégorie standard → top 10 couleurs ; config avec presets vides = saisie libre
+  const couleurPresets = couleurConfig ? couleurConfig.presets : DEFAULT_COLORS;
+
+  /* ── useEffect édition ──────────────────────────────────── */
   useEffect(() => {
     if (produit) {
       reset({
@@ -77,9 +96,9 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
         categorieId: produit.categorieId,
       });
       setPreviewUrl(produit.imageUrl ?? null);
-      setSelectedTailles(produit.variantes?.map((v) => v.taille) ?? [Taille.M, Taille.L]);
+      setSelectedTailles(produit.variantes?.map((v) => v.taille) ?? []);
       setSelectedCouleurs(
-        produit.variantes ? [...new Set(produit.variantes.map((v) => v.couleur))] : ["Noir", "Creme"]
+        produit.variantes ? [...new Set(produit.variantes.map((v) => v.couleur))] : []
       );
       if (produit.variantes?.[0]) setSeuilAlerte(produit.variantes[0].seuilAlerte);
       const qmap: Record<string, number> = {};
@@ -87,8 +106,6 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
       setQuantites(qmap);
     }
   }, [produit, reset]);
-
-  const selectedCategorieId = watch("categorieId");
 
   /* ── image upload ───────────────────────────────────────── */
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -124,21 +141,16 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  /* ── variantes local state ───────────────────────────────── */
-  const tailleOptions = useMemo(() => Object.values(Taille), []);
+  /* ── variantes état ─────────────────────────────────────── */
   const [varianteError, setVarianteError] = useState<string | null>(null);
-
-  const selectedCat = categories.find((c) => c.id === selectedCategorieId);
-  const isChaussure = selectedCat?.slug === "chaussures";
-
   const [selectedTailles, setSelectedTailles] = useState<string[]>(
-    produit?.variantes?.map((v) => v.taille) ?? [Taille.M, Taille.L]
+    produit?.variantes?.map((v) => v.taille) ?? []
   );
   const [newTaille, setNewTaille] = useState("");
   const [selectedCouleurs, setSelectedCouleurs] = useState<string[]>(
     produit?.variantes
       ? [...new Set(produit.variantes.map((v) => v.couleur))]
-      : ["Noir", "Creme"]
+      : []
   );
   const [newColor, setNewColor] = useState("");
   const [seuilAlerte, setSeuilAlerte] = useState<number>(
@@ -146,16 +158,14 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
   );
   const [quantites, setQuantites] = useState<Record<string, number>>(() => {
     const map: Record<string, number> = {};
-    produit?.variantes?.forEach((v) => {
-      map[`${v.taille}-${v.couleur}`] = v.quantiteStock;
-    });
+    produit?.variantes?.forEach((v) => { map[`${v.taille}-${v.couleur}`] = v.quantiteStock; });
     return map;
   });
 
-  /* ── helpers ─────────────────────────────────────────────── */
+  /* ── helpers taille ─────────────────────────────────────── */
   const toggleTaille = (t: string) => {
     setVarianteError(null);
-    setSelectedTailles((cur) => (cur.includes(t) ? cur.filter((x) => x !== t) : [...cur, t]));
+    setSelectedTailles((cur) => cur.includes(t) ? cur.filter((x) => x !== t) : [...cur, t]);
   };
 
   const addTaille = () => {
@@ -166,6 +176,12 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
     setNewTaille("");
   };
 
+  /* ── helpers couleur ─────────────────────────────────────── */
+  const toggleCouleur = (c: string) => {
+    setVarianteError(null);
+    setSelectedCouleurs((cur) => cur.includes(c) ? cur.filter((x) => x !== c) : [...cur, c]);
+  };
+
   const addColor = () => {
     const n = newColor.trim();
     if (!n || selectedCouleurs.includes(n)) return;
@@ -174,10 +190,12 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
     setNewColor("");
   };
 
+  const customColors = selectedCouleurs.filter((c) => !couleurPresets.includes(c));
+
+  /* ── submit ──────────────────────────────────────────────── */
   const setQty = (taille: string, couleur: string, val: number) =>
     setQuantites((cur) => ({ ...cur, [`${taille}-${couleur}`]: Math.max(0, val) }));
 
-  /* ── submit ──────────────────────────────────────────────── */
   const onSubmit = handleSubmit((fields) => {
     if (selectedTailles.length === 0 || selectedCouleurs.length === 0) {
       setVarianteError("Sélectionnez au moins une taille et une couleur");
@@ -246,9 +264,7 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
         <h3 className="font-[var(--font-display)] text-xl">
           {isNew ? "Nouveau produit" : "Éditer produit"}
         </h3>
-        <Button isIconOnly variant="light" onPress={onClose} aria-label="Fermer le panel">
-          ✕
-        </Button>
+        <Button isIconOnly variant="light" onPress={onClose} aria-label="Fermer le panel">✕</Button>
       </div>
 
       {/* corps scrollable */}
@@ -276,7 +292,7 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
             </div>
             {selectedBoutiqueIds.length === 0 && (
               <p className="mt-2 text-[11px] text-text-muted/70">
-                Sans boutique — le produit existera dans le catalogue sans stock attribué
+                Sans boutique — catalogue global sans stock attribué
               </p>
             )}
             {selectedBoutiqueIds.length > 1 && (
@@ -290,8 +306,6 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
         {/* IMAGE */}
         <section className="rounded-lg border border-border/80 bg-[color:rgba(45,69,103,0.4)] p-4">
           <p className="mb-2 text-xs uppercase tracking-[0.08em] text-text-muted">Photo</p>
-
-          {/* Zone drop / preview */}
           <div
             role="button"
             tabIndex={0}
@@ -310,12 +324,7 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
           >
             {previewUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={previewUrl}
-                alt="Aperçu"
-                className="h-full w-full object-cover"
-                onError={() => setPreviewUrl(null)}
-              />
+              <img src={previewUrl} alt="Aperçu" className="h-full w-full object-cover" onError={() => setPreviewUrl(null)} />
             ) : (
               <div className="flex flex-col items-center gap-2 text-center">
                 <span className="text-2xl text-text-muted">📷</span>
@@ -324,21 +333,9 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
               </div>
             )}
           </div>
-
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/jpeg,image/png,image/webp,image/gif"
-            className="hidden"
-            onChange={onFileChange}
-          />
-
+          <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp,image/gif" className="hidden" onChange={onFileChange} />
           {previewUrl && (
-            <button
-              type="button"
-              className="mt-2 text-xs text-out hover:underline"
-              onClick={clearImage}
-            >
+            <button type="button" className="mt-2 text-xs text-out hover:underline" onClick={clearImage}>
               Supprimer l&apos;image
             </button>
           )}
@@ -372,36 +369,49 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
           </div>
         </section>
 
-        {/* CATÉGORIE */}
+        {/* CATÉGORIE — groupée */}
         <section className="rounded-lg border border-border/80 bg-[color:rgba(45,69,103,0.4)] p-4">
           <p className="mb-3 text-xs uppercase tracking-[0.08em] text-text-muted">Catégorie</p>
           {catsLoading ? (
-            <div className="flex gap-2">
-              <Skeleton className="h-7 w-20 rounded-full" />
-              <Skeleton className="h-7 w-24 rounded-full" />
-              <Skeleton className="h-7 w-16 rounded-full" />
+            <div className="space-y-3">
+              {[1, 2, 3].map((i) => (
+                <div key={i}>
+                  <Skeleton className="mb-1.5 h-3 w-20 rounded" />
+                  <div className="flex gap-2">
+                    <Skeleton className="h-7 w-20 rounded-full" />
+                    <Skeleton className="h-7 w-24 rounded-full" />
+                    <Skeleton className="h-7 w-16 rounded-full" />
+                  </div>
+                </div>
+              ))}
             </div>
           ) : (
-            <div className="flex flex-wrap gap-2">
-              {categories.map((cat) => {
-                const active = selectedCategorieId === cat.id;
-                return (
-                  <Chip
-                    key={cat.id}
-                    variant="flat"
-                    className={
-                      active
-                        ? "cursor-pointer bg-accent text-black"
-                        : "cursor-pointer bg-[var(--color-surface-high)] text-text"
-                    }
-                    onClick={() => setValue("categorieId", cat.id, { shouldValidate: true })}
-                  >
-                    {cat.nom}
-                  </Chip>
-                );
-              })}
+            <div className="space-y-3">
+              {categoryGroups.map((group) => (
+                <div key={group.label}>
+                  <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-widest text-text-dim">
+                    {group.label}
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {group.items.map((cat) => (
+                      <Chip
+                        key={cat.id}
+                        variant="flat"
+                        className={
+                          selectedCategorieId === cat.id
+                            ? "cursor-pointer bg-accent text-black"
+                            : "cursor-pointer bg-[var(--color-surface-high)] text-text"
+                        }
+                        onClick={() => setValue("categorieId", cat.id, { shouldValidate: true })}
+                      >
+                        {cat.nom}
+                      </Chip>
+                    ))}
+                  </div>
+                </div>
+              ))}
               {errors.categorieId && (
-                <p className="w-full text-xs text-out">{errors.categorieId.message}</p>
+                <p className="text-xs text-out">{errors.categorieId.message}</p>
               )}
             </div>
           )}
@@ -432,91 +442,160 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
 
         {/* VARIANTES */}
         <section className="rounded-lg border border-border/80 bg-[color:rgba(45,69,103,0.4)] p-4">
+
+          {/* ── Tailles ── */}
           <p className="mb-3 text-xs uppercase tracking-[0.08em] text-text-muted">Tailles</p>
-          {isChaussure ? (
+
+          {taillePresets === null ? (
+            /* Chaussures : chips des tailles ajoutées + input numérique */
+            <div className="space-y-2">
+              {selectedTailles.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {selectedTailles.map((t) => (
+                    <Chip
+                      key={t}
+                      variant="flat"
+                      className="bg-accent text-black"
+                      onClose={() => {
+                        setVarianteError(null);
+                        setSelectedTailles((cur) => cur.filter((x) => x !== t));
+                      }}
+                    >
+                      {t}
+                    </Chip>
+                  ))}
+                </div>
+              )}
+              <div className="flex gap-2">
+                <Input
+                  variant="bordered"
+                  placeholder="Pointure (ex : 42)"
+                  inputMode="numeric"
+                  value={newTaille}
+                  onValueChange={setNewTaille}
+                  onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addTaille(); } }}
+                  size="sm"
+                />
+                <Button variant="flat" className="shrink-0 bg-accent text-black" onPress={addTaille} size="sm">+</Button>
+              </div>
+            </div>
+          ) : (
+            /* Autres catégories : chips cliquables prédéfinies */
             <div className="space-y-2">
               <div className="flex flex-wrap gap-2">
-                {selectedTailles.map((t) => (
+                {taillePresets.map((t) => (
                   <Chip
                     key={t}
                     variant="flat"
-                    className="bg-accent text-black"
-                    onClose={() => {
-                      setVarianteError(null);
-                      setSelectedTailles((cur) => cur.filter((x) => x !== t));
-                    }}
+                    className={
+                      selectedTailles.includes(t)
+                        ? "cursor-pointer bg-accent text-black"
+                        : "cursor-pointer bg-[var(--color-surface-high)] text-text"
+                    }
+                    onClick={() => toggleTaille(t)}
                   >
                     {t}
                   </Chip>
                 ))}
               </div>
-              <div className="flex gap-2">
+              {/* Taille personnalisée */}
+              <div className="flex gap-2 pt-1">
                 <Input
                   variant="bordered"
-                  placeholder="Pointure (ex : 42)"
-                  type="number"
-                  min={28}
-                  max={60}
+                  placeholder="Taille personnalisée (optionnel)"
                   value={newTaille}
                   onValueChange={setNewTaille}
                   onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addTaille(); } }}
+                  size="sm"
                 />
-                <Button variant="flat" className="shrink-0 bg-accent text-black" onPress={addTaille}>+</Button>
+                <Button variant="flat" className="shrink-0 bg-accent/20 text-accent" onPress={addTaille} size="sm">+</Button>
               </div>
+              {selectedTailles.filter((t) => !taillePresets.includes(t)).length > 0 && (
+                <div className="flex flex-wrap gap-1.5">
+                  {selectedTailles
+                    .filter((t) => !taillePresets.includes(t))
+                    .map((t) => (
+                      <Chip
+                        key={t}
+                        variant="flat"
+                        className="bg-accent text-black"
+                        onClose={() => {
+                          setVarianteError(null);
+                          setSelectedTailles((cur) => cur.filter((x) => x !== t));
+                        }}
+                      >
+                        {t}
+                      </Chip>
+                    ))}
+                </div>
+              )}
             </div>
-          ) : (
-            <div className="flex flex-wrap gap-2">
-              {tailleOptions.map((t) => (
+          )}
+
+          {/* ── Couleurs / label dynamique ── */}
+          <p className="mb-2 mt-5 text-xs uppercase tracking-[0.08em] text-text-muted">{couleurLabel}</p>
+
+          {/* Presets cliquables (couleurs ou présentations) */}
+          {couleurPresets.length > 0 && (
+            <div className="mb-3 flex flex-wrap gap-1.5">
+              {couleurPresets.map((c) => (
                 <Chip
-                  key={t}
+                  key={c}
                   variant="flat"
                   className={
-                    selectedTailles.includes(t)
+                    selectedCouleurs.includes(c)
                       ? "cursor-pointer bg-accent text-black"
                       : "cursor-pointer bg-[var(--color-surface-high)] text-text"
                   }
-                  onClick={() => toggleTaille(t)}
+                  onClick={() => toggleCouleur(c)}
                 >
-                  {t}
+                  {c}
                 </Chip>
               ))}
             </div>
           )}
 
-          <p className="mb-3 mt-4 text-xs uppercase tracking-[0.08em] text-text-muted">Couleurs</p>
-          <div className="mb-3 flex flex-wrap gap-2">
-            {selectedCouleurs.map((c) => (
-              <Chip
-                key={c}
-                variant="flat"
-                className="bg-[var(--color-surface-high)] text-text"
-                onClose={() => {
-                  setVarianteError(null);
-                  setSelectedCouleurs((cur) => cur.filter((x) => x !== c));
-                }}
-              >
-                {c}
-              </Chip>
-            ))}
-          </div>
+          {/* Valeurs personnalisées (saisies manuellement) */}
+          {customColors.length > 0 && (
+            <div className="mb-2 flex flex-wrap gap-1.5">
+              {customColors.map((c) => (
+                <Chip
+                  key={c}
+                  variant="flat"
+                  className="bg-[var(--color-surface-high)] text-text"
+                  onClose={() => {
+                    setVarianteError(null);
+                    setSelectedCouleurs((cur) => cur.filter((x) => x !== c));
+                  }}
+                >
+                  {c}
+                </Chip>
+              ))}
+            </div>
+          )}
+
+          {/* Input "Autre" */}
           <div className="flex gap-2">
             <Input
               variant="bordered"
-              placeholder="Ajouter couleur"
+              placeholder={
+                couleurPresets.length > 0
+                  ? `Autre ${couleurLabel.toLowerCase()}…`
+                  : `${couleurLabel}…`
+              }
               value={newColor}
               onValueChange={setNewColor}
               onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addColor(); } }}
+              size="sm"
             />
-            <Button variant="flat" className="shrink-0 bg-accent text-black" onPress={addColor}>
-              +
-            </Button>
+            <Button variant="flat" className="shrink-0 bg-accent text-black" onPress={addColor} size="sm">+</Button>
           </div>
 
           {varianteError && (
             <p className="mt-2 text-xs text-out">{varianteError}</p>
           )}
 
-          {/* matrice stock */}
+          {/* Matrice stock */}
           {selectedTailles.length > 0 && selectedCouleurs.length > 0 && (
             <div className="mt-4 overflow-auto">
               <p className="mb-2 text-xs uppercase tracking-[0.08em] text-text-muted">Quantités</p>

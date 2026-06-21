@@ -2,6 +2,7 @@
 
 import {
   Button,
+  Chip,
   Input,
   Modal,
   ModalBody,
@@ -10,6 +11,7 @@ import {
   ModalHeader,
   Select,
   SelectItem,
+  SelectSection,
   Spinner,
 } from "@heroui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,7 +20,13 @@ import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { useCategoriesList } from "@/features/produits/query/produits-queries";
 import type { NewProduitForEntree } from "@/features/entrees/api/entrees-api";
-import { Taille } from "@/types";
+import {
+  DEFAULT_COLORS,
+  SHOE_SLUGS,
+  SLUG_COULEUR_CONFIG,
+  getTaillesForSlug,
+  groupCategories,
+} from "@/lib/categoryConfig";
 import type { EntreeFormLineData } from "./EntreeFormLine";
 
 const schema = z.object({
@@ -43,11 +51,10 @@ interface NewProduitModalProps {
   onAdd: (line: EntreeFormLineData) => void;
 }
 
-const TAILLE_OPTIONS = Object.values(Taille);
-
 export function NewProduitModal({ isOpen, defaultValues, onClose, onAdd }: NewProduitModalProps) {
   const { data: categoriesData, isLoading: catLoading } = useCategoriesList();
   const categories = categoriesData?.data ?? [];
+  const categoryGroups = groupCategories(categories);
 
   const {
     register,
@@ -66,16 +73,29 @@ export function NewProduitModal({ isOpen, defaultValues, onClose, onAdd }: NewPr
   });
 
   const watchedCategorieId = useWatch({ control, name: "categorieId" });
-  const watchedPrixAchat = useWatch({ control, name: "prixAchat" });
-  const watchedImageUrl = useWatch({ control, name: "imageUrl" });
-  const selectedCat = categories.find((c) => c.id === watchedCategorieId);
-  const isChaussure = selectedCat?.slug === "chaussures";
+  const watchedPrixAchat   = useWatch({ control, name: "prixAchat" });
+  const watchedImageUrl    = useWatch({ control, name: "imageUrl" });
+  const watchedCouleur     = useWatch({ control, name: "couleur" });
 
+  const selectedCat   = categories.find((c) => c.id === watchedCategorieId);
+  const isChaussure   = selectedCat ? SHOE_SLUGS.has(selectedCat.slug) : false;
+  const tailleOptions = getTaillesForSlug(selectedCat?.slug);     // null = numeric
+  const couleurConfig = selectedCat ? (SLUG_COULEUR_CONFIG[selectedCat.slug] ?? null) : null;
+  const couleurLabel  = couleurConfig?.label ?? "Couleur";
+  const couleurPresets = couleurConfig ? couleurConfig.presets : DEFAULT_COLORS;
+
+  // Sync prix unitaire avec prix achat
   useEffect(() => {
     if (watchedPrixAchat) {
       setValue("prixUnitaire", watchedPrixAchat, { shouldValidate: false });
     }
   }, [watchedPrixAchat, setValue]);
+
+  // Reset taille/couleur quand la catégorie change
+  useEffect(() => {
+    setValue("taille", "", { shouldValidate: false });
+    setValue("couleur", "", { shouldValidate: false });
+  }, [watchedCategorieId, setValue]);
 
   const onSubmit = handleSubmit((values) => {
     const newProduit: NewProduitForEntree = {
@@ -151,14 +171,15 @@ export function NewProduitModal({ isOpen, defaultValues, onClose, onAdd }: NewPr
                     classNames={{ label: "text-text-muted text-xs", value: "text-text" }}
                     onSelectionChange={(keys) => {
                       const val = Array.from(keys)[0];
-                      if (val) {
-                        setValue("categorieId", String(val), { shouldValidate: true });
-                        setValue("taille", "", { shouldValidate: false });
-                      }
+                      if (val) setValue("categorieId", String(val), { shouldValidate: true });
                     }}
                   >
-                    {categories.map((cat) => (
-                      <SelectItem key={cat.id}>{cat.nom}</SelectItem>
+                    {categoryGroups.map((group) => (
+                      <SelectSection key={group.label} title={group.label} classNames={{ heading: "text-[10px] text-text-dim uppercase tracking-wider" }}>
+                        {group.items.map((cat) => (
+                          <SelectItem key={cat.id}>{cat.nom}</SelectItem>
+                        ))}
+                      </SelectSection>
                     ))}
                   </Select>
                 )}
@@ -167,9 +188,7 @@ export function NewProduitModal({ isOpen, defaultValues, onClose, onAdd }: NewPr
                   <Input
                     label="Prix de vente (FCFA)"
                     variant="bordered"
-                    type="number"
-                    min={0}
-                    step="0.01"
+                    inputMode="decimal"
                     isInvalid={!!errors.prixVente}
                     errorMessage={errors.prixVente?.message}
                     classNames={{ label: "text-text-muted text-xs", input: "text-text" }}
@@ -178,9 +197,7 @@ export function NewProduitModal({ isOpen, defaultValues, onClose, onAdd }: NewPr
                   <Input
                     label="Prix d'achat (FCFA)"
                     variant="bordered"
-                    type="number"
-                    min={0}
-                    step="0.01"
+                    inputMode="decimal"
                     isInvalid={!!errors.prixAchat}
                     errorMessage={errors.prixAchat?.message}
                     classNames={{ label: "text-text-muted text-xs", input: "text-text" }}
@@ -203,7 +220,7 @@ export function NewProduitModal({ isOpen, defaultValues, onClose, onAdd }: NewPr
                   </div>
                   <div className="mt-1 h-14 w-14 shrink-0 overflow-hidden rounded-lg border border-border/60 bg-[var(--color-surface-high)]">
                     {watchedImageUrl ? (
-                      /* eslint-disable-next-line @next/next/no-img-element */
+                      // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={watchedImageUrl}
                         alt="Aperçu"
@@ -228,15 +245,13 @@ export function NewProduitModal({ isOpen, defaultValues, onClose, onAdd }: NewPr
             {/* Variante */}
             <div className="rounded-xl border border-border/60 bg-[color:rgba(34,81,60,0.15)] p-4">
               <p className="mb-3 text-[11px] uppercase tracking-wider text-text-muted">Variante</p>
-              <div className="grid grid-cols-2 gap-3">
-                {isChaussure ? (
+              <div className="space-y-3">
+                {/* Taille */}
+                {isChaussure || tailleOptions === null ? (
                   <Input
                     label="Pointure"
                     variant="bordered"
-                    type="number"
-                    min={28}
-                    max={60}
-                    step={1}
+                    inputMode="numeric"
                     placeholder="Ex : 42"
                     isInvalid={!!errors.taille}
                     errorMessage={errors.taille?.message}
@@ -255,23 +270,50 @@ export function NewProduitModal({ isOpen, defaultValues, onClose, onAdd }: NewPr
                       if (val) setValue("taille", String(val), { shouldValidate: true });
                     }}
                   >
-                    {TAILLE_OPTIONS.map((t) => (
+                    {(tailleOptions ?? []).map((t) => (
                       <SelectItem key={t}>{t}</SelectItem>
                     ))}
                   </Select>
                 )}
 
-                <Input
-                  label="Couleur"
-                  variant="bordered"
-                  isInvalid={!!errors.couleur}
-                  errorMessage={errors.couleur?.message}
-                  classNames={{ label: "text-text-muted text-xs", input: "text-text" }}
-                  {...register("couleur")}
-                />
-              </div>
+                {/* Couleur / label dynamique */}
+                <div>
+                  <p className="mb-1.5 text-[11px] uppercase tracking-wider text-text-muted">{couleurLabel}</p>
+                  {/* Presets cliquables */}
+                  {couleurPresets.length > 0 && (
+                    <div className="mb-2 flex flex-wrap gap-1.5">
+                      {couleurPresets.map((c) => (
+                        <Chip
+                          key={c}
+                          size="sm"
+                          variant="flat"
+                          className={
+                            watchedCouleur === c
+                              ? "cursor-pointer bg-accent text-black"
+                              : "cursor-pointer bg-[var(--color-surface-high)] text-text"
+                          }
+                          onClick={() => setValue("couleur", c, { shouldValidate: true })}
+                        >
+                          {c}
+                        </Chip>
+                      ))}
+                    </div>
+                  )}
+                  {/* Saisie libre / Autre */}
+                  <Input
+                    variant="bordered"
+                    placeholder={
+                      couleurPresets.length > 0
+                        ? `Autre ${couleurLabel.toLowerCase()}…`
+                        : `${couleurLabel}…`
+                    }
+                    isInvalid={!!errors.couleur}
+                    errorMessage={errors.couleur?.message}
+                    classNames={{ input: "text-text text-sm" }}
+                    {...register("couleur")}
+                  />
+                </div>
 
-              <div className="mt-3">
                 <Input
                   label="Seuil d'alerte stock (optionnel)"
                   variant="bordered"
@@ -290,8 +332,7 @@ export function NewProduitModal({ isOpen, defaultValues, onClose, onAdd }: NewPr
                 <Input
                   label="Quantité reçue"
                   variant="bordered"
-                  type="number"
-                  min={1}
+                  inputMode="numeric"
                   isInvalid={!!errors.quantite}
                   errorMessage={errors.quantite?.message}
                   classNames={{ label: "text-text-muted text-xs", input: "text-text" }}
@@ -300,9 +341,7 @@ export function NewProduitModal({ isOpen, defaultValues, onClose, onAdd }: NewPr
                 <Input
                   label="Prix unitaire d'achat (FCFA)"
                   variant="bordered"
-                  type="number"
-                  min={0}
-                  step="0.01"
+                  inputMode="decimal"
                   isInvalid={!!errors.prixUnitaire}
                   errorMessage={errors.prixUnitaire?.message}
                   classNames={{ label: "text-text-muted text-xs", input: "text-text" }}
@@ -317,10 +356,7 @@ export function NewProduitModal({ isOpen, defaultValues, onClose, onAdd }: NewPr
           <Button variant="light" onPress={() => { reset(); onClose(); }}>
             Annuler
           </Button>
-          <Button
-            className="bg-in font-semibold text-black"
-            onPress={() => void onSubmit()}
-          >
+          <Button className="bg-in font-semibold text-black" onPress={() => void onSubmit()}>
             Ajouter au bon d&apos;entrée
           </Button>
         </ModalFooter>
