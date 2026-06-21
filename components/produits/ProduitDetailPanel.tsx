@@ -9,9 +9,7 @@ import toast from "react-hot-toast";
 import type { AppError } from "@/types";
 import { createProduitSchema, type CreateProduitInput } from "@/lib/validators/produit.schema";
 import {
-  CATEGORY_GROUPS,
   DEFAULT_COLORS,
-  SHOE_SLUGS,
   SLUG_COULEUR_CONFIG,
   getTaillesForSlug,
   groupCategories,
@@ -77,7 +75,6 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
   /* ── logique catégorie → tailles / couleurs ────────────── */
   const selectedCat = categories.find((c) => c.id === selectedCategorieId);
   const taillePresets = getTaillesForSlug(selectedCat?.slug);     // null = chaussures
-  const isChaussure = selectedCat ? SHOE_SLUGS.has(selectedCat.slug) : false;
   const couleurConfig = selectedCat ? (SLUG_COULEUR_CONFIG[selectedCat.slug] ?? null) : null;
   const couleurLabel = couleurConfig?.label ?? "Couleur";
   // null config = catégorie standard → top 10 couleurs ; config avec presets vides = saisie libre
