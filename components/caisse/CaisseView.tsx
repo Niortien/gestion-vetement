@@ -38,7 +38,7 @@ export function CaisseView() {
       <SessionGuard>
         {/* Header recettes + bouton terminer */}
         <div className="rounded-xl border border-border/80 bg-[linear-gradient(145deg,rgba(143,126,245,0.18),rgba(255,212,71,0.08))] p-4 md:p-5">
-          <div className="flex items-start justify-between gap-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div>
               <p className="text-xs uppercase tracking-[0.1em] text-text-muted">Recettes du jour</p>
               <CurrencyDisplay montant={resume?.totalVentes ?? "0"} size="xl" tone="accent" className="mt-2" />
@@ -46,7 +46,7 @@ export function CaisseView() {
             <Button
               size="sm"
               variant="flat"
-              className="shrink-0 border border-out/40 bg-out/10 text-out"
+              className="w-full sm:w-auto shrink-0 border border-out/40 bg-out/10 text-out"
               isDisabled={!sessionId || closeSession.isPending}
               isLoading={closeSession.isPending}
               onPress={onOpen}
