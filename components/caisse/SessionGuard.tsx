@@ -1,7 +1,6 @@
 "use client";
 
-import { Spinner } from "@heroui/react";
-import { useEffect } from "react";
+import { Button, Spinner } from "@heroui/react";
 import { useActiveSession } from "@/features/caisse/query/caisse-queries";
 import { useOuvrirSession } from "@/features/caisse/mutation/caisse-mutations";
 
@@ -14,14 +13,7 @@ export function SessionGuard({ children }: SessionGuardProps) {
   const openMutation = useOuvrirSession();
   const activeSession = data?.data ?? null;
 
-  // Auto-ouvre une session dès que la page est chargée et qu'aucune n'est active
-  useEffect(() => {
-    if (!isLoading && !activeSession && !openMutation.isPending && !openMutation.isSuccess) {
-      openMutation.mutate({ montantOuverture: "0" });
-    }
-  }, [isLoading, activeSession, openMutation]);
-
-  if (isLoading || openMutation.isPending) {
+  if (isLoading) {
     return (
       <div className="flex h-32 items-center justify-center gap-3">
         <Spinner color="warning" size="sm" />
@@ -30,16 +22,27 @@ export function SessionGuard({ children }: SessionGuardProps) {
     );
   }
 
-  if (openMutation.isError) {
+  if (!activeSession) {
     return (
-      <div className="rounded-xl border border-out/30 bg-out/8 p-4 text-center">
-        <p className="text-sm text-out">Impossible d&apos;ouvrir la caisse. Vérifie ta connexion.</p>
-        <button
-          onClick={() => openMutation.mutate({ montantOuverture: "0" })}
-          className="mt-3 text-xs font-semibold text-text-muted underline"
+      <div className="flex flex-col items-center justify-center gap-4 rounded-xl border border-in/30 bg-[color:rgba(57,211,83,0.06)] py-12 px-6 text-center">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[color:rgba(57,211,83,0.12)] text-3xl">
+          ☀️
+        </div>
+        <div>
+          <p className="font-[var(--font-display)] text-xl text-text">Prêt pour la journée ?</p>
+          <p className="mt-1 text-sm text-text-muted">Aucune session caisse n&apos;est ouverte</p>
+        </div>
+        <Button
+          size="lg"
+          className="bg-in font-semibold text-black px-8"
+          isLoading={openMutation.isPending}
+          onPress={() => openMutation.mutate({ montantOuverture: "0" })}
         >
-          Réessayer
-        </button>
+          Commencer la journée
+        </Button>
+        {openMutation.isError && (
+          <p className="text-xs text-out">Impossible d&apos;ouvrir la caisse. Vérifie ta connexion.</p>
+        )}
       </div>
     );
   }

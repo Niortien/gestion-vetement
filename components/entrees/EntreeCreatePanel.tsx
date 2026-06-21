@@ -35,6 +35,7 @@ export function EntreeCreatePanel({ isOpen, onClose }: EntreeCreatePanelProps) {
   const [lines, setLines] = useState<EntreeFormLineData[]>([]);
   const [addMode, setAddMode] = useState<AddMode>("idle");
   const [replacingIndex, setReplacingIndex] = useState<number | null>(null);
+  const [dateOperation, setDateOperation] = useState("");
 
   const {
     register,
@@ -111,6 +112,7 @@ export function EntreeCreatePanel({ isOpen, onClose }: EntreeCreatePanelProps) {
       {
         fournisseur: fields.fournisseur.trim(),
         notes: fields.notes?.trim() || undefined,
+        dateOperation: dateOperation || undefined,
         lignes: lines.map((l) => ({
           varianteId: l.varianteId,
           newProduit: l.newProduit,
@@ -123,6 +125,7 @@ export function EntreeCreatePanel({ isOpen, onClose }: EntreeCreatePanelProps) {
           toast.success("Entrée enregistrée !");
           reset();
           setLines([]);
+          setDateOperation("");
           onClose();
         },
         onError: (err) =>
@@ -211,6 +214,15 @@ export function EntreeCreatePanel({ isOpen, onClose }: EntreeCreatePanelProps) {
                 placeholder="Notes (optionnel)"
                 classNames={{ input: "text-sm text-text-muted" }}
                 {...register("notes")}
+              />
+              <Input
+                type="date"
+                variant="underlined"
+                label="Date de l'opération (si différente d'aujourd'hui)"
+                value={dateOperation}
+                onValueChange={setDateOperation}
+                max={new Date().toISOString().split("T")[0]}
+                classNames={{ input: "text-sm", label: "text-xs text-text-dim" }}
               />
             </div>
           </section>

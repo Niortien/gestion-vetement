@@ -22,8 +22,8 @@ import { produitKeys } from "../query/produits-queries";
 export function useCreateProduit() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ body, boutiqueId }: { body: CreateProduitBody; boutiqueId?: string }) =>
-      createProduit(body, boutiqueId),
+    mutationFn: ({ body, boutiqueIds }: { body: CreateProduitBody; boutiqueIds?: string[] }) =>
+      createProduit(body, boutiqueIds),
     onSuccess: async () => {
       await qc.invalidateQueries({ queryKey: produitKeys.all });
     },

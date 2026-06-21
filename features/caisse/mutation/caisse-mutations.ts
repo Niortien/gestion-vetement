@@ -92,12 +92,12 @@ export function useCaisseSocket() {
     if (!token) return;
     const socket = getCaisseSocket(token);
 
-    socket.on("nouvelle-transaction", async (transaction: Transaction) => {
+    socket.on("transaction.created", async (transaction: Transaction) => {
       addTransaction(transaction);
       await qc.invalidateQueries({ queryKey: caisseKeys.all });
     });
 
-    socket.on("session-fermee", async () => {
+    socket.on("session.closed", async () => {
       clearSession();
       toast("Session clôturée");
       router.push("/caisse");

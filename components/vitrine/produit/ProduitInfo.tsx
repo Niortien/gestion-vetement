@@ -1,7 +1,8 @@
 "use client";
 
+import { useMemo } from "react";
 import { motion } from "framer-motion";
-import type { Produit } from "@/types";
+import type { Produit, VarianteBoutique } from "@/types";
 
 interface ProduitInfoProps {
   produit: Produit;
@@ -42,6 +43,18 @@ function StockBadge({ stock }: { stock: number }) {
 
 export function ProduitInfo({ produit, totalStock }: ProduitInfoProps) {
   const prix = parseFloat(produit.prixVente || "0");
+
+  const boutiquesAvecStock = useMemo(() => {
+    const seen = new Set<string>();
+    const result: VarianteBoutique[] = [];
+    for (const v of produit.variantes ?? []) {
+      if (v.quantiteStock > 0 && v.boutique && !seen.has(v.boutique.id)) {
+        seen.add(v.boutique.id);
+        result.push(v.boutique);
+      }
+    }
+    return result;
+  }, [produit.variantes]);
   const isPromo = produit.enPromo && !!produit.prixPromo;
   const prixPromo = isPromo ? parseFloat(produit.prixPromo!) : null;
   const tauxReduction = isPromo && prixPromo !== null
@@ -89,6 +102,21 @@ export function ProduitInfo({ produit, totalStock }: ProduitInfoProps) {
           </motion.span>
         )}
       </div>
+
+      {/* Boutiques avec stock */}
+      {boutiquesAvecStock.length > 0 && (
+        <div className="mt-3 flex flex-wrap gap-2">
+          {boutiquesAvecStock.map((b) => (
+            <span
+              key={b.id}
+              className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold"
+              style={{ borderColor: "rgba(194,255,0,0.35)", backgroundColor: "rgba(194,255,0,0.08)", color: "var(--v-lime)" }}
+            >
+              📍 {b.nom}{b.ville ? ` — ${b.ville}` : ""}
+            </span>
+          ))}
+        </div>
+      )}
 
       {/* Prix */}
       <div className="mt-5">

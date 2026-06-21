@@ -25,6 +25,7 @@ export interface NewProduitForEntree {
 export interface CreateEntreeBody {
   fournisseur: string;
   notes?: string;
+  dateOperation?: string;
   lignes: Array<{
     varianteId?: string;
     newProduit?: NewProduitForEntree;

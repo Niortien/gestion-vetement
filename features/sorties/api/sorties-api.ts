@@ -15,6 +15,7 @@ export interface CreateSortieBody {
   type: TypeSortie;
   notes?: string;
   remiseMontant?: string;
+  dateOperation?: string;
   lignes: Array<{
     varianteId: string;
     quantite: number;

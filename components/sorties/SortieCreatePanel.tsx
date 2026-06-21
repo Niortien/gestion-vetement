@@ -51,6 +51,8 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
   const [recuOpen, setRecuOpen] = useState(false);
   const [recuData, setRecuData] = useState<RecuData | null>(null);
 
+  const [dateOperation, setDateOperation] = useState("");
+
   // Remise (uniquement pour VENTE)
   const [remiseMontant, setRemiseMontant] = useState("");
   const [remiseTaux, setRemiseTaux] = useState("");
@@ -84,6 +86,7 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
     setPickerOpen(false);
     setReplacingIndex(null);
     setRecuData(null);
+    setDateOperation("");
     setRemiseMontant("");
     setRemiseTaux("");
     setPaiementMode(null);
@@ -176,6 +179,7 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
         {
           type: selectedType!,
           notes: sortieNotes.trim() || undefined,
+          dateOperation: dateOperation || undefined,
           lignes: lines.map((l) => ({
             varianteId: l.varianteId,
             quantite: l.quantite,
@@ -352,6 +356,18 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
                 size="sm"
                 classNames={{ input: "text-sm text-text-muted" }}
               />
+              {selectedType !== TypeSortie.VENTE && (
+                <Input
+                  type="date"
+                  variant="underlined"
+                  label="Date de l'opération (si différente d'aujourd'hui)"
+                  value={dateOperation}
+                  onValueChange={setDateOperation}
+                  max={new Date().toISOString().split("T")[0]}
+                  size="sm"
+                  classNames={{ input: "text-sm", label: "text-xs text-text-dim" }}
+                />
+              )}
               <section className="rounded-lg border border-border/80 bg-[color:rgba(81,34,68,0.25)] p-4">
                 <div className="mb-3 flex items-center justify-between">
                   <p className="text-xs uppercase tracking-wide text-text-muted">Produits</p>

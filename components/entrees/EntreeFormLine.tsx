@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Button, Input } from "@heroui/react";
 import type { NewProduitForEntree } from "@/features/entrees/api/entrees-api";
 
@@ -25,6 +26,28 @@ interface EntreeFormLineProps {
 
 export function EntreeFormLine({ line, index, onPickVariante, onEditNew, onChange, onRemove }: EntreeFormLineProps) {
   const sousTotal = (line.quantite * parseFloat(line.prixUnitaire || "0")).toFixed(0);
+
+  // Saisie libre : local state permet d'effacer et retaper sans blocage
+  const [qtyInput, setQtyInput] = useState(String(line.quantite));
+
+  useEffect(() => {
+    setQtyInput(String(line.quantite));
+  }, [line.quantite]);
+
+  const handleQtyChange = (val: string) => {
+    if (/^\d*$/.test(val)) setQtyInput(val);
+  };
+
+  const handleQtyBlur = () => {
+    const n = parseInt(qtyInput, 10);
+    if (isNaN(n) || n < 1) {
+      onChange(index, "quantite", 1);
+      setQtyInput("1");
+    } else {
+      onChange(index, "quantite", n);
+      setQtyInput(String(n));
+    }
+  };
 
   const handleRowClick = () => {
     if (line.isNew && onEditNew) {
@@ -56,27 +79,25 @@ export function EntreeFormLine({ line, index, onPickVariante, onEditNew, onChang
         </span>
       </button>
 
-      {/* Quantité */}
+      {/* Quantité — saisie libre, validation au blur */}
       <Input
-        type="number"
+        inputMode="numeric"
         size="sm"
         variant="bordered"
-        min={1}
-        value={String(line.quantite)}
-        onChange={(e) => onChange(index, "quantite", Math.max(1, Number(e.target.value)))}
+        value={qtyInput}
+        onValueChange={handleQtyChange}
+        onBlur={handleQtyBlur}
         classNames={{ input: "text-center font-[var(--font-mono)] text-sm" }}
         aria-label={`Quantité ligne ${index + 1}`}
       />
 
       {/* Prix unitaire */}
       <Input
-        type="number"
+        inputMode="decimal"
         size="sm"
         variant="bordered"
-        min={0}
-        step="0.01"
         value={line.prixUnitaire}
-        onChange={(e) => onChange(index, "prixUnitaire", e.target.value)}
+        onValueChange={(val) => onChange(index, "prixUnitaire", val)}
         endContent={<span className="text-[10px] text-text-muted">FCFA</span>}
         classNames={{ input: "font-[var(--font-mono)] text-sm" }}
         aria-label={`Prix unitaire ligne ${index + 1}`}

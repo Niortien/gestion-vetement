@@ -67,8 +67,12 @@ export const getProduitById = (id: string) =>
 export const getProduitMouvements = (id: string, params?: ProduitMouvementsParams) =>
   apiGet<MouvementStock[]>(`/produits/${id}/mouvements`, params as Record<string, unknown> | undefined);
 
-export const createProduit = (body: CreateProduitBody, boutiqueId?: string) =>
-  apiPost<Produit, CreateProduitBody>("/produits", body, boutiqueId ? { boutiqueId } : undefined);
+export const createProduit = (body: CreateProduitBody, boutiqueIds?: string[]) =>
+  apiPost<Produit, CreateProduitBody>(
+    "/produits",
+    body,
+    boutiqueIds && boutiqueIds.length > 0 ? { boutiqueIds: boutiqueIds.join(",") } : undefined,
+  );
 
 export const updateProduit = (id: string, body: UpdateProduitBody) =>
   apiPatch<Produit, UpdateProduitBody>(`/produits/${id}`, body);

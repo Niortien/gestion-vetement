@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Chip, Input, Select, SelectItem, Skeleton, Slider, Spinner } from "@heroui/react";
+import { Button, Checkbox, Chip, Input, Skeleton, Slider, Spinner } from "@heroui/react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import type { AppError } from "@/types";
@@ -34,8 +34,10 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
   const defaultBoutiqueId = useBoutiqueId();
   const { data: boutiquesRes } = useBoutiques();
   const boutiques = boutiquesRes?.data ?? [];
-  // Sélection locale de boutique pour la création — indépendante de la sidebar
-  const [localBoutiqueId, setLocalBoutiqueId] = useState<string | undefined>(defaultBoutiqueId);
+  // Sélection locale multi-boutique pour la création
+  const [selectedBoutiqueIds, setSelectedBoutiqueIds] = useState<string[]>(
+    defaultBoutiqueId ? [defaultBoutiqueId] : []
+  );
   const isPending = createMutation.isPending || updateMutation.isPending;
 
   /* ── categories ─────────────────────────────────────────── */
@@ -208,7 +210,7 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
             imageUrl: fields.imageUrl?.trim() || undefined,
             variantes,
           },
-          boutiqueId: localBoutiqueId,
+          boutiqueIds: user?.role === "ADMIN" ? selectedBoutiqueIds : undefined,
         },
         {
           onSuccess: () => { toast.success("Produit créé !"); onClose(); },
@@ -255,24 +257,31 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
         {/* SÉLECTEUR BOUTIQUE (admin uniquement, création uniquement) */}
         {isNew && user?.role === "ADMIN" && (
           <section className="rounded-lg border border-border/80 bg-[color:rgba(45,69,103,0.4)] p-4">
-            <p className="mb-3 text-xs uppercase tracking-[0.08em] text-text-muted">Boutique</p>
-            <Select
-              variant="bordered"
-              placeholder="Aucune boutique"
-              selectedKeys={localBoutiqueId ? new Set([localBoutiqueId]) : new Set()}
-              onSelectionChange={(keys) => {
-                const val = Array.from(keys)[0] as string | undefined;
-                setLocalBoutiqueId(val ?? undefined);
-              }}
-              aria-label="Boutique du produit"
-            >
+            <p className="mb-3 text-xs uppercase tracking-[0.08em] text-text-muted">Boutiques</p>
+            <div className="flex flex-col gap-2">
               {boutiques.map((b) => (
-                <SelectItem key={b.id}>{b.nom}{b.ville ? ` · ${b.ville}` : ""}</SelectItem>
+                <Checkbox
+                  key={b.id}
+                  isSelected={selectedBoutiqueIds.includes(b.id)}
+                  onValueChange={(checked) => {
+                    setSelectedBoutiqueIds((cur) =>
+                      checked ? [...cur, b.id] : cur.filter((id) => id !== b.id)
+                    );
+                  }}
+                  classNames={{ label: "text-sm text-text" }}
+                >
+                  {b.nom}{b.ville ? ` · ${b.ville}` : ""}
+                </Checkbox>
               ))}
-            </Select>
-            {!localBoutiqueId && (
+            </div>
+            {selectedBoutiqueIds.length === 0 && (
               <p className="mt-2 text-[11px] text-text-muted/70">
                 Sans boutique — le produit existera dans le catalogue sans stock attribué
+              </p>
+            )}
+            {selectedBoutiqueIds.length > 1 && (
+              <p className="mt-2 text-[11px] text-in/80">
+                Les variantes seront dupliquées pour chaque boutique sélectionnée
               </p>
             )}
           </section>

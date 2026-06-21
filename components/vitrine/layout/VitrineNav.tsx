@@ -162,7 +162,7 @@ export function VitrineNav() {
             </nav>
 
             <div className="border-t border-[var(--v-border)] px-8 py-6">
-              <p className="text-sm text-[var(--v-dim)]">Riviere — Streetwear Dakar</p>
+              <p className="text-sm text-[var(--v-dim)]">Riviere — Streetwear Abidjan</p>
             </div>
           </motion.div>
         )}
