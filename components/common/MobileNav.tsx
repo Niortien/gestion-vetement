@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@heroui/react";
@@ -58,7 +59,14 @@ export function MobileNav() {
     <>
       <header className="flex shrink-0 items-center justify-between border-b border-border bg-surface px-4 py-3 lg:hidden">
         <div className="flex items-center gap-2.5">
-          <h2 className="font-[var(--font-display)] text-xl text-text">Riviere</h2>
+          <Image
+            src="/images/logo/logo.jpeg"
+            alt="Riviere"
+            height={36}
+            width={120}
+            className="h-9 w-auto object-contain"
+            priority
+          />
           {/* Badge boutique active visible dans le header sans ouvrir le drawer */}
           {isAdmin && <AdminBoutiqueBadge />}
         </div>
@@ -96,7 +104,13 @@ export function MobileNav() {
               className="fixed inset-y-0 left-0 z-[510] flex w-72 flex-col gap-3 overflow-y-auto border-r border-border bg-surface p-4 lg:hidden"
             >
               <div className="flex items-center justify-between">
-                <h2 className="font-[var(--font-display)] text-xl text-text">Riviere</h2>
+                <Image
+                  src="/images/logo/logo.jpeg"
+                  alt="Riviere"
+                  height={36}
+                  width={120}
+                  className="h-9 w-auto object-contain"
+                />
                 <button
                   type="button"
                   onClick={() => setOpen(false)}

@@ -27,19 +27,19 @@ export function ProduitCard({ produit, onPress }: ProduitCardProps) {
       onPress={onPress}
       className="group mb-3 w-full overflow-hidden border border-border/80 bg-[linear-gradient(145deg,rgba(45,69,103,0.32),rgba(34,54,81,0.8))] text-left transition hover:scale-[1.02] hover:border-accent/40 hover:shadow-glow-yellow"
     >
-      <div className="relative h-36 w-full overflow-hidden">
+      <div className="relative aspect-[3/4] w-full overflow-hidden bg-[color:rgba(20,32,50,0.9)]">
         {imageUrl && !imgError ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={imageUrl}
             alt={produit.nom}
-            className="h-full w-full object-cover"
+            className="h-full w-full object-contain"
             onError={() => setImgError(true)}
           />
         ) : (
           <div className="h-full w-full bg-gradient-to-br from-[var(--color-surface-high)] via-[color:rgba(143,126,245,0.22)] to-border" />
         )}
-        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgba(23,38,58,0.85)_0%,transparent_70%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgba(23,38,58,0.75)_0%,transparent_55%)]" />
         {isPromo && (
           <div className="absolute left-2 top-2 rounded-full bg-orange-500 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
             -{tauxReduction}%

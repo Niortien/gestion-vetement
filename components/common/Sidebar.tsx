@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@heroui/react";
@@ -33,7 +34,16 @@ export function Sidebar() {
 
   return (
     <aside className="hidden h-full w-56 flex-col gap-3 overflow-y-auto border-r border-border bg-surface p-4 lg:flex">
-      <h2 className="font-[var(--font-display)] text-xl text-text">Riviere</h2>
+      <Link href="/" tabIndex={-1}>
+        <Image
+          src="/images/logo/logo.jpeg"
+          alt="Riviere"
+          height={48}
+          width={160}
+          className="h-12 w-auto object-contain"
+          priority
+        />
+      </Link>
 
       {/* Sélecteur boutique admin — isolé pour éviter l'appel API pour les vendeurs */}
       {isAdmin && <AdminBoutiqueSelect />}

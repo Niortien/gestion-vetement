@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -37,11 +38,15 @@ export function VitrineNav() {
         />
         <div className="relative mx-auto flex h-16 max-w-7xl items-center justify-between px-5">
           {/* Logo */}
-          <Link
-            href="/"
-            className="font-[var(--font-display)] text-xl font-black tracking-[0.15em] text-[var(--v-text)] hover:text-[var(--v-lime)] transition-colors"
-          >
-            RIVIERE
+          <Link href="/" aria-label="Riviere — Accueil">
+            <Image
+              src="/images/logo/logo.jpeg"
+              alt="Riviere"
+              height={44}
+              width={140}
+              className="h-11 w-auto object-contain"
+              priority
+            />
           </Link>
 
           {/* Liens desktop */}
@@ -125,9 +130,13 @@ export function VitrineNav() {
             transition={{ duration: 0.2 }}
           >
             <div className="flex h-16 items-center justify-between px-5">
-              <span className="font-[var(--font-display)] text-xl font-black tracking-[0.15em] text-[var(--v-text)]">
-                RIVIERE
-              </span>
+              <Image
+                src="/images/logo/logo.jpeg"
+                alt="Riviere"
+                height={40}
+                width={130}
+                className="h-10 w-auto object-contain"
+              />
               <button
                 onClick={() => setMenuOpen(false)}
                 className="flex h-10 w-10 items-center justify-center text-[var(--v-muted)]"
