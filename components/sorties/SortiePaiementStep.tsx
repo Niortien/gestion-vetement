@@ -1,20 +1,22 @@
 "use client";
 
+import Image from "next/image";
 import { Input } from "@heroui/react";
 import { ModePaiement } from "@/types";
 
 interface ModeCard {
   mode: ModePaiement;
   label: string;
-  icon: string;
+  image?: string;
+  icon?: string;
 }
 
 const MODE_CARDS: ModeCard[] = [
-  { mode: ModePaiement.CASH, label: "Espèces", icon: "💵" },
-  { mode: ModePaiement.WAVE, label: "Wave", icon: "🌊" },
-  { mode: ModePaiement.ORANGE_MONEY, label: "Orange", icon: "🟠" },
-  { mode: ModePaiement.CARTE, label: "Carte", icon: "💳" },
-  { mode: ModePaiement.MTN_MONEY, label: "MTN", icon: "🟡" },
+  { mode: ModePaiement.CASH,        label: "Espèces",       icon: "💵" },
+  { mode: ModePaiement.WAVE,        label: "Wave",          image: "/images/paiement/wave.jpg" },
+  { mode: ModePaiement.ORANGE_MONEY,label: "Orange Money",  image: "/images/paiement/orange-money.jpg" },
+  { mode: ModePaiement.MTN_MONEY,   label: "MTN",           image: "/images/paiement/mtn.jpg" },
+  { mode: ModePaiement.CARTE,       label: "Carte",         icon: "💳" },
 ];
 
 export interface SortiePaiementStepProps {
@@ -87,14 +89,26 @@ export function SortiePaiementStep({
               type="button"
               onClick={() => onSelect(card.mode)}
               className={[
-                "flex flex-col items-center gap-1 rounded-xl border-2 px-1 py-2.5 transition-all",
+                "flex flex-col items-center gap-1.5 rounded-xl border-2 px-1 py-2.5 transition-all",
                 selected === card.mode
                   ? "border-accent bg-[color:rgba(255,212,71,0.15)] ring-2 ring-accent ring-offset-1 ring-offset-[var(--color-surface)]"
                   : "border-border/60 bg-[var(--color-surface-high)] hover:border-accent/40",
               ].join(" ")}
               aria-pressed={selected === card.mode}
             >
-              <span className="text-lg leading-none">{card.icon}</span>
+              {card.image ? (
+                <div className="h-7 w-full overflow-hidden rounded-md">
+                  <Image
+                    src={card.image}
+                    alt={card.label}
+                    width={56}
+                    height={28}
+                    className="h-full w-full object-contain"
+                  />
+                </div>
+              ) : (
+                <span className="text-xl leading-none">{card.icon}</span>
+              )}
               <span className="text-[9px] font-medium leading-tight text-text">{card.label}</span>
             </button>
           ))}
