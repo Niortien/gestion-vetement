@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 
-const WORDS = ["Authentique.", "Exclusif.", "Dakarois."];
+const WORDS = ["Authentique.", "Exclusif.", "Ivoirien."];
 
 export function HomeBrandStatement() {
   return (
@@ -19,7 +19,7 @@ export function HomeBrandStatement() {
           className="font-[var(--font-display)] text-[20vw] font-black uppercase leading-none opacity-[0.03]"
           style={{ color: "var(--v-text)" }}
         >
-          RIVIERE
+          DRI VALÉ
         </span>
       </div>
 
@@ -65,9 +65,9 @@ export function HomeBrandStatement() {
           viewport={{ once: true }}
           transition={{ delay: 0.4, duration: 0.6 }}
         >
-          Riviere, c&apos;est le reflet d&apos;une génération qui refuse le compromis.
-          Des pièces sélectionnées avec soin, des drops qui font sens, une communauté
-          qui partage les mêmes valeurs. Streetwear de Dakar, pour le monde.
+          Dri Valé, c&apos;est le reflet d&apos;une génération qui refuse le compromis.
+          Des vêtements sélectionnés avec soin, des pièces importées directement des États-Unis,
+          une boutique qui fait sens. Mode d&apos;Abidjan, pour toute la Côte d&apos;Ivoire.
         </motion.p>
 
         {/* Stats */}

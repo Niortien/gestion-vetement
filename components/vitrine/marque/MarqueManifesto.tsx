@@ -28,18 +28,18 @@ export function MarqueManifesto() {
           style={{ color: "var(--v-muted)" }}
         >
           <p>
-            Riviere, c&apos;est né d&apos;un constat simple : à Dakar, la culture streetwear existe depuis
-            longtemps, mais les vraies pièces restaient inaccessibles. On commandait à l&apos;étranger,
-            on payait des prix excessifs, on attendait des semaines pour recevoir des faux.
+            Dri Valé, c&apos;est né d&apos;un constat simple : à Yopougon, trouver des vêtements de
+            qualité à prix juste relevait du parcours du combattant. On importait de loin, on payait
+            des intermédiaires, on recevait des produits qui ne ressemblaient pas aux photos.
           </p>
           <p>
-            On a décidé de changer ça. Apporter des pièces authentiques — sneakers, cuts, layers —
-            directement à la communauté qui le mérite. Pas de filtre, pas d&apos;intermédiaire inutile.
-            Un rapport direct entre ceux qui portent et ceux qui sélectionnent.
+            On a décidé de changer ça. Apporter directement des pièces authentiques — ensembles,
+            abayas, casquettes, maroquinerie, parfumerie — importées des États-Unis et soigneusement
+            sélectionnées. Un rapport direct entre la boutique et ceux qui portent.
           </p>
           <p>
-            Le nom Riviere, c&apos;est le flux. L&apos;idée que la mode se déplace, circule, rejoint
-            ceux qui la vivent. Dakar est notre source, notre terrain, notre inspiration première.
+            Dri Valé, c&apos;est Yopougon. Notre quartier, notre terrain, notre inspiration première.
+            On livre à Abidjan et partout en Côte d&apos;Ivoire — et même à l&apos;étranger.
           </p>
         </motion.div>
 
@@ -56,12 +56,12 @@ export function MarqueManifesto() {
             className="font-[var(--font-display)] font-black leading-tight tracking-tight"
             style={{ fontSize: "clamp(22px,4vw,40px)", color: "var(--v-text)" }}
           >
-            &quot;Le streetwear est une langue.
+            &quot;La mode est un langage.
             <br />
-            Riviere t&apos;apprend à la parler couramment.&quot;
+            Dri Valé te donne les mots.&quot;
           </p>
           <footer className="mt-4 text-sm font-semibold" style={{ color: "var(--v-dim)" }}>
-            — Équipe Riviere, Dakar
+            — Dri Valé Boutique, Yopougon Abidjan
           </footer>
         </motion.blockquote>
       </div>

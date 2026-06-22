@@ -38,10 +38,10 @@ export function VitrineNav() {
         />
         <div className="relative mx-auto flex h-16 max-w-7xl items-center justify-between px-5">
           {/* Logo */}
-          <Link href="/" aria-label="Riviere — Accueil">
+          <Link href="/" aria-label="Dri Valé — Accueil">
             <Image
               src="/images/logo/logo.jpeg"
-              alt="Riviere"
+              alt="Dri Valé"
               height={44}
               width={140}
               className="h-11 w-auto object-contain"
@@ -132,7 +132,7 @@ export function VitrineNav() {
             <div className="flex h-16 items-center justify-between px-5">
               <Image
                 src="/images/logo/logo.jpeg"
-                alt="Riviere"
+                alt="Dri Valé"
                 height={40}
                 width={130}
                 className="h-10 w-auto object-contain"
@@ -171,7 +171,7 @@ export function VitrineNav() {
             </nav>
 
             <div className="border-t border-[var(--v-border)] px-8 py-6">
-              <p className="text-sm text-[var(--v-dim)]">Riviere — Streetwear Abidjan</p>
+              <p className="text-sm text-[var(--v-dim)]">Dri Valé — Boutique Yopougon, Abidjan</p>
             </div>
           </motion.div>
         )}

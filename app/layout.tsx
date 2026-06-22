@@ -22,8 +22,8 @@ const monoFont = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Rivere de Stock",
-  description: "Gestion de stock et de caisse pour streetwear",
+  title: "Dri Valé — Gestion Boutique",
+  description: "Gestion de stock et de caisse pour Dri Valé Boutique, Yopougon Abidjan",
 };
 
 export default function RootLayout({

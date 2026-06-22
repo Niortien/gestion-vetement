@@ -44,9 +44,11 @@ export function MarqueContact() {
             Adresse
           </p>
           <p className="text-sm font-semibold leading-relaxed" style={{ color: "var(--v-text)" }}>
-            Rue des Almadies
+            Ananeraie Oasis, Quartier Maroc
             <br />
-            Dakar, Sénégal
+            Yopougon, Abidjan
+            <br />
+            Côte d&apos;Ivoire
           </p>
           <a
             href="https://maps.google.com"
@@ -107,12 +109,14 @@ export function MarqueContact() {
               WhatsApp Business
             </a>
             <a
-              href="mailto:contact@riviere.sn"
+              href="https://www.tiktok.com/@kaypeurbienpaye1"
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex items-center gap-2 text-sm font-semibold transition-colors hover:text-[var(--v-text)]"
               style={{ color: "var(--v-muted)" }}
             >
               <span style={{ color: "var(--v-purple)" }}>●</span>
-              contact@riviere.sn
+              TikTok @kaypeurbienpaye1
             </a>
           </div>
         </motion.div>

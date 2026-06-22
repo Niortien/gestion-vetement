@@ -4,31 +4,31 @@ import { motion } from "framer-motion";
 
 const TIMELINE = [
   {
-    year: "2020",
-    title: "Les débuts",
+    year: "Les débuts",
+    title: "L'idée",
     description:
-      "Un groupe de passionnés dakarois commence à importer des sneakers authentiques pour le cercle proche. Le bouche-à-oreille fait le reste.",
+      "À Yopougon, une passion pour la mode et les produits importés. Les premières pièces arrivent des États-Unis — ensembles, casquettes, accessoires — et trouvent preneur en quelques heures. Le bouche-à-oreille fait le reste.",
     img: "/story-2020.jpg",
   },
   {
-    year: "2022",
-    title: "La boutique",
+    year: "La boutique",
+    title: "Ananeraie Oasis",
     description:
-      "Riviere ouvre ses portes physiques à Dakar. Le concept se précise : sélection pointue, prix justes, authenticité certifiée.",
+      "Dri Valé ouvre ses portes à l'Ananeraie Oasis, quartier Maroc, Yopougon. Le concept se précise : vêtements de qualité, maroquinerie, parfumerie, produits importés USA — à prix justes, sans intermédiaire.",
     img: "/story-2022.jpg",
   },
   {
-    year: "2024",
-    title: "La vitrine digitale",
+    year: "Digital",
+    title: "TikTok & WhatsApp",
     description:
-      "Lancement de la commande via WhatsApp, puis de la vitrine en ligne. La communauté Riviere dépasse Dakar et touche toute la région.",
+      "La boutique se retrouve sur TikTok sous le nom DRIVALÉ_SHOP. Les commandes via WhatsApp explosent. Livraisons à Abidjan (Selmer, Niangon) et expédition partout en Côte d'Ivoire et à l'étranger.",
     img: "/story-2024.jpg",
   },
   {
     year: "Aujourd'hui",
     title: "Toujours en mouvement",
     description:
-      "Nouvelles collections chaque saison, collaborations locales en cours, et une communauté qui grandit chaque jour. Le flux continue.",
+      "Nouvelles arrivées régulières, une clientèle fidèle qui grandit chaque jour, et une boutique qui reste le point de repère mode de Yopougon. Le mouvement continue.",
     img: "/story-now.jpg",
   },
 ];

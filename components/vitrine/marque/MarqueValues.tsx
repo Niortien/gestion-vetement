@@ -7,7 +7,7 @@ const VALUES = [
     num: "01",
     title: "Authenticité",
     description:
-      "Chaque pièce que nous vendons est vérifiée. Pas de replica, pas de compromis. L'authentique ou rien — c'est notre engagement envers notre communauté.",
+      "Chaque pièce que nous vendons est vérifiée. Produits importés directement des États-Unis, sans replica, sans compromis. L'authentique ou rien — c'est notre engagement envers notre clientèle.",
   },
   {
     num: "02",
@@ -19,7 +19,7 @@ const VALUES = [
     num: "03",
     title: "Communauté",
     description:
-      "Riviere, c'est avant tout une famille. Des gens qui vivent le street, qui comprennent la culture, qui s'entraident. La boutique est un point de rencontre, pas juste un commerce.",
+      "Dri Valé, c'est avant tout un lieu de vie. Des gens de Yopougon qui comprennent la mode, qui s'entraident. La boutique est un point de rencontre du quartier, pas juste un commerce.",
   },
 ];
 

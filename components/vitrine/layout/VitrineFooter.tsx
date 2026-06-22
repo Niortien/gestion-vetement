@@ -9,7 +9,7 @@ const FOOTER_LINKS = [
 ];
 
 export function VitrineFooter() {
-  const waUrl = getWhatsappUrl("Bonjour Riviere, j'ai une question !");
+  const waUrl = getWhatsappUrl("Bonjour Dri Valé, j'ai une question !");
 
   return (
     <footer
@@ -24,11 +24,11 @@ export function VitrineFooter() {
               className="font-[var(--font-display)] text-2xl font-black tracking-[0.15em]"
               style={{ color: "var(--v-text)" }}
             >
-              RIVIERE
+              DRI VALÉ
             </p>
             <p className="mt-3 text-sm leading-relaxed" style={{ color: "var(--v-muted)" }}>
-              Le streetwear authentique de Dakar.<br />
-              Qualité, style, communauté.
+              Vêtements, accessoires et produits importés.<br />
+              Yopougon, Abidjan — Côte d&apos;Ivoire.
             </p>
             <a
               href={waUrl}
@@ -78,7 +78,8 @@ export function VitrineFooter() {
               Contact
             </p>
             <ul className="space-y-2 text-sm" style={{ color: "var(--v-muted)" }}>
-              <li>Dakar, Plateau</li>
+              <li>Ananeraie Oasis, Yopougon</li>
+              <li>Quartier Maroc, Abidjan</li>
               <li>Lun–Sam : 9h–20h</li>
               <li>
                 <a
@@ -87,7 +88,7 @@ export function VitrineFooter() {
                   rel="noopener noreferrer"
                   className="hover:text-[#25D366] transition-colors"
                 >
-                  +221 77 000 00 00
+                  +225 07 09 29 44 68
                 </a>
               </li>
             </ul>
@@ -98,8 +99,8 @@ export function VitrineFooter() {
           className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t pt-8 text-xs"
           style={{ borderColor: "var(--v-border)", color: "var(--v-dim)" }}
         >
-          <span>© 2025 Riviere. Tous droits réservés.</span>
-          <span>Dakar · Sénégal</span>
+          <span>© 2025 Dri Valé Boutique. Tous droits réservés.</span>
+          <span>Yopougon · Abidjan · Côte d&apos;Ivoire</span>
         </div>
       </div>
     </footer>

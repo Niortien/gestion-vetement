@@ -2,9 +2,9 @@ import { MarqueView } from "@/components/vitrine/marque/MarqueView";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "La Marque — Riviere | Streetwear Dakar",
+  title: "La Marque — Dri Valé | Boutique Yopougon",
   description:
-    "Découvrez l'histoire de Riviere, notre manifeste et nos valeurs. Le streetwear authentique de Dakar.",
+    "Découvrez l'histoire de Dri Valé, notre boutique à Yopougon Abidjan. Vêtements, accessoires et produits importés USA.",
 };
 
 export default function MarquePage() {

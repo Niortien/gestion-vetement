@@ -35,7 +35,7 @@ export function buildWhatsappMessage(order: WhatsappOrder): string {
   const notesStr = order.notes ? `\n💬 *NOTES*\n${order.notes}` : "";
 
   return [
-    `🛒 *COMMANDE RIVIERE*`,
+    `🛒 *COMMANDE DRI VALÉ*`,
     sep,
     ``,
     items,
@@ -57,6 +57,6 @@ export function buildWhatsappMessage(order: WhatsappOrder): string {
 }
 
 export function getWhatsappUrl(message: string): string {
-  const number = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "221770000000";
+  const number = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "2250709294468";
   return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
 }

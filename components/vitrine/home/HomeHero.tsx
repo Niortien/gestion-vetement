@@ -53,7 +53,7 @@ export function HomeHero() {
                 className="block text-[clamp(30px,5vw,60px)] font-light tracking-[0.25em]"
                 style={{ color: "var(--v-muted)" }}
               >
-                de Dakar.
+                d&apos;Abidjan.
               </span>
             </h1>
 
@@ -62,7 +62,7 @@ export function HomeHero() {
               className="mt-8 max-w-sm text-base leading-relaxed"
               style={{ color: "var(--v-muted)" }}
             >
-              Pièces exclusives, drops limités. Authentique depuis Dakar.
+              Vêtements, accessoires et produits importés. Authentique depuis Yopougon, Abidjan.
             </p>
 
             {/* CTAs */}
