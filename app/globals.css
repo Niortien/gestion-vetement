@@ -102,10 +102,32 @@ input[type="number"] {
   --v-muted:  #7A94B8;
   --v-dim:    #3D5070;
   --v-border: rgba(255, 255, 255, 0.07);
+  --v-nav-bg: rgba(4, 8, 15, 0.92);
+  --v-nav-border: rgba(255, 255, 255, 0.06);
 }
 
 [data-vitrine] body,
 [data-vitrine] {
+  background: var(--v-bg);
+  color: var(--v-text);
+}
+
+/* ── Vitrine — thème clair ───────────────────────────────────── */
+[data-vitrine][data-theme="light"] {
+  --v-bg:       #F8F5F0;
+  --v-s1:       #EDE8E1;
+  --v-s2:       #E1DAD0;
+  --v-s3:       #D2C9BC;
+  --v-lime:     #6B9100;
+  --v-lime-dim: rgba(107, 145, 0, 0.12);
+  --v-red:      #CC001F;
+  --v-purple:   #5E3FB3;
+  --v-text:     #0D0B09;
+  --v-muted:    #4A4540;
+  --v-dim:      #8A837A;
+  --v-border:   rgba(0, 0, 0, 0.09);
+  --v-nav-bg:   rgba(248, 245, 240, 0.93);
+  --v-nav-border: rgba(0, 0, 0, 0.08);
   background: var(--v-bg);
   color: var(--v-text);
 }

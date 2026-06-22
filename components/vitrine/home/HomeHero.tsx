@@ -2,8 +2,12 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useVitrineStore } from "@/stores/vitrineStore";
 
 export function HomeHero() {
+  const theme = useVitrineStore((s) => s.theme);
+  const isDark = theme === "dark";
+
   return (
     <section
       className="relative flex min-h-[100svh] overflow-hidden"
@@ -85,33 +89,134 @@ export function HomeHero() {
           </motion.div>
         </div>
 
-        {/* Image hero droite — déborde hors du cadre */}
+        {/* Panel droit — couverture éditorial */}
         <motion.div
-          className="absolute right-0 top-0 bottom-0 w-[45%] overflow-visible"
+          className="absolute right-0 top-0 bottom-0 w-[45%] overflow-hidden"
           initial={{ opacity: 0, x: 60 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
         >
           <div
-            className="relative h-full w-full"
-            style={{
-              background:
-                "linear-gradient(135deg, var(--v-s3) 0%, var(--v-s2) 100%)",
-              clipPath: "polygon(8% 0%, 100% 0%, 100% 100%, 0% 100%)",
-            }}
+            className="relative h-full w-full overflow-hidden"
+            style={{ clipPath: "polygon(8% 0%, 100% 0%, 100% 100%, 0% 100%)" }}
           >
-            {/* Placeholder image — remplacer par une vraie photo produit */}
-            <div className="flex h-full items-center justify-center">
-              <div className="text-center">
-                <div className="text-8xl opacity-10">👟</div>
-                <p className="mt-4 text-xs uppercase tracking-widest" style={{ color: "var(--v-dim)" }}>
-                  Photo produit vedette
+            {/* Fond dégradé atmosphérique */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background: isDark
+                  ? `radial-gradient(ellipse at 22% 80%, rgba(255,148,32,0.5) 0%, transparent 52%),
+                     radial-gradient(ellipse at 78% 18%, rgba(194,255,0,0.18) 0%, transparent 46%),
+                     radial-gradient(ellipse at 55% 50%, rgba(155,127,234,0.2) 0%, transparent 42%),
+                     linear-gradient(155deg, #1E1508 0%, #2A1C0C 38%, #130F08 100%)`
+                  : `radial-gradient(ellipse at 22% 80%, rgba(210,120,20,0.3) 0%, transparent 52%),
+                     radial-gradient(ellipse at 78% 18%, rgba(107,145,0,0.18) 0%, transparent 46%),
+                     radial-gradient(ellipse at 55% 50%, rgba(94,63,179,0.1) 0%, transparent 42%),
+                     linear-gradient(155deg, #F2E4CC 0%, #EDD9B8 38%, #E4CCA0 100%)`,
+              }}
+            />
+
+            {/* Trame textile diagonale */}
+            <div
+              className="absolute inset-0"
+              style={{
+                opacity: isDark ? 0.07 : 0.1,
+                backgroundImage: `repeating-linear-gradient(
+                  -45deg,
+                  ${isDark ? "rgba(255,255,255,0.6)" : "rgba(0,0,0,0.4)"},
+                  ${isDark ? "rgba(255,255,255,0.6)" : "rgba(0,0,0,0.4)"} 1px,
+                  transparent 1px,
+                  transparent 26px
+                )`,
+              }}
+            />
+
+            {/* Watermark marque vertical */}
+            <div
+              className="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none select-none"
+              aria-hidden
+            >
+              <span
+                className="font-[var(--font-display)] font-black leading-none"
+                style={{
+                  fontSize: "clamp(56px,9vw,140px)",
+                  color: isDark ? "rgba(255,255,255,0.028)" : "rgba(0,0,0,0.05)",
+                  writingMode: "vertical-rl",
+                  letterSpacing: "0.14em",
+                  transform: "rotate(180deg)",
+                }}
+              >
+                DRI VALÉ
+              </span>
+            </div>
+
+            {/* Composition centrale */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-7 px-8">
+              {/* SVG cintre mode */}
+              <svg viewBox="0 0 120 100" className="w-28 h-24" fill="none" aria-hidden>
+                <path
+                  d="M60 18 C60 18 60 30 72 38 L108 62 A6 6 0 0 1 108 74 H12 A6 6 0 0 1 12 62 L48 38 C60 30 60 18 60 18 Z"
+                  stroke="var(--v-lime)"
+                  strokeWidth="2"
+                  fill="var(--v-lime-dim)"
+                />
+                <circle cx="60" cy="14" r="5" stroke="var(--v-lime)" strokeWidth="2" />
+                <line x1="60" y1="9" x2="60" y2="1" stroke="var(--v-lime)" strokeWidth="2" />
+                <path d="M60 1 Q65 -4 70 1" stroke="var(--v-lime)" strokeWidth="2" fill="none" />
+              </svg>
+
+              {/* Badge + localisation */}
+              <div className="flex flex-col items-center gap-3">
+                <div
+                  className="rounded-full border px-5 py-1.5"
+                  style={{
+                    borderColor: "var(--v-lime)",
+                    backgroundColor: "var(--v-lime-dim)",
+                  }}
+                >
+                  <span
+                    className="font-[var(--font-display)] text-[10px] font-bold uppercase tracking-[0.35em]"
+                    style={{ color: "var(--v-lime)" }}
+                  >
+                    Nouvelle Arrivée
+                  </span>
+                </div>
+                <p
+                  className="text-[9px] font-semibold uppercase tracking-[0.3em]"
+                  style={{ color: "var(--v-dim)" }}
+                >
+                  Yopougon · Abidjan
                 </p>
               </div>
+
+              {/* Trois points produit */}
+              <div className="flex flex-col gap-2 self-start pl-4">
+                {["Vêtements importés USA", "Maroquinerie & Parfumerie", "Livraison partout en CI"].map((label) => (
+                  <div key={label} className="flex items-center gap-2">
+                    <div
+                      className="h-1 w-1 rounded-full flex-shrink-0"
+                      style={{ backgroundColor: "var(--v-lime)" }}
+                    />
+                    <span className="text-[10px] uppercase tracking-widest" style={{ color: "var(--v-muted)" }}>
+                      {label}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
-            {/* Overlay gradient gauche pour fondu */}
+
+            {/* Barre accent bas */}
             <div
-              className="absolute inset-y-0 left-0 w-24"
+              className="absolute bottom-0 left-0 right-0 h-[2px]"
+              style={{
+                background: "linear-gradient(to right, transparent, var(--v-lime), transparent)",
+                opacity: 0.6,
+              }}
+            />
+
+            {/* Fondu gauche vers le fond */}
+            <div
+              className="absolute inset-y-0 left-0 w-28"
               style={{ background: "linear-gradient(to right, var(--v-bg), transparent)" }}
             />
           </div>

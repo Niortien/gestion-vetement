@@ -16,6 +16,8 @@ interface VitrineState {
   clearCart: () => void;
   cartOpen: boolean;
   setCartOpen: (open: boolean) => void;
+  theme: "dark" | "light";
+  toggleTheme: () => void;
 }
 
 export const useVitrineStore = create<VitrineState>()(
@@ -23,6 +25,9 @@ export const useVitrineStore = create<VitrineState>()(
     (set) => ({
       cart: [],
       cartOpen: false,
+      theme: "dark",
+      toggleTheme: () =>
+        set((state) => ({ theme: state.theme === "dark" ? "light" : "dark" })),
 
       addToCart: (item) =>
         set((state) => {
@@ -60,7 +65,7 @@ export const useVitrineStore = create<VitrineState>()(
       storage: createJSONStorage(() =>
         typeof window !== "undefined" ? localStorage : sessionStorage
       ),
-      partialize: (state) => ({ cart: state.cart }),
+      partialize: (state) => ({ cart: state.cart, theme: state.theme }),
     }
   )
 );
