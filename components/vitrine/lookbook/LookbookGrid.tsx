@@ -62,7 +62,7 @@ export function LookbookGrid() {
             <span style={{ color: "var(--v-lime)" }}>Shooting</span>
           </h2>
           <p className="max-w-xs text-right text-sm" style={{ color: "var(--v-muted)" }}>
-            Shot à Dakar — Almadies, Ngor, Corniche Ouest
+            Shot à Abidjan — Yopougon, Cocody, Plateau
           </p>
         </div>
 

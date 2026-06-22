@@ -5,7 +5,7 @@ import { getWhatsappUrl } from "@/lib/whatsapp";
 
 export function LookbookWhatsapp() {
   const url = getWhatsappUrl(
-    "Salut Riviere 👋 J'ai vu le lookbook Dakar Nights et j'aimerais recréer le look. Pouvez-vous m'aider ?"
+    "Salut Dri Valé 👋 J'ai vu le lookbook Abidjan Nights et j'aimerais recréer le look. Pouvez-vous m'aider ?"
   );
 
   return (

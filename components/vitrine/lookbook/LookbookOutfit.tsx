@@ -82,7 +82,7 @@ export function LookbookOutfit() {
         >
           <img
             src="/lookbook-outfit.jpg"
-            alt="Look complet Dakar Nights"
+            alt="Look complet Abidjan Nights"
             className="h-full w-full object-cover"
             onError={(e) => {
               (e.target as HTMLImageElement).style.display = "none";

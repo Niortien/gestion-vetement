@@ -25,16 +25,16 @@ export function LookbookEditorial() {
           >
             Inspiré par
             <br />
-            les nuits de Dakar
+            les nuits d&apos;Abidjan
           </h2>
           <p className="mb-5 text-sm leading-relaxed" style={{ color: "var(--v-muted)" }}>
-            Quand la chaleur du jour laisse place à l&apos;électricité de la nuit, Dakar révèle
-            une autre dimension. Les Almadies, Ngor, la Corniche — des spots où la mode se vit
+            Quand la chaleur du jour laisse place à l&apos;électricité de la nuit, Abidjan révèle
+            une autre dimension. Yopougon, Cocody, le Plateau — des spots où la mode se vit
             sans codes imposés, où chaque look est une déclaration d&apos;identité.
           </p>
           <p className="text-sm leading-relaxed" style={{ color: "var(--v-muted)" }}>
-            Riviere a shooté cette collection là où la ville respire : dans les ruelles,
-            sous les néons, au bord de l&apos;eau. Des pièces pensées pour habiter ces moments.
+            Dri Valé a shooté cette collection là où la ville respire : dans les ruelles,
+            sous les néons, au bord de la lagune. Des pièces pensées pour habiter ces moments.
           </p>
 
           {/* Stats éditoriales */}
@@ -42,7 +42,7 @@ export function LookbookEditorial() {
             {[
               { value: "12", label: "Pièces" },
               { value: "3", label: "Looks" },
-              { value: "100%", label: "Dakarois" },
+              { value: "100%", label: "Abidjanais" },
             ].map((stat) => (
               <div key={stat.label}>
                 <p
@@ -73,7 +73,7 @@ export function LookbookEditorial() {
           >
             <img
               src="/lookbook-editorial.jpg"
-              alt="Editorial Dakar Nights"
+              alt="Editorial Abidjan Nights"
               className="h-full w-full object-cover"
               onError={(e) => {
                 (e.target as HTMLImageElement).style.display = "none";
