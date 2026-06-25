@@ -2,8 +2,8 @@
 const nextConfig = {
   images: {
     remotePatterns: [
-      { protocol: "https", hostname: "finc-dev.com" },
-      { protocol: "https", hostname: "**.finc-dev.com" },
+      { protocol: "https", hostname: "dri-vale.org" },
+      { protocol: "https", hostname: "**.dri-vale.org" },
     ],
   },
 };
