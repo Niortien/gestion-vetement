@@ -41,8 +41,13 @@ export function EntreesTable({ data }: EntreesTableProps) {
     () => [
       columnHelper.accessor("createdAt", {
         header: "Date",
-        cell: (info) =>
-          format(new Date(info.getValue()), "dd MMM yyyy HH:mm", { locale: fr }),
+        cell: (info) => {
+          const val = info.getValue();
+          if (!val) return <span className="text-xs text-text-muted">—</span>;
+          const d = new Date(val);
+          if (isNaN(d.getTime())) return <span className="text-xs text-text-muted">—</span>;
+          return format(d, "dd MMM yyyy HH:mm", { locale: fr });
+        },
         sortingFn: "datetime",
       }),
       columnHelper.accessor("reference", {
