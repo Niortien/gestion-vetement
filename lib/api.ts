@@ -46,6 +46,7 @@ function toAppError(error: AxiosError<ApiErrorResponse>): AppError {
 export const api = axios.create({
   baseURL: `${getBaseUrl()}/api/v1`,
   headers: { "Content-Type": "application/json" },
+  timeout: 60_000,
 });
 
 api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
