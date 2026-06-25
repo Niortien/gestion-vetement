@@ -111,13 +111,26 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
 
   const handleFile = (file: File) => {
     if (!file.type.startsWith("image/")) return;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const dataUrl = e.target?.result as string;
+    const img = new Image();
+    const objectUrl = URL.createObjectURL(file);
+    img.onload = () => {
+      const MAX = 1200;
+      let { width, height } = img;
+      if (width > MAX || height > MAX) {
+        if (width >= height) { height = Math.round(height * MAX / width); width = MAX; }
+        else                 { width  = Math.round(width  * MAX / height); height = MAX; }
+      }
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      canvas.getContext("2d")!.drawImage(img, 0, 0, width, height);
+      URL.revokeObjectURL(objectUrl);
+      const dataUrl = canvas.toDataURL("image/jpeg", 0.82);
       setPreviewUrl(dataUrl);
       setValue("imageUrl", dataUrl, { shouldValidate: false });
     };
-    reader.readAsDataURL(file);
+    img.onerror = () => URL.revokeObjectURL(objectUrl);
+    img.src = objectUrl;
   };
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
