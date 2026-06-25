@@ -54,7 +54,11 @@ export const CATEGORY_GROUPS = [
   },
   {
     label: "Bas",
-    slugs: ["pantalon-tissu", "pantalon-docker", "jogging"],
+    slugs: ["pantalon-tissu", "pantalon-docker", "jogging", "jean-simple", "cargo"],
+  },
+  {
+    label: "Culotte",
+    slugs: ["culotte-simple", "culotte-away", "culotte-jean", "pantacourt-asake"],
   },
   {
     label: "Chaussures",

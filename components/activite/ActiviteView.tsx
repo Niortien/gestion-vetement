@@ -127,9 +127,9 @@ export function ActiviteView() {
   const { data: alertes } = useStockAlertes();
   const { data: resume } = useResumeJour();
 
-  const ventes = ventesData?.data ?? [];
-  const flux = fluxData?.data ?? [];
-  const topProduits = topData?.data ?? [];
+  const ventes = Array.isArray(ventesData?.data) ? ventesData.data : [];
+  const flux = Array.isArray(fluxData?.data) ? fluxData.data : [];
+  const topProduits = Array.isArray(topData?.data) ? topData.data : [];
 
   const totalVentes = useMemo(
     () => ventes.reduce((acc, v) => acc + parseFloat(v.totalVentes || "0"), 0),
