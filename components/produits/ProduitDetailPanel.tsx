@@ -36,8 +36,9 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
   const createMutation = useCreateProduit();
   const updateMutation = useUpdateProduit(produit?.id ?? "");
   const user = useAuthStore((s) => s.user);
+  const isAdmin = user?.role === "ADMIN";
   const defaultBoutiqueId = useBoutiqueId();
-  const { data: boutiquesRes } = useBoutiques();
+  const { data: boutiquesRes } = useBoutiques(isAdmin && isNew);
   const boutiques = boutiquesRes?.data ?? [];
   const [selectedBoutiqueIds, setSelectedBoutiqueIds] = useState<string[]>(
     defaultBoutiqueId ? [defaultBoutiqueId] : []
@@ -646,6 +647,7 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
         <section className="rounded-lg border border-border/80 bg-[color:rgba(45,69,103,0.4)] p-4">
           <p className="mb-3 text-xs uppercase tracking-[0.08em] text-text-muted">Seuil alerte</p>
           <Slider
+            aria-label="Seuil d'alerte stock"
             size="sm"
             step={1}
             minValue={0}

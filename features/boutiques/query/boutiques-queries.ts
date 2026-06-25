@@ -10,12 +10,12 @@ export const boutiqueKeys = {
   detail: (id: string) => ["boutiques", "detail", id] as const,
 };
 
-export function useBoutiques() {
+export function useBoutiques(enabled = true) {
   const token = useAuthStore((s) => s.accessToken);
   return useQuery({
     queryKey: boutiqueKeys.list(),
     queryFn: getBoutiques,
-    enabled: !!token,
+    enabled: !!token && enabled,
     staleTime: 5 * 60_000,
   });
 }
