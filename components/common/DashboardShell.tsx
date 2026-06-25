@@ -16,7 +16,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(900px_500px_at_90%_-5%,rgba(143,126,245,0.16),transparent_62%)]" />
       <MobileNav />
       <Sidebar />
-      <main className="relative flex-1 overflow-y-auto p-4 md:p-6">
+      <main className="relative flex-1 overflow-x-hidden overflow-y-auto p-4 md:p-6">
         <AnimatePresence mode="wait">{children}</AnimatePresence>
       </main>
       <CommandBar />

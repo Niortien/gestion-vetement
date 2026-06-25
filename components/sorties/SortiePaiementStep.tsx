@@ -82,7 +82,7 @@ export function SortiePaiementStep({
       {/* Mode de paiement — 5 colonnes compactes sur mobile */}
       <div>
         <p className="mb-2.5 text-xs uppercase tracking-wide text-text-muted">Mode de paiement</p>
-        <div className="grid grid-cols-5 gap-1.5">
+        <div className="grid grid-cols-3 gap-1.5 sm:grid-cols-5">
           {MODE_CARDS.map((card) => (
             <button
               key={card.mode}

@@ -56,7 +56,7 @@ export function LoginView() {
 
   return (
     <section className="mx-auto mt-16 max-w-md rounded-lg border border-border bg-surface p-6">
-      <h1 className="mb-4 font-[var(--font-display)] text-3xl">Connexion</h1>
+      <h1 className="mb-4 font-[var(--font-display)] text-2xl md:text-3xl">Connexion</h1>
       <div className="space-y-3">
         <Input
           type="email"

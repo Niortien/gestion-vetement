@@ -52,7 +52,7 @@ function KpiCard({ label, value, sub, tone, isMontant = false, hint }: KpiCardPr
       {isMontant ? (
         <CurrencyDisplay montant={String(value)} size="lg" tone={tone} className="mt-2" />
       ) : (
-        <p className={`mt-2 font-[var(--font-display)] text-3xl ${t.text}`}>{value}</p>
+        <p className={`mt-2 font-[var(--font-display)] text-xl md:text-3xl ${t.text}`}>{value}</p>
       )}
       {sub && <p className="mt-1 text-xs text-text-muted">{sub}</p>}
       {hint && <p className="mt-1.5 text-[10px] text-text-muted/50 italic">{hint}</p>}

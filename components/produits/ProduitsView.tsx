@@ -24,7 +24,7 @@ export function ProduitsView() {
   return (
     <PageWrapper>
       <div className="rounded-xl border border-border/80 bg-[linear-gradient(120deg,rgba(255,212,71,0.14),rgba(143,126,245,0.14))] p-4 md:p-5">
-        <h1 className="font-[var(--font-display)] text-4xl md:text-5xl">Produits</h1>
+        <h1 className="font-[var(--font-display)] text-2xl md:text-4xl">Produits</h1>
       </div>
       {isLoading ? <p className="text-sm text-text-muted">Chargement des produits…</p> : null}
       {!isLoading && error ? (
