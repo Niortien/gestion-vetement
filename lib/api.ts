@@ -31,7 +31,7 @@ function toAppError(error: AxiosError<ApiErrorResponse>): AppError {
   if (statusCode === 500) {
     return {
       code: 500,
-      message: "Erreur serveur. Reessaie dans quelques secondes.",
+      message: message !== "Erreur serveur" ? message : "Erreur serveur. Reessaie dans quelques secondes.",
       details,
     };
   }
