@@ -243,7 +243,6 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
         },
         {
           onSuccess: () => { toast.success("Produit mis à jour !"); onClose(); },
-          onError: () => toast.error("Erreur lors de la mise à jour"),
         }
       );
     }
