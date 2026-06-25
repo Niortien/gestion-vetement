@@ -27,6 +27,8 @@ export const rapportKeys = {
   fluxTresorerie: (params: FluxTresorerieParams) => ["rapports", "flux-tresorerie", params] as const,
 };
 
+const DASHBOARD_STALE = 5 * 60 * 1000; // 5 min — données non temps-réel
+
 export function useResumeDashboard(params: ResumeDashboardParams = {}) {
   const token = useAuthStore((s) => s.accessToken);
   const boutiqueId = useBoutiqueId();
@@ -35,6 +37,7 @@ export function useResumeDashboard(params: ResumeDashboardParams = {}) {
     queryKey: rapportKeys.resumeDashboard(effectiveParams),
     queryFn: () => getResumeDashboard(effectiveParams),
     enabled: !!token,
+    staleTime: DASHBOARD_STALE,
   });
 }
 
@@ -46,6 +49,7 @@ export function useVentes(params: RapportVentesParams) {
     queryKey: rapportKeys.ventes(effectiveParams),
     queryFn: () => getVentes(effectiveParams),
     enabled: !!token,
+    staleTime: DASHBOARD_STALE,
   });
 }
 
@@ -56,6 +60,7 @@ export function useStockValeur() {
     queryKey: rapportKeys.stockValeur(boutiqueId),
     queryFn: () => getStockValeur(boutiqueId),
     enabled: !!token,
+    staleTime: DASHBOARD_STALE,
   });
 }
 

@@ -29,6 +29,7 @@ export function useSortiesList(params: SortiesListParams = {}) {
       return current < total ? current + 1 : undefined;
     },
     enabled: !!token,
+    staleTime: 60_000,
   });
 }
 

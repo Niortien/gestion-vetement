@@ -28,7 +28,8 @@ export function useActiveSession() {
     queryKey: caisseKeys.activeSession(boutiqueId),
     queryFn: () => getActiveSession(boutiqueId),
     enabled: !!token,
-    refetchInterval: 10_000,
+    refetchInterval: 60_000,
+    staleTime: 55_000,
   });
 }
 
@@ -39,7 +40,8 @@ export function useResumeJour() {
     queryKey: caisseKeys.resumeJour(boutiqueId),
     queryFn: () => getResumeJour(boutiqueId),
     enabled: !!token,
-    refetchInterval: 5_000,
+    refetchInterval: 60_000,
+    staleTime: 55_000,
   });
 }
 

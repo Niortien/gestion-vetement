@@ -40,6 +40,7 @@ export function useStockAlertes() {
     queryKey: stockKeys.alertes(boutiqueId),
     queryFn: () => getStockAlertes(boutiqueId),
     enabled: !!token,
+    staleTime: 5 * 60_000,
   });
 }
 

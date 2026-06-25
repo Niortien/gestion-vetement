@@ -29,6 +29,7 @@ export function useEntreesList(params: EntreesListParams = {}) {
       return current < total ? current + 1 : undefined;
     },
     enabled: !!token,
+    staleTime: 60_000,
   });
 }
 
