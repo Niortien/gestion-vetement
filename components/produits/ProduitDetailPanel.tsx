@@ -18,7 +18,7 @@ import { getMotionVariant, panelSlide } from "@/lib/motionVariants";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useCategoriesList } from "@/features/produits/query/produits-queries";
 import { useCreateProduit, useUpdateProduit } from "@/features/produits/mutation/produits-mutations";
-import { addVarianteToProduit, deleteVariante } from "@/features/produits/api/produits-api";
+import { addVarianteToProduit, deleteVariante, updateVariante } from "@/features/produits/api/produits-api";
 import { useBoutiqueId } from "@/hooks/useBoutiqueId";
 import { useBoutiques } from "@/features/boutiques/query/boutiques-queries";
 import { useAuthStore } from "@/stores/authStore";
@@ -95,7 +95,7 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
         categorieId: produit.categorieId,
       });
       setPreviewUrl(produit.imageUrl ?? null);
-      setSelectedTailles(produit.variantes?.map((v) => v.taille) ?? []);
+      setSelectedTailles(produit.variantes ? [...new Set(produit.variantes.map((v) => v.taille))] : []);
       setSelectedCouleurs(
         produit.variantes ? [...new Set(produit.variantes.map((v) => v.couleur))] : []
       );
@@ -156,7 +156,7 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
   /* ── variantes état ─────────────────────────────────────── */
   const [varianteError, setVarianteError] = useState<string | null>(null);
   const [selectedTailles, setSelectedTailles] = useState<string[]>(
-    produit?.variantes?.map((v) => v.taille) ?? []
+    produit?.variantes ? [...new Set(produit.variantes.map((v) => v.taille))] : []
   );
   const [newTaille, setNewTaille] = useState("");
   const [selectedCouleurs, setSelectedCouleurs] = useState<string[]>(
@@ -258,35 +258,51 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
           imageUrl: fields.imageUrl?.trim() || undefined,
         });
 
-        // Sync variantes : ajouter les nouvelles combinaisons, supprimer les retirées
+        // Sync variantes — PATCH en priorité pour préserver l'historique de stock
         const existing = produit.variantes ?? [];
-        const vKey = (t: string, c: string) => `${t}||${c}`;
-        const existingKeys = new Set(existing.map((v) => vKey(v.taille, v.couleur)));
-        const desiredKeys = new Set(
-          selectedTailles.flatMap((t) => selectedCouleurs.map((c) => vKey(t, c)))
+
+        // Grouper par combo taille||couleur (plusieurs boutiques possibles)
+        const existingGroups = new Map<string, typeof existing>();
+        for (const v of existing) {
+          const key = `${v.taille}||${v.couleur}`;
+          if (!existingGroups.has(key)) existingGroups.set(key, []);
+          existingGroups.get(key)!.push(v);
+        }
+
+        const desiredSet = new Set(
+          selectedTailles.flatMap((t) => selectedCouleurs.map((c) => `${t}||${c}`))
         );
+
+        const keysToRemove = [...existingGroups.keys()].filter((k) => !desiredSet.has(k));
+        const keysToAdd = [...desiredSet].filter((k) => !existingGroups.has(k));
 
         const ops: Promise<unknown>[] = [];
 
-        for (const t of selectedTailles) {
-          for (const c of selectedCouleurs) {
-            if (!existingKeys.has(vKey(t, c))) {
-              ops.push(
-                addVarianteToProduit(produit.id, {
-                  taille: t,
-                  couleur: c,
-                  quantiteStock: quantites[`${t}-${c}`] ?? 0,
-                  seuilAlerte,
-                  boutiqueId: defaultBoutiqueId,
-                })
-              );
-            }
+        // Repurposer les variantes retirées vers les nouveaux combos via PATCH
+        for (let i = 0; i < Math.min(keysToRemove.length, keysToAdd.length); i++) {
+          const [newTailleVal, newCouleurVal] = keysToAdd[i].split("||");
+          for (const v of existingGroups.get(keysToRemove[i])!) {
+            ops.push(updateVariante(v.id, { taille: newTailleVal, couleur: newCouleurVal }));
           }
         }
 
-        for (const v of existing) {
-          if (!desiredKeys.has(vKey(v.taille, v.couleur))) {
-            // Silencieux si la variante a des mouvements (le backend refuse la suppression)
+        // Créer les combos vraiment nouveaux (sans variante existante à repurposer)
+        for (let i = keysToRemove.length; i < keysToAdd.length; i++) {
+          const [taille, couleur] = keysToAdd[i].split("||");
+          ops.push(
+            addVarianteToProduit(produit.id, {
+              taille,
+              couleur,
+              quantiteStock: quantites[`${taille}-${couleur}`] ?? 0,
+              seuilAlerte,
+              boutiqueId: defaultBoutiqueId,
+            })
+          );
+        }
+
+        // Supprimer les variantes restantes non repurposées (best-effort)
+        for (let i = keysToAdd.length; i < keysToRemove.length; i++) {
+          for (const v of existingGroups.get(keysToRemove[i])!) {
             ops.push(deleteVariante(v.id).catch(() => {}));
           }
         }
