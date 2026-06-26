@@ -39,15 +39,15 @@ export const DEFAULT_COLORS = [
 export const CATEGORY_GROUPS = [
   {
     label: "Hauts",
-    slugs: ["tee-shirt", "polo", "polo-corp", "polo-sans-col", "polo-cardigan", "deambre", "debardeur"],
+    slugs: ["tee-shirt", "polo", "polo-corp", "polo-sans-col", "polo-cartigan", "deambre", "body", "debardeur"],
   },
   {
     label: "Chemises & Vestes",
-    slugs: ["chemise-simple", "chemise-crope", "djaket", "doudoune"],
+    slugs: ["chemise-simple", "surchemise", "chemise-crope", "djaket", "doudoune"],
   },
   {
     label: "Tenues",
-    slugs: ["complet-culotte", "complet-pantalon", "complet-pull", "complet-sous-vetement"],
+    slugs: ["complet-culotte", "complet-pantalon", "complet-pull", "complet-sky", "complet-sous-vetement"],
   },
   {
     label: "Pulls & Maillots",
