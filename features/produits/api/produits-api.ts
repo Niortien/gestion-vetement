@@ -36,6 +36,7 @@ export interface CreateProduitBody {
 export interface UpdateProduitBody {
   nom?: string;
   description?: string;
+  categorieId?: string;
   prixVente?: string;
   prixAchat?: string;
   imageUrl?: string | null;
@@ -44,6 +45,14 @@ export interface UpdateProduitBody {
   prixPromo?: string | null;
   dateDebutPromo?: string | null;
   dateFinPromo?: string | null;
+}
+
+export interface AddVarianteBody {
+  taille: string;
+  couleur: string;
+  quantiteStock?: number;
+  seuilAlerte?: number;
+  boutiqueId?: string;
 }
 
 export interface UpdateVarianteBody {
@@ -76,6 +85,9 @@ export const createProduit = (body: CreateProduitBody, boutiqueIds?: string[]) =
 
 export const updateProduit = (id: string, body: UpdateProduitBody) =>
   apiPatch<Produit, UpdateProduitBody>(`/produits/${id}`, body);
+
+export const addVarianteToProduit = (produitId: string, body: AddVarianteBody) =>
+  apiPost<Variante, AddVarianteBody>(`/produits/${produitId}/variantes`, body);
 
 export const deleteProduit = (id: string) =>
   apiDelete<{ success: boolean }>(`/produits/${id}`);

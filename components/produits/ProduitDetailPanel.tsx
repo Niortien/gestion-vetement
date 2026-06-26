@@ -18,6 +18,7 @@ import { getMotionVariant, panelSlide } from "@/lib/motionVariants";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useCategoriesList } from "@/features/produits/query/produits-queries";
 import { useCreateProduit, useUpdateProduit } from "@/features/produits/mutation/produits-mutations";
+import { addVarianteToProduit, deleteVariante } from "@/features/produits/api/produits-api";
 import { useBoutiqueId } from "@/hooks/useBoutiqueId";
 import { useBoutiques } from "@/features/boutiques/query/boutiques-queries";
 import { useAuthStore } from "@/stores/authStore";
@@ -207,7 +208,7 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
   const setQty = (taille: string, couleur: string, val: number) =>
     setQuantites((cur) => ({ ...cur, [`${taille}-${couleur}`]: Math.max(0, val) }));
 
-  const onSubmit = handleSubmit((fields) => {
+  const onSubmit = handleSubmit(async (fields) => {
     if (selectedTailles.length === 0 || selectedCouleurs.length === 0) {
       setVarianteError("Sélectionnez au moins une taille et une couleur");
       return;
@@ -247,18 +248,55 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
         }
       );
     } else {
-      updateMutation.mutate(
-        {
+      try {
+        await updateMutation.mutateAsync({
           nom: fields.nom.trim(),
           description: fields.description?.trim() || undefined,
+          categorieId: fields.categorieId,
           prixVente,
           prixAchat,
           imageUrl: fields.imageUrl?.trim() || undefined,
-        },
-        {
-          onSuccess: () => { toast.success("Produit mis à jour !"); onClose(); },
+        });
+
+        // Sync variantes : ajouter les nouvelles combinaisons, supprimer les retirées
+        const existing = produit.variantes ?? [];
+        const vKey = (t: string, c: string) => `${t}||${c}`;
+        const existingKeys = new Set(existing.map((v) => vKey(v.taille, v.couleur)));
+        const desiredKeys = new Set(
+          selectedTailles.flatMap((t) => selectedCouleurs.map((c) => vKey(t, c)))
+        );
+
+        const ops: Promise<unknown>[] = [];
+
+        for (const t of selectedTailles) {
+          for (const c of selectedCouleurs) {
+            if (!existingKeys.has(vKey(t, c))) {
+              ops.push(
+                addVarianteToProduit(produit.id, {
+                  taille: t,
+                  couleur: c,
+                  quantiteStock: quantites[`${t}-${c}`] ?? 0,
+                  seuilAlerte,
+                  boutiqueId: defaultBoutiqueId,
+                })
+              );
+            }
+          }
         }
-      );
+
+        for (const v of existing) {
+          if (!desiredKeys.has(vKey(v.taille, v.couleur))) {
+            // Silencieux si la variante a des mouvements (le backend refuse la suppression)
+            ops.push(deleteVariante(v.id).catch(() => {}));
+          }
+        }
+
+        await Promise.allSettled(ops);
+        toast.success("Produit mis à jour !");
+        onClose();
+      } catch {
+        // Le toast d'erreur est géré par useUpdateProduit onError
+      }
     }
   });
 
