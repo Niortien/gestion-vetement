@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import { Button, Checkbox, Chip, Input, Skeleton, Slider, Spinner } from "@heroui/react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
@@ -16,9 +17,9 @@ import {
 } from "@/lib/categoryConfig";
 import { getMotionVariant, panelSlide } from "@/lib/motionVariants";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
-import { useCategoriesList } from "@/features/produits/query/produits-queries";
+import { useCategoriesList, produitKeys } from "@/features/produits/query/produits-queries";
 import { useCreateProduit, useUpdateProduit } from "@/features/produits/mutation/produits-mutations";
-import { addVarianteToProduit, deleteVariante, updateVariante } from "@/features/produits/api/produits-api";
+import { addVarianteToProduit, adjustVarianteStock, deleteVariante, updateVariante } from "@/features/produits/api/produits-api";
 import { useBoutiqueId } from "@/hooks/useBoutiqueId";
 import { useBoutiques } from "@/features/boutiques/query/boutiques-queries";
 import { useAuthStore } from "@/stores/authStore";
@@ -32,6 +33,8 @@ interface ProduitDetailPanelProps {
 export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps) {
   const reduced = useReducedMotion();
   const isNew = !produit;
+
+  const qc = useQueryClient();
 
   /* ── mutations ─────────────────────────────────────────── */
   const createMutation = useCreateProduit();
@@ -307,7 +310,29 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
           }
         }
 
+        // Ajuster le stock des combos INCHANGÉS si la quantité a été modifiée dans l'UI
+        for (const [key, varianteList] of existingGroups.entries()) {
+          if (!desiredSet.has(key)) continue;
+          const [t, c] = key.split("||");
+          const desired = quantites[`${t}-${c}`];
+          for (const v of varianteList) {
+            if (desired !== undefined && desired !== v.quantiteStock) {
+              const delta = desired - v.quantiteStock;
+              ops.push(
+                adjustVarianteStock(v.id, {
+                  variation: delta,
+                  motif: "Mise à jour manuelle",
+                }).catch(() => {})
+              );
+            }
+          }
+        }
+
         await Promise.allSettled(ops);
+
+        // Re-invalider APRÈS le sync pour que le cache reflète les nouvelles variantes
+        await qc.invalidateQueries({ queryKey: produitKeys.all });
+
         toast.success("Produit mis à jour !");
         onClose();
       } catch {
