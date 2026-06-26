@@ -1,5 +1,5 @@
 import { apiDelete, apiGet, apiPatch, apiPost } from "@/lib/api";
-import type { Categorie, MouvementStock, Produit, ProduitImage } from "@/types";
+import type { Categorie, MouvementStock, Produit, ProduitImage, Variante } from "@/types";
 
 export interface ProduitListParams {
   page?: number;
