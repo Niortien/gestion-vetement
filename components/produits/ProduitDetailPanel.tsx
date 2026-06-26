@@ -239,7 +239,7 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
             imageUrl: fields.imageUrl?.trim() || undefined,
             variantes,
           },
-          boutiqueIds: user?.role === "ADMIN" ? selectedBoutiqueIds : undefined,
+          boutiqueIds: user?.role === "ADMIN" ? selectedBoutiqueIds : defaultBoutiqueId ? [defaultBoutiqueId] : undefined,
         },
         {
           onSuccess: () => { toast.success("Produit créé !"); onClose(); },

@@ -24,7 +24,7 @@ function ProduitPromoRow({ produit }: { produit: Produit }) {
 
   async function handleToggle(checked: boolean) {
     if (!checked) {
-      await update.mutateAsync({ enPromo: false });
+      if (produit.enPromo) await update.mutateAsync({ enPromo: false });
       setExpanded(false);
     } else {
       setExpanded(true);
@@ -92,7 +92,7 @@ function ProduitPromoRow({ produit }: { produit: Produit }) {
         {/* Toggle */}
         <Switch
           size="sm"
-          isSelected={expanded}
+          isSelected={produit.enPromo || expanded}
           onValueChange={handleToggle}
           isDisabled={update.isPending}
           classNames={{ thumb: "bg-white", wrapper: "group-data-[selected=true]:bg-orange-500" }}
@@ -101,7 +101,7 @@ function ProduitPromoRow({ produit }: { produit: Produit }) {
       </div>
 
       {/* Formulaire inline */}
-      {expanded && (
+      {(expanded || produit.enPromo) && (
         <PromoInlineForm
           produit={produit}
           onSave={handleSave}
