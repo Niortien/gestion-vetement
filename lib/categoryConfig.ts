@@ -51,7 +51,7 @@ export const CATEGORY_GROUPS = [
   },
   {
     label: "Pulls & Maillots",
-    slugs: ["pull-simple", "pull-cardigan", "maillot-foot", "maillot-basket"],
+    slugs: ["pull-simple", "pull-cartigan", "maillot-foot", "maillot-basket"],
   },
   {
     label: "Bas",
