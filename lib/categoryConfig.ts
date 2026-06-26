@@ -39,7 +39,7 @@ export const DEFAULT_COLORS = [
 export const CATEGORY_GROUPS = [
   {
     label: "Hauts",
-    slugs: ["tee-shirt", "polo", "polo-corp", "polo-sans-col", "polo-cartigan", "deambre", "body", "debardeur"],
+    slugs: ["tee-shirt", "polo", "polo-corp", "polo-sans-col", "polo-cartigan", "demanbre", "body", "debardeur"],
   },
   {
     label: "Chemises & Vestes",
