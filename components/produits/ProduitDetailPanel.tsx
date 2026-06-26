@@ -86,27 +86,33 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
   const couleurPresets = couleurConfig ? couleurConfig.presets : DEFAULT_COLORS;
 
   /* ── useEffect édition ──────────────────────────────────── */
+  // On n'initialise l'état local QUE quand on ouvre un nouveau produit (id change).
+  // Un refetch en arrière-plan ne doit pas écraser les modifications en cours de l'utilisateur.
+  const initedProduitIdRef = useRef<string | undefined>(undefined);
+
   useEffect(() => {
-    if (produit) {
-      reset({
-        nom: produit.nom,
-        sku: produit.sku ?? "",
-        description: produit.description ?? "",
-        prixVente: produit.prixVente,
-        prixAchat: produit.prixAchat,
-        imageUrl: produit.imageUrl ?? "",
-        categorieId: produit.categorieId,
-      });
-      setPreviewUrl(produit.imageUrl ?? null);
-      setSelectedTailles(produit.variantes ? [...new Set(produit.variantes.map((v) => v.taille))] : []);
-      setSelectedCouleurs(
-        produit.variantes ? [...new Set(produit.variantes.map((v) => v.couleur))] : []
-      );
-      if (produit.variantes?.[0]) setSeuilAlerte(produit.variantes[0].seuilAlerte);
-      const qmap: Record<string, number> = {};
-      produit.variantes?.forEach((v) => { qmap[`${v.taille}-${v.couleur}`] = v.quantiteStock; });
-      setQuantites(qmap);
-    }
+    if (!produit) return;
+    if (produit.id === initedProduitIdRef.current) return;
+    initedProduitIdRef.current = produit.id;
+
+    reset({
+      nom: produit.nom,
+      sku: produit.sku ?? "",
+      description: produit.description ?? "",
+      prixVente: produit.prixVente,
+      prixAchat: produit.prixAchat,
+      imageUrl: produit.imageUrl ?? "",
+      categorieId: produit.categorieId,
+    });
+    setPreviewUrl(produit.imageUrl ?? null);
+    setSelectedTailles(produit.variantes ? [...new Set(produit.variantes.map((v) => v.taille))] : []);
+    setSelectedCouleurs(
+      produit.variantes ? [...new Set(produit.variantes.map((v) => v.couleur))] : []
+    );
+    if (produit.variantes?.[0]) setSeuilAlerte(produit.variantes[0].seuilAlerte);
+    const qmap: Record<string, number> = {};
+    produit.variantes?.forEach((v) => { qmap[`${v.taille}-${v.couleur}`] = v.quantiteStock; });
+    setQuantites(qmap);
   }, [produit, reset]);
 
   /* ── image upload ───────────────────────────────────────── */
@@ -328,12 +334,18 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
           }
         }
 
-        await Promise.allSettled(ops);
+        const results = await Promise.allSettled(ops);
 
         // Re-invalider APRÈS le sync pour que le cache reflète les nouvelles variantes
         await qc.invalidateQueries({ queryKey: produitKeys.all });
 
-        toast.success("Produit mis à jour !");
+        const failed = results.filter((r) => r.status === "rejected") as PromiseRejectedResult[];
+        if (failed.length > 0) {
+          const msg = failed[0].reason?.message ?? "Erreur inconnue";
+          toast.error(`Produit mis à jour, mais erreur variantes : ${msg}`);
+        } else {
+          toast.success("Produit mis à jour !");
+        }
         onClose();
       } catch {
         // Le toast d'erreur est géré par useUpdateProduit onError

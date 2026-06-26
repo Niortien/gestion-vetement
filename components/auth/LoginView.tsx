@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Button, Input } from "@heroui/react";
+import { IconEye, IconEyeOff } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,6 +16,7 @@ import { Role } from "@/types";
 export function LoginView() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const setTokens = useAuthStore((state) => state.setTokens);
   const setUser = useAuthStore((state) => state.setUser);
   const token = useAuthStore((state) => state.accessToken);
@@ -67,11 +69,25 @@ export function LoginView() {
           {...register("email")}
         />
         <Input
-          type="password"
+          type={showPassword ? "text" : "password"}
           label="Mot de passe"
           variant="bordered"
           isInvalid={Boolean(errors.password)}
           errorMessage={errors.password?.message}
+          endContent={
+            <button
+              type="button"
+              aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
+              onClick={() => setShowPassword((v) => !v)}
+              className="text-default-400 hover:text-default-600 focus:outline-none"
+            >
+              {showPassword ? (
+                <IconEyeOff size={20} />
+              ) : (
+                <IconEye size={20} />
+              )}
+            </button>
+          }
           {...register("password")}
         />
         <Button className="w-full bg-accent text-black" onPress={() => void onSubmit()} isLoading={isSubmitting}>
