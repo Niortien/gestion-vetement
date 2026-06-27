@@ -86,14 +86,20 @@ export function getTaillesForSlug(slug: string | undefined): string[] | null {
   return SLUG_TAILLE_MAP[slug] ?? STANDARD_TAILLES;
 }
 
-/** Regroupe les catégories par groupe visuel. Catégories sans groupe → bucket "Autres". */
-export function groupCategories<T extends { slug: string }>(categories: T[]) {
-  const allGroupSlugs = new Set(CATEGORY_GROUPS.flatMap((g) => g.slugs));
-  const groups = CATEGORY_GROUPS.map((group) => ({
-    label: group.label,
-    items: categories.filter((c) => group.slugs.includes(c.slug)),
-  })).filter((g) => g.items.length > 0);
-  const ungrouped = categories.filter((c) => !allGroupSlugs.has(c.slug));
+/** Regroupe les catégories par groupe visuel.
+ *  Priorité : champ `description` (catégories créées via admin) puis slug hardcodé.
+ *  Catégories sans groupe connu → bucket "Autres".
+ */
+export function groupCategories<T extends { slug: string; description?: string | null }>(categories: T[]) {
+  const grouped = new Set<T>();
+  const groups = CATEGORY_GROUPS.map((group) => {
+    const items = categories.filter(
+      (c) => c.description === group.label || group.slugs.includes(c.slug)
+    );
+    items.forEach((c) => grouped.add(c));
+    return { label: group.label, items };
+  }).filter((g) => g.items.length > 0);
+  const ungrouped = categories.filter((c) => !grouped.has(c));
   if (ungrouped.length > 0) groups.push({ label: "Autres", items: ungrouped });
   return groups;
 }
