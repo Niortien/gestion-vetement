@@ -27,6 +27,7 @@ const ITEMS = [
 const ADMIN_ITEMS = [
   { href: "/admin/boutiques", label: "Boutiques" },
   { href: "/admin/utilisateurs", label: "Utilisateurs" },
+  { href: "/admin/categories", label: "Catégories" },
 ];
 
 // Badge compact dans le header pour montrer la boutique active (admin)
