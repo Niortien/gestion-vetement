@@ -12,7 +12,7 @@ export function EntreeImportZone({ onDropCsv }: EntreeImportZoneProps) {
         onDropCsv?.();
       }}
     >
-      Glisse un fichier CSV pour pré-remplir la liste d'entrées
+      Glisse un fichier CSV pour pr&eacute;-remplir la liste d&apos;entr&eacute;es
     </div>
   );
 }

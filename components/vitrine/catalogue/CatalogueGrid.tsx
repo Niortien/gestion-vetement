@@ -10,21 +10,22 @@ interface CatalogueGridProps {
   categorieId: string | null;
   taille: Taille | null;
   search: string;
+  inStockOnly?: boolean;
 }
 
-export function CatalogueGrid({ categorieId, taille, search }: CatalogueGridProps) {
+export function CatalogueGrid({ categorieId, taille, search, inStockOnly }: CatalogueGridProps) {
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
     useVitrineProduits({
       limit: 12,
-      ...(categorieId ? { categorieId } : {}),
-      ...(search ? { search } : {}),
+      ...(categorieId  ? { categorieId }  : {}),
+      ...(search       ? { search }       : {}),
+      ...(inStockOnly  ? { inStockOnly }  : {}),
     });
 
   const allProduits: Produit[] = (data?.pages ?? []).flatMap((p) => p.data);
 
-  // Filtre côté client pour la taille (l'API ne supporte pas ce filtre)
   const filtered = taille
     ? allProduits.filter((p) =>
         (p.variantes ?? []).some((v) => v.taille === taille && v.quantiteStock > 0)

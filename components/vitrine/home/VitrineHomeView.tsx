@@ -3,11 +3,10 @@
 import { HomeHero } from "./HomeHero";
 import { HomeTicker } from "./HomeTicker";
 import { HomeFeaturedDrops } from "./HomeFeaturedDrops";
-import { HomeBrandStatement } from "./HomeBrandStatement";
-import { HomeCategoryGrid } from "./HomeCategoryGrid";
-import { HomeBestSellers } from "./HomeBestSellers";
-import { HomeWhatsappCta } from "./HomeWhatsappCta";
 import { HomePromoSection } from "./HomePromoSection";
+import { HomeCategorySections } from "./HomeCategorySections";
+import { HomeBrandStatement } from "./HomeBrandStatement";
+import { HomeWhatsappCta } from "./HomeWhatsappCta";
 
 export function VitrineHomeView() {
   return (
@@ -16,9 +15,8 @@ export function VitrineHomeView() {
       <HomeTicker />
       <HomeFeaturedDrops />
       <HomePromoSection />
+      <HomeCategorySections />
       <HomeBrandStatement />
-      <HomeCategoryGrid />
-      <HomeBestSellers />
       <HomeWhatsappCta />
     </>
   );

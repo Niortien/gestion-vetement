@@ -1,115 +1,83 @@
 ﻿"use client";
 
 import type { Categorie } from "@/types";
-import { Taille } from "@/types";
-
-const TAILLES = Object.values(Taille);
 
 interface CatalogueFiltersProps {
   categories: Categorie[];
   selectedCategorieId: string | null;
-  selectedTaille: Taille | null;
   inStockOnly: boolean;
   onCategorieChange: (id: string | null) => void;
-  onTailleChange: (t: Taille | null) => void;
   onInStockChange: (v: boolean) => void;
-}
-
-function Chip({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className="shrink-0 rounded-full border px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-wider transition-all"
-      style={
-        active
-          ? { backgroundColor: "var(--v-lime)", borderColor: "var(--v-lime)", color: "#fff" }
-          : {
-              backgroundColor: "transparent",
-              borderColor: "var(--v-border)",
-              color: "var(--v-muted)",
-            }
-      }
-    >
-      {children}
-    </button>
-  );
 }
 
 export function CatalogueFilters({
   categories,
   selectedCategorieId,
-  selectedTaille,
   inStockOnly,
   onCategorieChange,
-  onTailleChange,
   onInStockChange,
 }: CatalogueFiltersProps) {
   return (
     <div
       className="sticky top-16 z-30 border-b"
-      style={{ borderColor: "var(--v-border)", backgroundColor: "rgba(4,8,15,0.92)", backdropFilter: "blur(12px)" }}
+      style={{
+        borderColor: "var(--v-border)",
+        backgroundColor: "rgba(6,6,7,0.93)",
+        backdropFilter: "blur(14px)",
+      }}
     >
-      <div className="mx-auto max-w-7xl px-5">
-        {/* Ligne catégories */}
-        <div className="flex gap-2 overflow-x-auto py-3 scrollbar-hide">
-          <Chip active={!selectedCategorieId} onClick={() => onCategorieChange(null)}>
-            Tous
-          </Chip>
-          {categories.map((cat) => (
-            <Chip
-              key={cat.id}
-              active={selectedCategorieId === cat.id}
-              onClick={() => onCategorieChange(selectedCategorieId === cat.id ? null : cat.id)}
-            >
-              {cat.nom}
-            </Chip>
-          ))}
-        </div>
+      <div className="flex items-center gap-2 overflow-x-auto px-4 py-3" style={{ scrollbarWidth: "none" }}>
+        {/* Chip Tout */}
+        <button
+          onClick={() => onCategorieChange(null)}
+          className="shrink-0 rounded-full border px-4 py-2 text-[11px] font-black uppercase tracking-wider transition-all active:scale-95"
+          style={
+            !selectedCategorieId
+              ? { backgroundColor: "var(--v-gold)", borderColor: "var(--v-gold)", color: "#060607" }
+              : { borderColor: "var(--v-border)", color: "var(--v-muted)", backgroundColor: "transparent" }
+          }
+        >
+          Tout
+        </button>
 
-        {/* Ligne tailles + stock */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-3 scrollbar-hide">
-          <span
-            className="shrink-0 text-[10px] font-bold uppercase tracking-widest"
-            style={{ color: "var(--v-dim)" }}
+        {/* Chips catégories */}
+        {categories.map((cat) => (
+          <button
+            key={cat.id}
+            onClick={() => onCategorieChange(selectedCategorieId === cat.id ? null : cat.id)}
+            className="shrink-0 rounded-full border px-4 py-2 text-[11px] font-black uppercase tracking-wider transition-all active:scale-95"
+            style={
+              selectedCategorieId === cat.id
+                ? { backgroundColor: "var(--v-gold)", borderColor: "var(--v-gold)", color: "#060607" }
+                : { borderColor: "var(--v-border)", color: "var(--v-muted)", backgroundColor: "transparent" }
+            }
           >
-            Taille :
-          </span>
-          {TAILLES.map((t) => (
-            <Chip
-              key={t}
-              active={selectedTaille === t}
-              onClick={() => onTailleChange(selectedTaille === t ? null : t)}
-            >
-              {t}
-            </Chip>
-          ))}
+            {cat.nom}
+          </button>
+        ))}
 
-          <div className="ml-auto shrink-0">
-            <button
-              onClick={() => onInStockChange(!inStockOnly)}
-              className="flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-wider transition-all"
-              style={
-                inStockOnly
-                  ? { backgroundColor: "var(--v-s3)", borderColor: "var(--v-lime)", color: "var(--v-lime)" }
-                  : { backgroundColor: "transparent", borderColor: "var(--v-border)", color: "var(--v-dim)" }
-              }
-            >
-              <span
-                className="h-1.5 w-1.5 rounded-full"
-                style={{ backgroundColor: inStockOnly ? "var(--v-lime)" : "var(--v-dim)" }}
-              />
-              En stock
-            </button>
-          </div>
-        </div>
+        {/* Séparateur */}
+        <div
+          className="mx-1 h-5 w-px shrink-0"
+          style={{ backgroundColor: "var(--v-border)" }}
+        />
+
+        {/* Toggle En stock */}
+        <button
+          onClick={() => onInStockChange(!inStockOnly)}
+          className="flex shrink-0 items-center gap-1.5 rounded-full border px-4 py-2 text-[11px] font-black uppercase tracking-wider transition-all active:scale-95"
+          style={
+            inStockOnly
+              ? { backgroundColor: "var(--v-hot)", borderColor: "var(--v-hot)", color: "#fff" }
+              : { borderColor: "var(--v-border)", color: "var(--v-muted)", backgroundColor: "transparent" }
+          }
+        >
+          <span
+            className="h-1.5 w-1.5 rounded-full"
+            style={{ backgroundColor: inStockOnly ? "#fff" : "var(--v-dim)" }}
+          />
+          En stock
+        </button>
       </div>
     </div>
   );
