@@ -46,7 +46,12 @@ export function VitrineFooter() {
           Yop City.{" "}
           <span style={{ color: "var(--v-gold)" }}>On est l&agrave;.</span>
         </p>
-        <p className="mt-3 text-sm" style={{ color: "var(--v-muted)" }}>
+        <p className="mt-3 flex items-center justify-center gap-2 text-sm font-bold" style={{ color: "var(--v-gold)" }}>
+          <span>★</span>
+          <span>Sortez toujours bien habill&eacute;</span>
+          <span>★</span>
+        </p>
+        <p className="mt-1 text-xs" style={{ color: "var(--v-muted)" }}>
           Dri Val&eacute; &mdash; La boutique des jeunes class&eacute;s de Yopougon.
         </p>
       </div>

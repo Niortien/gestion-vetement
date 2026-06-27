@@ -179,10 +179,14 @@ export function VitrineNav() {
             </nav>
 
             <div className="border-t px-6 py-6" style={{ borderColor: "var(--v-border)" }}>
-              <span className="text-xs font-bold uppercase tracking-widest" style={{ color: "var(--v-gold)" }}>
-                Dri Valé
-              </span>
-              <p className="mt-0.5 text-xs" style={{ color: "var(--v-dim)" }}>Yopougon · Abidjan · CI</p>
+              <div className="flex items-center gap-2">
+                <span style={{ color: "var(--v-gold)" }}>★</span>
+                <span className="font-[var(--font-display)] text-sm font-black uppercase tracking-wider" style={{ color: "var(--v-gold)" }}>
+                  Sortez toujours bien habillé
+                </span>
+                <span style={{ color: "var(--v-gold)" }}>★</span>
+              </div>
+              <p className="mt-1 text-xs" style={{ color: "var(--v-dim)" }}>Dri Valé · Yopougon · Abidjan · CI</p>
             </div>
           </motion.div>
         )}

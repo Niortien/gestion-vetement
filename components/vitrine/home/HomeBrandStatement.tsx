@@ -86,14 +86,32 @@ export function HomeBrandStatement() {
           On ne fait pas dans le g&eacute;n&eacute;rique.
         </motion.p>
 
+        {/* Slogan officiel */}
+        <motion.div
+          className="mt-10 flex items-center gap-3 md:ml-[12vw]"
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.5 }}
+        >
+          <span style={{ color: "var(--v-gold)", fontSize: 22 }}>★</span>
+          <p
+            className="font-[var(--font-display)] text-lg font-black uppercase tracking-[0.15em] md:text-2xl"
+            style={{ color: "var(--v-gold)" }}
+          >
+            Sortez toujours bien habill&eacute;
+          </p>
+          <span style={{ color: "var(--v-gold)", fontSize: 22 }}>★</span>
+        </motion.div>
+
         {/* Ligne citation Nouchi */}
         <motion.blockquote
-          className="mt-8 inline-block rounded-xl border-l-4 pl-5 font-[var(--font-display)] text-base italic md:ml-[12vw]"
-          style={{ borderColor: "var(--v-gold)", color: "var(--v-gold)" }}
+          className="mt-6 inline-block rounded-xl border-l-4 pl-5 font-[var(--font-display)] text-base italic md:ml-[12vw]"
+          style={{ borderColor: "var(--v-gold)", color: "var(--v-muted)" }}
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.55 }}
+          transition={{ delay: 0.6 }}
         >
           &ldquo;On est l&agrave;, fr&egrave;re. Yop City represent.&rdquo;
         </motion.blockquote>

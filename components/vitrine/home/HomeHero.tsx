@@ -84,13 +84,30 @@ export function HomeHero() {
             </span>
           </motion.h1>
 
+          {/* Slogan */}
+          <motion.div
+            className="mt-8 flex items-center gap-3"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            <span style={{ color: "var(--v-gold)", fontSize: 18 }}>★</span>
+            <p
+              className="font-[var(--font-display)] text-base font-black uppercase tracking-[0.12em] md:text-lg"
+              style={{ color: "var(--v-gold)" }}
+            >
+              Sortez toujours bien habillé
+            </p>
+            <span style={{ color: "var(--v-gold)", fontSize: 18 }}>★</span>
+          </motion.div>
+
           {/* Tagline */}
           <motion.p
-            className="mt-8 max-w-md text-base leading-relaxed md:text-lg"
+            className="mt-4 max-w-md text-sm leading-relaxed"
             style={{ color: "var(--v-muted)" }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.35 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
           >
             Vêtements, sneakers et accessoires importés. Directo depuis
             Yopougon — <span style={{ color: "var(--v-text)", fontWeight: 600 }}>100% authentique.</span>
