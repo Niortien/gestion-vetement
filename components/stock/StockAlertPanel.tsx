@@ -16,7 +16,7 @@ export function StockAlertPanel({ alertes }: StockAlertPanelProps) {
             key={item.id}
             className="flex items-center gap-1.5 rounded-lg border border-out/30 bg-[color:rgba(255,77,109,0.08)] px-2.5 py-1 text-xs"
           >
-            <span className="font-medium text-text">{item.produit.nom}</span>
+            <span className="font-medium text-text">{item.produit?.nom ?? "—"}</span>
             <span className="text-text-muted">{item.taille} · {item.couleur}</span>
             <span className="font-[var(--font-mono)] font-bold text-out">{item.quantiteStock}</span>
           </li>

@@ -14,9 +14,9 @@ export function StockFlowRow({ item }: StockFlowRowProps) {
       <div className="flex items-center gap-3">
         <PulseIndicator mode={isAlerte ? "critique" : "normal"} />
         <div>
-          <p className="text-sm font-semibold text-text">{item.produit.nom}</p>
+          <p className="text-sm font-semibold text-text">{item.produit?.nom ?? "—"}</p>
           <p className="text-xs font-[var(--font-mono)] text-text-muted">
-            {item.produit.sku} · {item.taille} · {item.couleur}
+            {item.produit?.sku} · {item.taille} · {item.couleur}
           </p>
         </div>
       </div>
