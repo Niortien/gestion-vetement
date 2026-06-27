@@ -65,7 +65,7 @@ export function RecuPrint({
       {/* Zone d'impression — hors modal, visible uniquement @media print */}
       <div id="recu-print-root" aria-hidden="true" style={{ display: "none" }}>
         <div style={{ textAlign: "center", marginBottom: 4 }}>
-          <div style={{ fontSize: 15, fontWeight: "bold", letterSpacing: 3 }}>RIVIERE</div>
+          <div style={{ fontSize: 15, fontWeight: "bold", letterSpacing: 3 }}>DRI VALÉ</div>
           <div style={{ fontSize: 9 }}>Dri Valé — Gestion Boutique</div>
         </div>
         <div style={{ borderTop: "1px dashed #000", margin: "4px 0" }} />
@@ -139,8 +139,8 @@ export function RecuPrint({
             <div className="rounded-lg border border-border/60 bg-white p-4 text-black">
               {/* En-tête */}
               <div className="mb-2 text-center">
-                <p className="text-base font-bold tracking-[0.25em]">RIVIERE</p>
-                <p className="text-[10px] text-gray-500">Streetwear · Stock & Caisse</p>
+                <p className="text-base font-bold tracking-[0.25em]">DRI VALÉ</p>
+                <p className="text-[10px] text-gray-500">Boutique · Stock & Caisse</p>
               </div>
               <div className="my-2 border-t border-dashed border-gray-300" />
 

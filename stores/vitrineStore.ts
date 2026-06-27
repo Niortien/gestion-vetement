@@ -61,7 +61,7 @@ export const useVitrineStore = create<VitrineState>()(
       setCartOpen: (cartOpen) => set({ cartOpen }),
     }),
     {
-      name: "riviere-cart",
+      name: "drivale-cart",
       storage: createJSONStorage(() =>
         typeof window !== "undefined" ? localStorage : sessionStorage
       ),
