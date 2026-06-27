@@ -12,14 +12,16 @@ import {
 } from "../api/categories-api";
 import { categorieKeys } from "../query/categories-queries";
 
+const invalidateAll = async (qc: ReturnType<typeof useQueryClient>) => {
+  await qc.invalidateQueries({ queryKey: categorieKeys.all });
+  await qc.invalidateQueries({ queryKey: ["categories"] });
+};
+
 export function useCreateCategorie() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (body: CreateCategorieBody) => createCategorie(body),
-    onSuccess: async () => {
-      await qc.invalidateQueries({ queryKey: categorieKeys.all });
-      toast.success("Catégorie créée");
-    },
+    onSuccess: async () => { await invalidateAll(qc); toast.success("Catégorie créée"); },
     onError: (err) => toast.error((err as unknown as AppError).message ?? "Erreur création"),
   });
 }
@@ -29,10 +31,7 @@ export function useUpdateCategorie() {
   return useMutation({
     mutationFn: ({ id, body }: { id: string; body: UpdateCategorieBody }) =>
       updateCategorie(id, body),
-    onSuccess: async () => {
-      await qc.invalidateQueries({ queryKey: categorieKeys.all });
-      toast.success("Catégorie mise à jour");
-    },
+    onSuccess: async () => { await invalidateAll(qc); toast.success("Catégorie mise à jour"); },
     onError: (err) => toast.error((err as unknown as AppError).message ?? "Erreur mise à jour"),
   });
 }
@@ -41,10 +40,7 @@ export function useDeleteCategorie() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => deleteCategorie(id),
-    onSuccess: async () => {
-      await qc.invalidateQueries({ queryKey: categorieKeys.all });
-      toast.success("Catégorie supprimée");
-    },
+    onSuccess: async () => { await invalidateAll(qc); toast.success("Catégorie supprimée"); },
     onError: (err) => toast.error((err as unknown as AppError).message ?? "Erreur suppression"),
   });
 }
