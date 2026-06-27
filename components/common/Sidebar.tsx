@@ -23,6 +23,7 @@ const ITEMS = [
 const ADMIN_ITEMS = [
   { href: "/admin/boutiques", label: "Boutiques" },
   { href: "/admin/utilisateurs", label: "Utilisateurs" },
+  { href: "/admin/categories", label: "Catégories" },
 ];
 
 export function Sidebar() {
