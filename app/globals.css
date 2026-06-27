@@ -329,16 +329,19 @@ input[type="number"] {
 }
 
 @media print {
-  body * {
+  /*
+    "visibility: hidden" sur body cascade aux enfants.
+    On utilise "absolute" (pas "fixed") car position:fixed en impression
+    est rendu à la position écran par certains navigateurs (bug Chrome/Edge)
+    ce qui causait le texte au milieu de la feuille.
+  */
+  body {
     visibility: hidden;
-  }
-  #recu-print-root,
-  #recu-print-root * {
-    visibility: visible;
   }
 
   #recu-print-root {
-    position: fixed;
+    visibility: visible;
+    position: absolute;
     top: 0;
     left: 0;
     width: 80mm;
@@ -348,5 +351,10 @@ input[type="number"] {
     background: #fff;
     padding: 3mm 3mm 2mm;
     line-height: 1.3;
+    overflow: visible;
+  }
+
+  #recu-print-root * {
+    visibility: visible;
   }
 }
