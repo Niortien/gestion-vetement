@@ -64,59 +64,59 @@ export function RecuPrint({
     <>
       {/* Zone d'impression — hors modal, visible uniquement @media print */}
       <div id="recu-print-root" aria-hidden="true" style={{ display: "none" }}>
-        <div style={{ textAlign: "center", marginBottom: 8 }}>
-          <div style={{ fontSize: 18, fontWeight: "bold", letterSpacing: 4 }}>RIVIERE</div>
-          <div style={{ fontSize: 10 }}>Streetwear · Stock & Caisse</div>
+        <div style={{ textAlign: "center", marginBottom: 4 }}>
+          <div style={{ fontSize: 15, fontWeight: "bold", letterSpacing: 3 }}>RIVIERE</div>
+          <div style={{ fontSize: 9 }}>Dri Valé — Gestion Boutique</div>
         </div>
-        <div style={{ borderTop: "1px dashed #000", margin: "6px 0" }} />
-        <div style={{ fontSize: 10 }}>
+        <div style={{ borderTop: "1px dashed #000", margin: "4px 0" }} />
+        <div style={{ fontSize: 9 }}>
           <div>Date : {formatDateFr(date)}</div>
           <div>Réf  : {reference}</div>
           {transactionReference && <div>Pmt  : {transactionReference}</div>}
         </div>
-        <div style={{ borderTop: "1px dashed #000", margin: "6px 0" }} />
+        <div style={{ borderTop: "1px dashed #000", margin: "4px 0" }} />
         {lignes.map((l, i) => (
-          <div key={i} style={{ fontSize: 10, marginBottom: 3 }}>
-            <div>{l.produitNom}</div>
-            <div style={{ paddingLeft: 8 }}>{l.taille} · {l.couleur}</div>
-            <div style={{ display: "flex", justifyContent: "space-between", paddingLeft: 8 }}>
-              <span>{l.quantite} × {Number(l.prixUnitaire).toLocaleString("fr-FR")} FCFA</span>
+          <div key={i} style={{ fontSize: 9, marginBottom: 2 }}>
+            <div style={{ fontWeight: "bold" }}>{l.produitNom}</div>
+            <div style={{ paddingLeft: 6 }}>{l.taille} · {l.couleur}</div>
+            <div style={{ display: "flex", justifyContent: "space-between", paddingLeft: 6 }}>
+              <span>{l.quantite} x {Number(l.prixUnitaire).toLocaleString("fr-FR")} FCFA</span>
               <span>{Number(l.sousTotal).toLocaleString("fr-FR")} FCFA</span>
             </div>
           </div>
         ))}
-        <div style={{ borderTop: "1px dashed #000", margin: "6px 0" }} />
+        <div style={{ borderTop: "1px dashed #000", margin: "4px 0" }} />
         {showRemise && (
           <>
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 9 }}>
               <span>Sous-total</span>
               <span>{Number(totalAvantRemise).toLocaleString("fr-FR")} FCFA</span>
             </div>
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, marginTop: 2 }}>
-              <span>Réduction</span>
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 9, marginTop: 1 }}>
+              <span>Reduction</span>
               <span>- {Number(remiseMontant).toLocaleString("fr-FR")} FCFA</span>
             </div>
           </>
         )}
-        <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", fontSize: 13, marginTop: showRemise ? 4 : 0 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", fontSize: 11, marginTop: showRemise ? 2 : 0 }}>
           <span>TOTAL</span>
           <span>{Number(totalMontant).toLocaleString("fr-FR")} FCFA</span>
         </div>
-        <div style={{ fontSize: 10, marginTop: 4 }}>Mode : {MODE_LABELS[modePaiement]}</div>
+        <div style={{ fontSize: 9, marginTop: 2 }}>Mode : {MODE_LABELS[modePaiement]}</div>
         {showCash && (
           <>
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, marginTop: 2 }}>
-              <span>Reçu</span>
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 9, marginTop: 1 }}>
+              <span>Recu</span>
               <span>{Number(montantRecu).toLocaleString("fr-FR")} FCFA</span>
             </div>
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, marginTop: 2, fontWeight: "bold" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 9, marginTop: 1, fontWeight: "bold" }}>
               <span>Monnaie rendue</span>
               <span>{Number(monnaieRendue ?? 0).toLocaleString("fr-FR")} FCFA</span>
             </div>
           </>
         )}
-        <div style={{ borderTop: "1px dashed #000", margin: "8px 0" }} />
-        <div style={{ textAlign: "center", fontSize: 10 }}>Merci pour votre achat !</div>
+        <div style={{ borderTop: "1px dashed #000", margin: "4px 0" }} />
+        <div style={{ textAlign: "center", fontSize: 9 }}>Merci pour votre achat !</div>
       </div>
 
       {/* Modal visuelle */}

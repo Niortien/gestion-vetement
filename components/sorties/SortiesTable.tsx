@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import {
   createColumnHelper,
@@ -32,7 +32,7 @@ const TYPE_LABELS: Record<TypeSortie, string> = {
 };
 
 const TYPE_COLORS: Record<TypeSortie, string> = {
-  VENTE: "bg-[color:rgba(255,212,71,0.15)] text-accent",
+  VENTE: "bg-[color:rgba(200,118,44,0.15)] text-accent",
   PERTE: "bg-[color:rgba(255,77,109,0.15)] text-[var(--color-out)]",
   DON: "bg-[color:rgba(143,126,245,0.15)] text-purple-400",
   RETOUR_FOURNISSEUR: "bg-[color:rgba(100,160,255,0.15)] text-blue-400",
@@ -81,7 +81,7 @@ function ReprintButton({ sortieId }: { sortieId: string }) {
       <Button
         size="sm"
         variant="flat"
-        className="min-w-0 bg-[color:rgba(255,212,71,0.12)] text-accent"
+        className="min-w-0 bg-[color:rgba(200,118,44,0.12)] text-accent"
         isLoading={isLoading && fetchRecu}
         onPress={() => {
           if (!fetchRecu) setFetchRecu(true);

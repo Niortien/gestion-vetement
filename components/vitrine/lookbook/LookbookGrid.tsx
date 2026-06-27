@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { motion } from "framer-motion";
 
@@ -39,7 +39,7 @@ function GridCell({
       {/* Overlay gradient */}
       <div
         className="absolute inset-0 opacity-0 transition-opacity duration-300 hover:opacity-100"
-        style={{ background: "rgba(194,255,0,0.08)" }}
+        style={{ background: "rgba(200,118,44,0.08)" }}
       />
     </motion.div>
   );

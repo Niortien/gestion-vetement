@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { Button } from "@heroui/react";
@@ -139,7 +139,7 @@ export function SortieFeedItem({ sortie, onCancel }: SortieFeedItemProps) {
               <Button
                 size="sm"
                 variant="flat"
-                className="bg-[color:rgba(255,212,71,0.12)] text-accent"
+                className="bg-[color:rgba(200,118,44,0.12)] text-accent"
                 isLoading={detailLoading && fetchRecu}
                 onPress={handleReprint}
               >

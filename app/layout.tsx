@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
+import { JetBrains_Mono, Montserrat, Poppins } from "next/font/google";
 import { Providers } from "@/providers";
 import "./globals.css";
 
-const displayFont = Space_Grotesk({
+const displayFont = Montserrat({
   variable: "--font-display",
   subsets: ["latin"],
-  weight: ["400", "500", "700"],
+  weight: ["500", "600", "700", "800"],
 });
 
-const bodyFont = Inter({
+const bodyFont = Poppins({
   variable: "--font-body",
   subsets: ["latin"],
   weight: ["400", "500", "600"],

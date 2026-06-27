@@ -23,8 +23,8 @@ interface KpiCardProps {
 
 const TONE_CLASSES: Record<KpiCardProps["tone"], { border: string; bg: string; text: string }> = {
   accent: {
-    border: "border-accent/40",
-    bg: "bg-[color:rgba(255,212,71,0.08)]",
+    border: "border-accent/35",
+    bg: "bg-[color:rgba(200,118,44,0.07)]",
     text: "text-accent",
   },
   in: {

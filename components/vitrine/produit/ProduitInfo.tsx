@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useMemo } from "react";
 import { motion } from "framer-motion";
@@ -33,7 +33,7 @@ function StockBadge({ stock }: { stock: number }) {
   return (
     <span
       className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider"
-      style={{ backgroundColor: "rgba(194,255,0,0.12)", color: "var(--v-lime)" }}
+      style={{ backgroundColor: "rgba(200,118,44,0.12)", color: "var(--v-lime)" }}
     >
       <span className="h-1.5 w-1.5 rounded-full bg-[var(--v-lime)]" />
       Disponible
@@ -110,7 +110,7 @@ export function ProduitInfo({ produit, totalStock }: ProduitInfoProps) {
             <span
               key={b.id}
               className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold"
-              style={{ borderColor: "rgba(194,255,0,0.35)", backgroundColor: "rgba(194,255,0,0.08)", color: "var(--v-lime)" }}
+              style={{ borderColor: "rgba(200,118,44,0.35)", backgroundColor: "rgba(200,118,44,0.08)", color: "var(--v-lime)" }}
             >
               📍 {b.nom}{b.ville ? ` — ${b.ville}` : ""}
             </span>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import type { Variante } from "@/types";
 import { Taille } from "@/types";
@@ -79,7 +79,7 @@ export function ProduitVariantPicker({
                         textDecoration: "line-through",
                       }
                     : isActive
-                    ? { borderColor: "var(--v-lime)", backgroundColor: "var(--v-lime)", color: "#000" }
+                    ? { borderColor: "var(--v-lime)", backgroundColor: "var(--v-lime)", color: "#fff" }
                     : { borderColor: "var(--v-border)", color: "var(--v-text)" }
                 }
               >
@@ -124,7 +124,7 @@ export function ProduitVariantPicker({
                   stock === 0
                     ? { borderColor: "var(--v-border)", color: "var(--v-dim)", opacity: 0.4, cursor: "not-allowed" }
                     : isActive
-                    ? { borderColor: "var(--v-lime)", backgroundColor: "rgba(194,255,0,0.1)", color: "var(--v-lime)" }
+                    ? { borderColor: "var(--v-lime)", backgroundColor: "rgba(200,118,44,0.1)", color: "var(--v-lime)" }
                     : { borderColor: "var(--v-border)", color: "var(--v-text)" }
                 }
               >

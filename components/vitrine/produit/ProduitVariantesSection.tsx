@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { motion } from "framer-motion";
 import type { Variante } from "@/types";
@@ -140,7 +140,7 @@ export function ProduitVariantesSection({
                     style={{
                       borderBottom: rowIdx < tailles.length - 1 ? `1px solid var(--v-border)` : undefined,
                       backgroundColor:
-                        selectedTaille === t ? "rgba(194,255,0,0.05)" : undefined,
+                        selectedTaille === t ? "rgba(200,118,44,0.05)" : undefined,
                     }}
                   >
                     <td className="px-4 py-2.5">
@@ -173,7 +173,7 @@ export function ProduitVariantesSection({
                               className="inline-flex flex-col items-center gap-0.5 rounded-lg px-2 py-1 transition-all disabled:cursor-not-allowed"
                               style={
                                 isSelected
-                                  ? { backgroundColor: "rgba(194,255,0,0.15)", outline: "1px solid var(--v-lime)" }
+                                  ? { backgroundColor: "rgba(200,118,44,0.15)", outline: "1px solid var(--v-lime)" }
                                   : undefined
                               }
                             >

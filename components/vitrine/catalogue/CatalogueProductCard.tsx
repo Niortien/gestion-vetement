@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -83,7 +83,7 @@ export function CatalogueProductCard({ produit, priority }: CatalogueProductCard
           {firstVariante && totalStock > 0 && (
             <motion.button
               className="absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center rounded-full font-black text-sm"
-              style={{ backgroundColor: "var(--v-lime)", color: "#000" }}
+              style={{ backgroundColor: "var(--v-lime)", color: "#fff" }}
               variants={{ rest: { opacity: 0, scale: 0.7 }, hovered: { opacity: 1, scale: 1 } }}
               transition={{ duration: 0.2 }}
               onClick={(e) => {
@@ -152,7 +152,7 @@ export function CatalogueProductCard({ produit, priority }: CatalogueProductCard
           {priority && !isPromo && (
             <span
               className="rounded-full px-2 py-0.5 text-[9px] font-black uppercase tracking-wider"
-              style={{ backgroundColor: "var(--v-lime)", color: "#000" }}
+              style={{ backgroundColor: "var(--v-lime)", color: "#fff" }}
             >
               NEW
             </span>

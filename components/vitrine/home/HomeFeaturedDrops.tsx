@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -110,7 +110,7 @@ export function HomeFeaturedDrops() {
                   {produit && (
                     <Link
                       href={`/boutique/${produit.id}`}
-                      className="inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-black uppercase tracking-wider transition-all group-hover:bg-[var(--v-lime)] group-hover:text-black"
+                      className="inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-black uppercase tracking-wider transition-all group-hover:bg-[var(--v-lime)] group-hover:text-white"
                       style={{ backgroundColor: "var(--v-s3)", color: "var(--v-text)" }}
                     >
                       Voir →

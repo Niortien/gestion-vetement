@@ -23,7 +23,7 @@ export function ProduitsView() {
 
   return (
     <PageWrapper>
-      <div className="rounded-xl border border-border/80 bg-[linear-gradient(120deg,rgba(255,212,71,0.14),rgba(143,126,245,0.14))] p-4 md:p-5">
+      <div className="rounded-xl border border-border/80 bg-[linear-gradient(120deg,rgba(200,118,44,0.14),rgba(143,126,245,0.14))] p-4 md:p-5">
         <h1 className="font-[var(--font-display)] text-2xl md:text-4xl">Produits</h1>
       </div>
       {isLoading ? <p className="text-sm text-text-muted">Chargement des produits…</p> : null}
@@ -43,7 +43,7 @@ export function ProduitsView() {
       />
       <Button
         isIconOnly
-        className="fixed bottom-6 right-6 z-[1000] h-12 w-12 rounded-full border border-accent/70 bg-[linear-gradient(135deg,#ffd447,#d0ae37)] text-black shadow-glow-yellow"
+        className="fixed bottom-6 right-6 z-[1000] h-12 w-12 rounded-full border border-accent/70 bg-[linear-gradient(135deg,#C8762C,#8A4E18)] text-white shadow-glow-orange"
         onPress={() => setPanelId("new")}
       >
         +

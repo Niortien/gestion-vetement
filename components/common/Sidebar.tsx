@@ -4,118 +4,156 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@heroui/react";
+import {
+  IconLayoutDashboard,
+  IconActivity,
+  IconBoxSeam,
+  IconCoin,
+  IconPackageImport,
+  IconPackageExport,
+  IconHanger,
+  IconRosetteDiscount,
+  IconBuildingStore,
+  IconUsers,
+  IconCategory2,
+  IconWorld,
+  IconLogout,
+} from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 import { useLogout } from "@/features/auth/mutation/auth-mutations";
 import { useAuthStore } from "@/stores/authStore";
 import { AdminBoutiqueSelect } from "./AdminBoutiqueSelect";
+import type { ComponentType } from "react";
 
-const ITEMS = [
-  { href: "/dashboard", label: "Dashboard" },
-  { href: "/activite", label: "Activité" },
-  { href: "/stock", label: "Stock" },
-  { href: "/caisse", label: "Caisse" },
-  { href: "/entrees", label: "Entrées" },
-  { href: "/sorties", label: "Sorties" },
-  { href: "/produits", label: "Produits" },
-  { href: "/promotions", label: "Promotions" },
+interface NavItem {
+  href: string;
+  label: string;
+  icon: ComponentType<{ size?: number; className?: string }>;
+}
+
+const ITEMS: NavItem[] = [
+  { href: "/dashboard",  label: "Dashboard",   icon: IconLayoutDashboard },
+  { href: "/activite",   label: "Activité",    icon: IconActivity },
+  { href: "/stock",      label: "Stock",        icon: IconBoxSeam },
+  { href: "/caisse",     label: "Caisse",       icon: IconCoin },
+  { href: "/entrees",    label: "Entrées",      icon: IconPackageImport },
+  { href: "/sorties",    label: "Sorties",      icon: IconPackageExport },
+  { href: "/produits",   label: "Produits",     icon: IconHanger },
+  { href: "/promotions", label: "Promotions",   icon: IconRosetteDiscount },
 ];
 
-const ADMIN_ITEMS = [
-  { href: "/admin/boutiques", label: "Boutiques" },
-  { href: "/admin/utilisateurs", label: "Utilisateurs" },
-  { href: "/admin/categories", label: "Catégories" },
+const ADMIN_ITEMS: NavItem[] = [
+  { href: "/admin/boutiques",    label: "Boutiques",    icon: IconBuildingStore },
+  { href: "/admin/utilisateurs", label: "Utilisateurs", icon: IconUsers },
+  { href: "/admin/categories",   label: "Catégories",   icon: IconCategory2 },
 ];
+
+function StarMotif() {
+  return (
+    <div className="flex items-center gap-1.5 px-1 mt-0.5">
+      {[0.35, 0.65, 0.35].map((opacity, i) => (
+        <svg
+          key={i}
+          width="7"
+          height="7"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          className="text-accent shrink-0"
+          style={{ opacity }}
+        >
+          <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
+        </svg>
+      ))}
+    </div>
+  );
+}
+
+function NavLink({ item, active }: { item: NavItem; active: boolean }) {
+  const Icon = item.icon;
+  return (
+    <Link
+      href={item.href}
+      className={cn(
+        "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium",
+        "border-l-2 transition-all duration-150",
+        active
+          ? "border-accent bg-accent/[0.08] text-accent"
+          : "border-transparent text-text-muted hover:border-accent/25 hover:bg-surface-high/60 hover:text-text"
+      )}
+    >
+      <Icon size={15} className="shrink-0" />
+      {item.label}
+    </Link>
+  );
+}
 
 export function Sidebar() {
   const pathname = usePathname();
   const logout = useLogout();
   const user = useAuthStore((s) => s.user);
-
   const isAdmin = user?.role === "ADMIN";
 
   return (
     <aside className="hidden h-full w-56 flex-col gap-3 overflow-y-auto border-r border-border bg-surface p-4 lg:flex">
-      <Link href="/" tabIndex={-1}>
-        <Image
-          src="/images/logo/logo.jpeg"
-          alt="Riviere"
-          height={48}
-          width={160}
-          className="h-12 w-auto object-contain"
-          priority
-        />
-      </Link>
+      {/* Logo + étoiles */}
+      <div className="flex flex-col gap-1">
+        <Link href="/" tabIndex={-1}>
+          <Image
+            src="/images/logo/logo.jpeg"
+            alt="Dri Valé"
+            height={48}
+            width={160}
+            className="h-12 w-auto object-contain"
+            priority
+          />
+        </Link>
+        <StarMotif />
+      </div>
 
-      {/* Sélecteur boutique admin — isolé pour éviter l'appel API pour les vendeurs */}
+      {/* Sélecteur boutique admin */}
       {isAdmin && <AdminBoutiqueSelect />}
 
       {/* Badge boutique vendeur */}
       {!isAdmin && user?.boutiqueId && (
-        <div className="rounded-md border border-accent/30 bg-accent/10 px-3 py-1.5 text-xs font-semibold text-accent">
+        <div className="rounded-md border border-accent/30 bg-accent/[0.07] px-3 py-1.5 text-xs font-semibold text-accent">
           Ma boutique
         </div>
       )}
 
-      <nav className="flex flex-col gap-2">
-        {ITEMS.map((item) => {
-          const active = pathname === item.href;
-          return (
-            <Button
-              key={item.href}
-              as={Link}
-              href={item.href}
-              variant={active ? "solid" : "light"}
-              className={cn("justify-start", active ? "bg-accent text-black" : "text-text-muted")}
-            >
-              {item.label}
-            </Button>
-          );
-        })}
+      <nav className="flex flex-col gap-0.5">
+        {ITEMS.map((item) => (
+          <NavLink key={item.href} item={item} active={pathname === item.href} />
+        ))}
 
         {isAdmin && (
           <>
-            <p className="mt-2 px-2 text-[10px] font-semibold uppercase tracking-widest text-text-muted/60">
+            <div className="my-2 border-t border-border/50" />
+            <p className="mb-1 px-3 text-[9px] font-semibold uppercase tracking-widest text-text-dim">
               Administration
             </p>
-            {ADMIN_ITEMS.map((item) => {
-              const active = pathname === item.href;
-              return (
-                <Button
-                  key={item.href}
-                  as={Link}
-                  href={item.href}
-                  variant={active ? "solid" : "light"}
-                  className={cn("justify-start", active ? "bg-accent text-black" : "text-text-muted")}
-                >
-                  {item.label}
-                </Button>
-              );
-            })}
+            {ADMIN_ITEMS.map((item) => (
+              <NavLink key={item.href} item={item} active={pathname === item.href} />
+            ))}
           </>
         )}
       </nav>
 
-      <div className="mt-auto flex flex-col gap-2">
-        <Button
-          as={Link}
+      <div className="mt-auto flex flex-col gap-1.5">
+        <Link
           href="/"
           target="_blank"
           rel="noopener noreferrer"
-          variant="flat"
-          className="w-full justify-start border border-accent/30 bg-accent/10 text-accent"
+          className="flex items-center gap-2.5 rounded-md border border-accent/25 bg-accent/[0.07] px-3 py-2 text-sm font-medium text-accent transition-colors hover:bg-accent/[0.12]"
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
-            <circle cx="12" cy="12" r="10" />
-            <line x1="2" y1="12" x2="22" y2="12" />
-            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-          </svg>
+          <IconWorld size={15} className="shrink-0" />
           Voir le site
-        </Button>
+        </Link>
         <Button
           variant="light"
-          className="w-full justify-start text-text-muted hover:text-out"
+          className="w-full justify-start gap-2.5 text-sm text-text-muted hover:text-out"
           onPress={() => logout.mutate()}
           isLoading={logout.isPending}
+          startContent={!logout.isPending && <IconLogout size={15} />}
         >
           Déconnexion
         </Button>

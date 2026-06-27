@@ -5,9 +5,9 @@ import { motion } from "framer-motion";
 import { useVitrineCategories } from "@/features/vitrine/query/vitrine-queries";
 
 const CATEGORY_GRADIENTS = [
-  "linear-gradient(135deg, #1A2A42 0%, #0C1624 100%)",
-  "linear-gradient(135deg, #1A1A2E 0%, #0C1624 100%)",
-  "linear-gradient(135deg, #1A2A1A 0%, #0C1624 100%)",
+  "linear-gradient(135deg, #1C1C24 0%, #0F0F14 100%)",
+  "linear-gradient(135deg, #1E1B24 0%, #0F0F14 100%)",
+  "linear-gradient(135deg, #1C1E22 0%, #0F0F14 100%)",
 ];
 
 export function HomeCategoryGrid() {

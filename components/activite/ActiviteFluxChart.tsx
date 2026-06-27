@@ -65,28 +65,28 @@ export function ActiviteFluxChart({ data, groupBy }: ActiviteFluxChartProps) {
         <CartesianGrid strokeDasharray="3 3" stroke="rgba(64,96,138,0.3)" />
         <XAxis
           dataKey="label"
-          tick={{ fill: "#b3c3db", fontSize: 11 }}
+          tick={{ fill: "#9A9088", fontSize: 11 }}
           axisLine={false}
           tickLine={false}
         />
         <YAxis
           tickFormatter={fmt}
-          tick={{ fill: "#b3c3db", fontSize: 11 }}
+          tick={{ fill: "#9A9088", fontSize: 11 }}
           axisLine={false}
           tickLine={false}
           width={48}
         />
         <Tooltip
           contentStyle={{
-            background: "#223651",
-            border: "1px solid #40608a",
+            background: "#1D1B18",
+            border: "1px solid #332D28",
             borderRadius: "8px",
             fontSize: "12px",
-            color: "#eef5ff",
+            color: "#F0EBE3",
           }}
           formatter={(value: number) => [`${value.toLocaleString("fr-FR")} FCFA`]}
         />
-        <Legend wrapperStyle={{ fontSize: "12px", color: "#b3c3db", paddingTop: "8px" }} />
+        <Legend wrapperStyle={{ fontSize: "12px", color: "#9A9088", paddingTop: "8px" }} />
         <Line
           type="monotone"
           dataKey="Cash entrant"
@@ -106,7 +106,7 @@ export function ActiviteFluxChart({ data, groupBy }: ActiviteFluxChartProps) {
         <Line
           type="monotone"
           dataKey="Solde"
-          stroke="#ffd447"
+          stroke="#C8762C"
           strokeWidth={2}
           strokeDasharray="4 2"
           dot={false}

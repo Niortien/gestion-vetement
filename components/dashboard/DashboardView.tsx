@@ -50,9 +50,9 @@ export function DashboardView() {
   return (
     <PageWrapper>
       {/* Header */}
-      <div className="rounded-xl border border-border/80 bg-[linear-gradient(120deg,rgba(255,212,71,0.14),rgba(34,40,81,0.55))] p-4 md:p-5">
-        <h1 className="font-[var(--font-display)] text-2xl text-accent md:text-4xl">Dashboard</h1>
-        <p className="mt-1 text-sm text-text-muted">Vue d&apos;ensemble de l&apos;activité</p>
+      <div className="rounded-xl border border-border bg-[linear-gradient(135deg,rgba(255,255,255,0.03)_0%,transparent_60%)] p-4 md:p-5" style={{ boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06)" }}>
+        <h1 className="font-[var(--font-display)] text-2xl font-bold tracking-tight text-text md:text-4xl">Dashboard</h1>
+        <p className="mt-1 text-sm text-text-muted">Vue d&apos;ensemble · Dri Val<span className="text-accent font-semibold">é</span></p>
       </div>
 
       {/* KPIs */}

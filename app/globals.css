@@ -3,101 +3,122 @@
 @tailwind utilities;
 
 :root {
-  --color-base: #17263a;
-  --color-surface: #223651;
-  --color-surface-high: #2d4567;
-  --color-border: #40608a;
-  --color-border-active: #5d7fae;
+  /* ════════════════════════════════════════════════════════════
+     Palette DriValé — "Noir Métallique + Feu de Bronze"
+     Base: quasi-noir bleu-métal   Texte: blanc cassé neutre
+     Accent: bronze chaud — UNIQUEMENT sur les éléments clics/stars
+     ════════════════════════════════════════════════════════════ */
 
-  --color-accent: #ffd447;
-  --color-accent-dim: #d0ae37;
+  --color-base:         #0B0C10;
+  --color-surface:      #111318;
+  --color-surface-high: #1A1C23;
+  --color-border:       #252830;
+  --color-border-active:#393C4A;
 
-  --color-in: #39d353;
-  --color-in-dim: rgba(57, 211, 83, 0.12);
-  --color-out: #ff4d6d;
-  --color-out-dim: rgba(255, 77, 109, 0.12);
-  --color-return: #ff9a3c;
+  /* Accent feu — utilisé avec parcimonie : boutons CTA, étoiles logo, indicateur actif */
+  --color-accent:     #C8762C;
+  --color-accent-dim: #9E5C1E;
+
+  /* Fonctionnels (inchangés — verts, rouges, orange, violet) */
+  --color-in:         #3DD68C;
+  --color-in-dim:     rgba(61, 214, 140, 0.12);
+  --color-out:        #FF4D6D;
+  --color-out-dim:    rgba(255, 77, 109, 0.12);
+  --color-return:     #FF9A3C;
   --color-return-dim: rgba(255, 154, 60, 0.12);
-  --color-cash: #8f7ef5;
+  --color-cash:       #A78BFA;
 
-  --color-text: #eef5ff;
-  --color-text-muted: #b3c3db;
-  --color-text-dim: #7d95b8;
+  /* Typographie — blanc cassé neutre, pas bleuté ni crème */
+  --color-text:       #F0F0F5;
+  --color-text-muted: #888895;
+  --color-text-dim:   #484855;
 
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 20px;
-  --space-6: 24px;
-  --space-8: 32px;
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
   --space-10: 40px;
   --space-12: 48px;
   --space-16: 64px;
   --space-20: 80px;
   --space-24: 96px;
 
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   16px;
+  --radius-xl:   24px;
   --radius-pill: 999px;
 
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
-  --shadow-glow-yellow: 0 0 16px rgba(240, 224, 64, 0.25);
-  --shadow-glow-green: 0 0 12px rgba(57, 211, 83, 0.2);
-  --shadow-glow-red: 0 0 12px rgba(255, 77, 109, 0.2);
+  /* Ombres — cartes qui "flottent" avec reflet subtil en haut */
+  --shadow-sm:   0 1px 3px rgba(0, 0, 0, 0.6);
+  --shadow-md:   0 4px 20px rgba(0, 0, 0, 0.7);
+  --shadow-lg:   0 8px 40px rgba(0, 0, 0, 0.85);
 
-  --duration-fast: 120ms;
+  /* Carte : reflet de lumière en haut + ombre profonde + liseré brillant */
+  --shadow-card:
+    0 1px 0 rgba(255, 255, 255, 0.05),
+    0 4px 24px rgba(0, 0, 0, 0.8),
+    0 0 0 1px rgba(255, 255, 255, 0.04);
+
+  /* Glows — sobres, bronze seulement */
+  --shadow-glow-yellow: 0 0 20px rgba(200, 118, 44, 0.25);
+  --shadow-glow-green:  0 0 12px rgba(61, 214, 140, 0.18);
+  --shadow-glow-red:    0 0 12px rgba(255, 77, 109, 0.18);
+  --shadow-glow-purple: 0 0 18px rgba(167, 139, 250, 0.22);
+  --shadow-glow-orange: 0 0 20px rgba(200, 118, 44, 0.28);
+
+  --duration-fast:   120ms;
   --duration-normal: 220ms;
-  --duration-slow: 380ms;
-  --duration-xslow: 550ms;
+  --duration-slow:   380ms;
+  --duration-xslow:  550ms;
 
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-expo:    cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out-circ: cubic-bezier(0.85, 0, 0.15, 1);
-  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-spring:      cubic-bezier(0.34, 1.56, 0.64, 1);
 
-  /* ── Primary scale (Gold) ── base: #FFD447 = --color-accent */
-  --primary-50:  #FFFBEA;
-  --primary-100: #FFF3C4;
-  --primary-200: #FFE780;
-  --primary-300: #FFD94F;
-  --primary-400: #FFD447;
-  --primary-500: #E8BC1F;
-  --primary-600: #C49A0E;
-  --primary-700: #9C7709;
-  --primary-800: #735707;
-  --primary-900: #4A3804;
-  --primary-950: #241B01;
+  /* ── Primary scale (Bronze chaud) — base: #C8762C ── */
+  --primary-50:  #FDF5EB;
+  --primary-100: #FAE8CC;
+  --primary-200: #F4CC96;
+  --primary-300: #ECAC5A;
+  --primary-400: #C8762C;
+  --primary-500: #A55E1C;
+  --primary-600: #844A14;
+  --primary-700: #663910;
+  --primary-800: #4C2B0D;
+  --primary-900: #311B08;
+  --primary-950: #180D03;
 
-  /* ── Brand scale (Night Blue) ── surfaces existantes intégrées */
-  --brand-50:  #EFF6FF;
-  --brand-100: #DBEAFE;
-  --brand-200: #B8D3F0;
-  --brand-300: #8AAFD9;
-  --brand-400: #5D7FAE;
-  --brand-500: #40608A;
-  --brand-600: #2D4567;
-  --brand-700: #223651;
-  --brand-800: #17263A;
-  --brand-900: #0E1A27;
-  --brand-950: #07101A;
+  /* ── Brand scale (Noir métallique) — surfaces ── */
+  --brand-50:  #F2F2F5;
+  --brand-100: #E2E2E8;
+  --brand-200: #C0C0CC;
+  --brand-300: #9090A0;
+  --brand-400: #636375;
+  --brand-500: #42424F;
+  --brand-600: #2D2D38;
+  --brand-700: #1A1C23;
+  --brand-800: #111318;
+  --brand-900: #0B0C10;
+  --brand-950: #060609;
 
-  /* ── Success scale ── base: #39D353 = --color-in */
-  --success-50:  #EDFDF2;
-  --success-100: #D1FAE0;
-  --success-200: #A7F3C1;
-  --success-300: #6FE89A;
-  --success-400: #39D353;
-  --success-500: #22B83C;
-  --success-600: #18932F;
-  --success-700: #167126;
-  --success-800: #155A21;
-  --success-900: #12491D;
-  --success-950: #042A0D;
+  /* ── Success scale ── */
+  --success-50:  #EDFDF5;
+  --success-100: #D1FAE5;
+  --success-200: #A7F3CE;
+  --success-300: #6EE7B2;
+  --success-400: #3DD68C;
+  --success-500: #22C074;
+  --success-600: #18975A;
+  --success-700: #157348;
+  --success-800: #145C3B;
+  --success-900: #124B32;
+  --success-950: #042B1C;
 
-  /* ── Error scale ── base: #FF4D6D = --color-out */
+  /* ── Error scale ── */
   --error-50:  #FFF1F3;
   --error-100: #FFE0E6;
   --error-200: #FFC5D0;
@@ -110,7 +131,7 @@
   --error-900: #790E2A;
   --error-950: #420210;
 
-  /* ── Warning scale ── base: #FF9A3C = --color-return */
+  /* ── Warning scale ── */
   --warning-50:  #FFFAEB;
   --warning-100: #FFF0C7;
   --warning-200: #FFDE88;
@@ -123,7 +144,7 @@
   --warning-900: #732D0F;
   --warning-950: #421307;
 
-  /* ── Info scale (Caisse) ── base: #8F7EF5 = --color-cash */
+  /* ── Info / Caisse scale (violet) ── */
   --info-50:  #F5F3FF;
   --info-100: #EDE9FE;
   --info-200: #DDD6FE;
@@ -136,20 +157,20 @@
   --info-900: #4C1D95;
   --info-950: #2E1065;
 
-  /* ── Neutral scale ── */
-  --neutral-50:  #F8FAFC;
-  --neutral-100: #EEF5FF;
-  --neutral-200: #DBEAFE;
-  --neutral-300: #B3C3DB;
-  --neutral-400: #7D95B8;
-  --neutral-500: #5A6F8C;
-  --neutral-600: #405070;
-  --neutral-700: #2D3A52;
-  --neutral-800: #1E2A3D;
-  --neutral-900: #111929;
-  --neutral-950: #080E18;
+  /* ── Neutral scale (gris froid — métal poli) ── */
+  --neutral-50:  #F4F4F7;
+  --neutral-100: #E8E8EE;
+  --neutral-200: #CACAD6;
+  --neutral-300: #A2A2B0;
+  --neutral-400: #78788A;
+  --neutral-500: #555565;
+  --neutral-600: #3C3C4A;
+  --neutral-700: #282832;
+  --neutral-800: #18181E;
+  --neutral-900: #0E0E12;
+  --neutral-950: #060608;
 
-  /* ── Typographie — échelle formelle ── */
+  /* ── Typographie ── */
   --text-2xs:  10px;
   --text-xs:   11px;
   --text-sm:   13px;
@@ -172,7 +193,7 @@
   --tracking-wide:     0.04em;
   --tracking-widest:   0.1em;
 
-  /* ── Z-index — couches formelles ── */
+  /* ── Z-index ── */
   --z-base:     0;
   --z-raised:   10;
   --z-dropdown: 100;
@@ -182,12 +203,6 @@
   --z-panel:    800;
   --z-toast:    900;
   --z-tooltip:  1000;
-
-  /* ── Shadows supplémentaires ── */
-  --shadow-lg:          0 8px 32px rgba(0, 0, 0, 0.6);
-  --shadow-card:        0 2px 8px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(64, 96, 138, 0.3);
-  --shadow-glow-purple: 0 0 20px rgba(143, 126, 245, 0.25);
-  --shadow-glow-orange: 0 0 12px rgba(255, 154, 60, 0.2);
 }
 
 html,
@@ -196,10 +211,15 @@ body {
 }
 
 body {
+  /*
+    Fond DriValé : noir profond avec un voile de lumière très subtil en haut
+    (comme un spot d'éclairage sur un présentoir de mode)
+    + reflet métallique sur les bords
+  */
   background:
-    radial-gradient(1200px 700px at 85% -10%, rgba(143, 126, 245, 0.2), transparent 60%),
-    radial-gradient(900px 600px at -5% 100%, rgba(57, 211, 83, 0.12), transparent 55%),
-    linear-gradient(180deg, #1c2d44 0%, var(--color-base) 55%, #122033 100%);
+    radial-gradient(1000px 500px at 50% -2%, rgba(255, 255, 255, 0.025), transparent 60%),
+    radial-gradient(600px 400px at 0% 100%, rgba(200, 118, 44, 0.04), transparent 55%),
+    linear-gradient(180deg, #111318 0%, #0B0C10 40%, #080A0D 100%);
   color: var(--color-text);
 }
 
@@ -208,7 +228,7 @@ body {
   outline-offset: 2px;
 }
 
-/* Supprimer les flèches increment/decrement des inputs numériques */
+/* Supprimer les flèches des inputs numériques */
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -219,22 +239,43 @@ input[type="number"] {
   appearance: textfield;
 }
 
-/* ── Vitrine publique — design system ────────────────────────── */
+/* ══════════════════════════════════════════════════════════════
+   VITRINE DRI VALÉ — Design System Yopougon Edition
+   Cible : Jeunes 16-28 ans de Yopougon, Abidjan
+   Palette : Noir pur · Or ivoirien · Rouge feu · Blanc propre
+   ══════════════════════════════════════════════════════════════ */
 [data-vitrine] {
-  --v-bg:     #04080F;
-  --v-s1:     #0C1624;
-  --v-s2:     #131F32;
-  --v-s3:     #1A2A42;
-  --v-lime:   #C2FF00;
-  --v-lime-dim: rgba(194, 255, 0, 0.12);
-  --v-red:    #FF2449;
-  --v-purple: #9B7FEA;
-  --v-text:   #EFF6FF;
-  --v-muted:  #7A94B8;
-  --v-dim:    #3D5070;
-  --v-border: rgba(255, 255, 255, 0.07);
-  --v-nav-bg: rgba(4, 8, 15, 0.92);
-  --v-nav-border: rgba(255, 255, 255, 0.06);
+  --v-bg:       #060607;          /* Noir pur — puissance, ambition */
+  --v-s1:       #0E0E10;          /* Surface 1 */
+  --v-s2:       #141416;          /* Surface 2 */
+  --v-s3:       #1C1C1F;          /* Surface 3 — cartes, panels */
+
+  --v-gold:     #F0B429;          /* Or ivoirien — prestige, classe */
+  --v-gold-dim: rgba(240, 180, 41, 0.12);
+  --v-gold-glow: rgba(240, 180, 41, 0.20);
+
+  --v-hot:      #FF3359;          /* Rouge feu — drops, urgence, énergie */
+  --v-hot-dim:  rgba(255, 51, 89, 0.12);
+
+  /* Alias pour rétrocompatibilité des anciens composants */
+  --v-lime:     #F0B429;
+  --v-lime-dim: rgba(240, 180, 41, 0.12);
+  --v-red:      #FF3359;
+  --v-purple:   #9B7FEA;
+
+  --v-text:     #FAFAFA;          /* Blanc pur — propre, frais */
+  --v-muted:    #888896;          /* Gris texte secondaire */
+  --v-dim:      #48484F;          /* Gris très atténué */
+
+  --v-border:      rgba(255, 255, 255, 0.06);
+  --v-border-gold: rgba(240, 180, 41, 0.25);
+  --v-nav-bg:      rgba(6, 6, 7, 0.94);
+  --v-nav-border:  rgba(255, 255, 255, 0.05);
+
+  /* Ombres Yop Edition */
+  --v-shadow-gold: 0 0 24px rgba(240,180,41,0.22);
+  --v-shadow-hot:  0 0 20px rgba(255,51,89,0.20);
+  --v-shadow-card: 0 2px 20px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.04);
 }
 
 [data-vitrine] body,
@@ -243,22 +284,31 @@ input[type="number"] {
   color: var(--v-text);
 }
 
-/* ── Vitrine — thème clair ───────────────────────────────────── */
+/* ── Vitrine — thème clair (secondaire) ─────────────────────── */
 [data-vitrine][data-theme="light"] {
-  --v-bg:       #F8F5F0;
-  --v-s1:       #EDE8E1;
-  --v-s2:       #E1DAD0;
-  --v-s3:       #D2C9BC;
-  --v-lime:     #6B9100;
-  --v-lime-dim: rgba(107, 145, 0, 0.12);
-  --v-red:      #CC001F;
-  --v-purple:   #5E3FB3;
-  --v-text:     #0D0B09;
-  --v-muted:    #4A4540;
-  --v-dim:      #8A837A;
-  --v-border:   rgba(0, 0, 0, 0.09);
-  --v-nav-bg:   rgba(248, 245, 240, 0.93);
-  --v-nav-border: rgba(0, 0, 0, 0.08);
+  --v-bg:          #F8F8FA;
+  --v-s1:          #EFEFF2;
+  --v-s2:          #E5E5E8;
+  --v-s3:          #D8D8DC;
+  --v-gold:        #C47B00;
+  --v-gold-dim:    rgba(196,123,0,0.10);
+  --v-gold-glow:   rgba(196,123,0,0.15);
+  --v-hot:         #E0103A;
+  --v-hot-dim:     rgba(224,16,58,0.10);
+  --v-lime:        #C47B00;
+  --v-lime-dim:    rgba(196,123,0,0.10);
+  --v-red:         #E0103A;
+  --v-purple:      #5E3FB3;
+  --v-text:        #060607;
+  --v-muted:       #48484F;
+  --v-dim:         #888896;
+  --v-border:      rgba(0,0,0,0.07);
+  --v-border-gold: rgba(196,123,0,0.25);
+  --v-nav-bg:      rgba(248,248,250,0.94);
+  --v-nav-border:  rgba(0,0,0,0.06);
+  --v-shadow-gold: 0 0 20px rgba(196,123,0,0.18);
+  --v-shadow-hot:  0 0 16px rgba(224,16,58,0.15);
+  --v-shadow-card: 0 2px 16px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.06);
   background: var(--v-bg);
   color: var(--v-text);
 }
@@ -273,8 +323,12 @@ input[type="number"] {
 }
 
 /* ── Impression reçu thermique 80mm ──────────────────────────── */
+@page {
+  size: 80mm auto;
+  margin: 0;
+}
+
 @media print {
-  /* Masque tout sauf le reçu */
   body * {
     visibility: hidden;
   }
@@ -289,9 +343,10 @@ input[type="number"] {
     left: 0;
     width: 80mm;
     font-family: monospace;
-    font-size: 11px;
+    font-size: 10px;
     color: #000;
     background: #fff;
-    padding: 4mm 3mm;
+    padding: 3mm 3mm 2mm;
+    line-height: 1.3;
   }
 }

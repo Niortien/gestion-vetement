@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { Button, Input } from "@heroui/react";
@@ -73,7 +73,7 @@ export function PromoInlineForm({ produit, onSave, onCancel, isSaving }: PromoIn
   }
 
   return (
-    <div className="mt-2 rounded-xl border border-[var(--color-cash)]/30 bg-[color:rgba(255,212,71,0.06)] p-3 space-y-3">
+    <div className="mt-2 rounded-xl border border-[var(--color-cash)]/30 bg-[color:rgba(200,118,44,0.06)] p-3 space-y-3">
       <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
         <Input
           variant="bordered"

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { motion } from "framer-motion";
@@ -134,7 +134,7 @@ export function MarqueSocial() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               className="rounded-xl px-6 py-4 text-center"
-              style={{ backgroundColor: "rgba(194,255,0,0.1)", border: "1px solid var(--v-lime)" }}
+              style={{ backgroundColor: "rgba(200,118,44,0.1)", border: "1px solid var(--v-lime)" }}
             >
               <p className="text-sm font-black" style={{ color: "var(--v-lime)" }}>
                 Bienvenue dans la famille Dri Valé ✓
@@ -154,7 +154,7 @@ export function MarqueSocial() {
               <button
                 type="submit"
                 className="whitespace-nowrap rounded-xl px-6 py-3 text-sm font-black uppercase tracking-wider transition-all hover:opacity-90 sm:rounded-l-none"
-                style={{ backgroundColor: "var(--v-lime)", color: "#000" }}
+                style={{ backgroundColor: "var(--v-lime)", color: "#fff" }}
               >
                 S&apos;inscrire
               </button>

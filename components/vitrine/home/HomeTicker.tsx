@@ -1,39 +1,34 @@
-"use client";
+﻿"use client";
 
 const ITEMS = [
-  "NOUVELLE COLLECTION 2025",
+  "YOP CITY ON EST LÀ 🔥",
   "PAIEMENT WAVE · ORANGE MONEY · CASH",
-  "LIVRAISON DAKAR",
-  "DROPS LIMITÉS",
-  "AUTHENTIQUE DEPUIS DAKAR",
-  "QUALITÉ STREETWEAR PREMIUM",
+  "LIVRAISON YOPOUGON 24H",
+  "DROPS LIMITÉS — SOIS RAPIDE",
+  "STYLE GARANTI OU REMBOURSÉ",
+  "AUTHENTIQUE DEPUIS YOP",
+  "TROP FORT C'EST DRI VALÉ",
 ];
 
 export function HomeTicker() {
-  const text = ITEMS.join("  •  ") + "  •  " + ITEMS.join("  •  ") + "  •  ";
+  const text = ITEMS.join("   ✦   ") + "   ✦   ";
 
   return (
     <div
-      className="overflow-hidden border-y py-3"
-      style={{
-        borderColor: "var(--v-border)",
-        backgroundColor: "var(--v-s1)",
-      }}
+      className="overflow-hidden border-y py-3.5"
+      style={{ borderColor: "var(--v-border)", backgroundColor: "var(--v-s1)" }}
     >
       <div className="vitrine-marquee-track flex whitespace-nowrap">
-        <span
-          className="font-[var(--font-display)] text-xs font-black uppercase tracking-[0.2em]"
-          style={{ color: "var(--v-lime)" }}
-        >
-          {text}
-        </span>
-        <span
-          className="font-[var(--font-display)] text-xs font-black uppercase tracking-[0.2em]"
-          style={{ color: "var(--v-lime)" }}
-          aria-hidden
-        >
-          {text}
-        </span>
+        {[text, text].map((t, i) => (
+          <span
+            key={i}
+            aria-hidden={i > 0}
+            className="font-[var(--font-display)] text-[11px] font-black uppercase tracking-[0.22em]"
+            style={{ color: "var(--v-gold)" }}
+          >
+            {t}
+          </span>
+        ))}
       </div>
     </div>
   );

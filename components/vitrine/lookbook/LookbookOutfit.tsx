@@ -99,7 +99,7 @@ export function LookbookOutfit() {
           </div>
           {/* Badge */}
           <div className="absolute left-4 top-4 rounded-xl px-3 py-1.5" style={{ backgroundColor: "var(--v-lime)" }}>
-            <p className="text-[10px] font-black uppercase tracking-widest text-black">Look 01</p>
+            <p className="text-[10px] font-black uppercase tracking-widest text-white">Look 01</p>
           </div>
         </motion.div>
 

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import type { Categorie } from "@/types";
 import { Taille } from "@/types";
@@ -30,7 +30,7 @@ function Chip({
       className="shrink-0 rounded-full border px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-wider transition-all"
       style={
         active
-          ? { backgroundColor: "var(--v-lime)", borderColor: "var(--v-lime)", color: "#000" }
+          ? { backgroundColor: "var(--v-lime)", borderColor: "var(--v-lime)", color: "#fff" }
           : {
               backgroundColor: "transparent",
               borderColor: "var(--v-border)",

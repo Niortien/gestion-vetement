@@ -1,244 +1,177 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useVitrineStore } from "@/stores/vitrineStore";
+import { getWhatsappUrl } from "@/lib/whatsapp";
+
+const waUrl = getWhatsappUrl("Allo Dri Valé, je veux voir vos nouveautés 🔥");
 
 export function HomeHero() {
-  const theme = useVitrineStore((s) => s.theme);
-  const isDark = theme === "dark";
-
   return (
     <section
-      className="relative flex min-h-[100svh] overflow-hidden"
+      className="relative flex min-h-[100svh] flex-col overflow-hidden"
       style={{ backgroundColor: "var(--v-bg)" }}
     >
-      {/* Glow lime bas-gauche */}
+      {/* Glow or — ambiance prestige */}
       <div
-        className="pointer-events-none absolute -bottom-32 -left-32 h-96 w-96 rounded-full"
-        style={{ background: "radial-gradient(circle, rgba(194,255,0,0.12) 0%, transparent 70%)" }}
+        className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 h-[500px] w-[700px] rounded-full"
+        style={{ background: "radial-gradient(ellipse, rgba(240,180,41,0.12) 0%, transparent 68%)" }}
       />
-      {/* Glow purple haut-droite */}
+      {/* Grain texture overlay */}
       <div
-        className="pointer-events-none absolute -right-20 -top-20 h-80 w-80 rounded-full"
-        style={{ background: "radial-gradient(circle, rgba(155,127,234,0.15) 0%, transparent 70%)" }}
+        className="pointer-events-none absolute inset-0"
+        style={{
+          opacity: 0.03,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+          backgroundSize: "200px 200px",
+        }}
       />
 
-      <div className="relative mx-auto flex w-full max-w-7xl items-center px-5 py-24">
-        {/* Contenu gauche */}
-        <div className="z-10 flex-1">
+      <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-5 pb-12 pt-28">
+        <div className="max-w-3xl">
+          {/* Eyebrow badge */}
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.5 }}
           >
-            {/* Eyebrow */}
             <span
-              className="inline-block rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em]"
-              style={{ borderColor: "var(--v-lime)", color: "var(--v-lime)" }}
+              className="inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.25em]"
+              style={{ borderColor: "var(--v-border-gold)", color: "var(--v-gold)" }}
             >
-              Nouvelle collection 2025
+              <span
+                className="h-1.5 w-1.5 rounded-full animate-pulse"
+                style={{ backgroundColor: "var(--v-hot)" }}
+              />
+              Nouveaux drops disponibles
             </span>
+          </motion.div>
 
-            {/* Titre géant */}
-            <h1
-              className="mt-6 font-[var(--font-display)] font-black leading-[0.9] tracking-tight"
-              style={{ color: "var(--v-text)" }}
+          {/* Titre principal */}
+          <motion.h1
+            className="mt-6 font-[var(--font-display)] font-black leading-[0.92] tracking-[-0.02em]"
+            initial={{ opacity: 0, y: 32 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.65, delay: 0.1 }}
+          >
+            <span
+              className="block"
+              style={{
+                fontSize: "clamp(64px, 12vw, 140px)",
+                color: "var(--v-text)",
+              }}
             >
-              <span className="block text-[clamp(60px,10vw,120px)]">LE</span>
-              <span
-                className="block text-[clamp(60px,10vw,120px)]"
-                style={{ color: "var(--v-lime)", WebkitTextStroke: "0px" }}
-              >
-                STREET
-              </span>
-              <span className="block text-[clamp(60px,10vw,120px)]">WEAR</span>
-              <span
-                className="block text-[clamp(30px,5vw,60px)] font-light tracking-[0.25em]"
-                style={{ color: "var(--v-muted)" }}
-              >
-                d&apos;Abidjan.
-              </span>
-            </h1>
-
-            {/* Tagline */}
-            <p
-              className="mt-8 max-w-sm text-base leading-relaxed"
-              style={{ color: "var(--v-muted)" }}
+              SOIS LE
+            </span>
+            <span
+              className="block"
+              style={{
+                fontSize: "clamp(64px, 12vw, 140px)",
+                color: "var(--v-gold)",
+                textShadow: "0 0 60px rgba(240,180,41,0.3)",
+              }}
             >
-              Vêtements, accessoires et produits importés. Authentique depuis Yopougon, Abidjan.
-            </p>
+              PLUS STYLÉ
+            </span>
+            <span
+              className="block"
+              style={{
+                fontSize: "clamp(64px, 12vw, 140px)",
+                color: "var(--v-text)",
+              }}
+            >
+              DE YOP.
+            </span>
+          </motion.h1>
 
-            {/* CTAs */}
-            <div className="mt-10 flex flex-wrap items-center gap-4">
-              <Link
-                href="/catalogue"
-                className="inline-flex items-center gap-2 rounded-xl px-6 py-3.5 font-[var(--font-display)] text-sm font-black uppercase tracking-widest transition-opacity hover:opacity-85"
-                style={{ backgroundColor: "var(--v-lime)", color: "#000" }}
-              >
-                Explorer le catalogue →
-              </Link>
-              <Link
-                href="/lookbook"
-                className="inline-flex items-center gap-2 rounded-xl border px-6 py-3.5 font-[var(--font-display)] text-sm font-black uppercase tracking-widest transition-colors hover:border-[var(--v-text)] hover:text-[var(--v-text)]"
-                style={{ borderColor: "var(--v-border)", color: "var(--v-muted)" }}
-              >
-                Lookbook
-              </Link>
-            </div>
+          {/* Tagline */}
+          <motion.p
+            className="mt-8 max-w-md text-base leading-relaxed md:text-lg"
+            style={{ color: "var(--v-muted)" }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.35 }}
+          >
+            Vêtements, sneakers et accessoires importés. Directo depuis
+            Yopougon — <span style={{ color: "var(--v-text)", fontWeight: 600 }}>100% authentique.</span>
+          </motion.p>
+
+          {/* CTAs */}
+          <motion.div
+            className="mt-10 flex flex-wrap items-center gap-4"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+          >
+            <Link
+              href="/catalogue"
+              className="inline-flex items-center gap-2 rounded-xl px-7 py-4 font-[var(--font-display)] text-sm font-black uppercase tracking-widest transition-all hover:scale-[1.03] hover:shadow-[0_0_32px_rgba(240,180,41,0.35)] active:scale-[0.97]"
+              style={{ backgroundColor: "var(--v-gold)", color: "#000" }}
+            >
+              Explorer le catalogue
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </Link>
+            <a
+              href={waUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-xl border px-7 py-4 font-[var(--font-display)] text-sm font-black uppercase tracking-widest transition-all hover:border-[var(--v-gold)] hover:text-[var(--v-gold)]"
+              style={{ borderColor: "var(--v-border)", color: "var(--v-muted)" }}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+              </svg>
+              Commander sur WA
+            </a>
+          </motion.div>
+
+          {/* Stats sociales */}
+          <motion.div
+            className="mt-12 flex items-center gap-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.75 }}
+          >
+            {[
+              { val: "200+", label: "clients à Yop" },
+              { val: "4.9★", label: "satisfaction" },
+              { val: "24h",  label: "livraison locale" },
+            ].map((s) => (
+              <div key={s.label} className="flex flex-col">
+                <span className="font-[var(--font-display)] text-xl font-black" style={{ color: "var(--v-gold)" }}>
+                  {s.val}
+                </span>
+                <span className="text-[10px] uppercase tracking-wider" style={{ color: "var(--v-dim)" }}>
+                  {s.label}
+                </span>
+              </div>
+            ))}
           </motion.div>
         </div>
-
-        {/* Panel droit — couverture éditorial */}
-        <motion.div
-          className="absolute right-0 top-0 bottom-0 w-[45%] overflow-hidden"
-          initial={{ opacity: 0, x: 60 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
-        >
-          <div
-            className="relative h-full w-full overflow-hidden"
-            style={{ clipPath: "polygon(8% 0%, 100% 0%, 100% 100%, 0% 100%)" }}
-          >
-            {/* Fond dégradé atmosphérique */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background: isDark
-                  ? `radial-gradient(ellipse at 22% 80%, rgba(255,148,32,0.5) 0%, transparent 52%),
-                     radial-gradient(ellipse at 78% 18%, rgba(194,255,0,0.18) 0%, transparent 46%),
-                     radial-gradient(ellipse at 55% 50%, rgba(155,127,234,0.2) 0%, transparent 42%),
-                     linear-gradient(155deg, #1E1508 0%, #2A1C0C 38%, #130F08 100%)`
-                  : `radial-gradient(ellipse at 22% 80%, rgba(210,120,20,0.3) 0%, transparent 52%),
-                     radial-gradient(ellipse at 78% 18%, rgba(107,145,0,0.18) 0%, transparent 46%),
-                     radial-gradient(ellipse at 55% 50%, rgba(94,63,179,0.1) 0%, transparent 42%),
-                     linear-gradient(155deg, #F2E4CC 0%, #EDD9B8 38%, #E4CCA0 100%)`,
-              }}
-            />
-
-            {/* Trame textile diagonale */}
-            <div
-              className="absolute inset-0"
-              style={{
-                opacity: isDark ? 0.07 : 0.1,
-                backgroundImage: `repeating-linear-gradient(
-                  -45deg,
-                  ${isDark ? "rgba(255,255,255,0.6)" : "rgba(0,0,0,0.4)"},
-                  ${isDark ? "rgba(255,255,255,0.6)" : "rgba(0,0,0,0.4)"} 1px,
-                  transparent 1px,
-                  transparent 26px
-                )`,
-              }}
-            />
-
-            {/* Watermark marque vertical */}
-            <div
-              className="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none select-none"
-              aria-hidden
-            >
-              <span
-                className="font-[var(--font-display)] font-black leading-none"
-                style={{
-                  fontSize: "clamp(56px,9vw,140px)",
-                  color: isDark ? "rgba(255,255,255,0.028)" : "rgba(0,0,0,0.05)",
-                  writingMode: "vertical-rl",
-                  letterSpacing: "0.14em",
-                  transform: "rotate(180deg)",
-                }}
-              >
-                DRI VALÉ
-              </span>
-            </div>
-
-            {/* Composition centrale */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-7 px-8">
-              {/* SVG cintre mode */}
-              <svg viewBox="0 0 120 100" className="w-28 h-24" fill="none" aria-hidden>
-                <path
-                  d="M60 18 C60 18 60 30 72 38 L108 62 A6 6 0 0 1 108 74 H12 A6 6 0 0 1 12 62 L48 38 C60 30 60 18 60 18 Z"
-                  stroke="var(--v-lime)"
-                  strokeWidth="2"
-                  fill="var(--v-lime-dim)"
-                />
-                <circle cx="60" cy="14" r="5" stroke="var(--v-lime)" strokeWidth="2" />
-                <line x1="60" y1="9" x2="60" y2="1" stroke="var(--v-lime)" strokeWidth="2" />
-                <path d="M60 1 Q65 -4 70 1" stroke="var(--v-lime)" strokeWidth="2" fill="none" />
-              </svg>
-
-              {/* Badge + localisation */}
-              <div className="flex flex-col items-center gap-3">
-                <div
-                  className="rounded-full border px-5 py-1.5"
-                  style={{
-                    borderColor: "var(--v-lime)",
-                    backgroundColor: "var(--v-lime-dim)",
-                  }}
-                >
-                  <span
-                    className="font-[var(--font-display)] text-[10px] font-bold uppercase tracking-[0.35em]"
-                    style={{ color: "var(--v-lime)" }}
-                  >
-                    Nouvelle Arrivée
-                  </span>
-                </div>
-                <p
-                  className="text-[9px] font-semibold uppercase tracking-[0.3em]"
-                  style={{ color: "var(--v-dim)" }}
-                >
-                  Yopougon · Abidjan
-                </p>
-              </div>
-
-              {/* Trois points produit */}
-              <div className="flex flex-col gap-2 self-start pl-4">
-                {["Vêtements importés USA", "Maroquinerie & Parfumerie", "Livraison partout en CI"].map((label) => (
-                  <div key={label} className="flex items-center gap-2">
-                    <div
-                      className="h-1 w-1 rounded-full flex-shrink-0"
-                      style={{ backgroundColor: "var(--v-lime)" }}
-                    />
-                    <span className="text-[10px] uppercase tracking-widest" style={{ color: "var(--v-muted)" }}>
-                      {label}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Barre accent bas */}
-            <div
-              className="absolute bottom-0 left-0 right-0 h-[2px]"
-              style={{
-                background: "linear-gradient(to right, transparent, var(--v-lime), transparent)",
-                opacity: 0.6,
-              }}
-            />
-
-            {/* Fondu gauche vers le fond */}
-            <div
-              className="absolute inset-y-0 left-0 w-28"
-              style={{ background: "linear-gradient(to right, var(--v-bg), transparent)" }}
-            />
-          </div>
-        </motion.div>
       </div>
+
+      {/* Bande dorée en bas */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-px"
+        style={{ background: "linear-gradient(to right, transparent 0%, var(--v-gold) 40%, var(--v-gold) 60%, transparent 100%)", opacity: 0.3 }}
+      />
 
       {/* Scroll indicator */}
       <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+        className="absolute bottom-8 right-8 flex flex-col items-center gap-2"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.2, duration: 0.6 }}
+        transition={{ delay: 1.2 }}
       >
-        <span className="text-[10px] uppercase tracking-[0.3em]" style={{ color: "var(--v-dim)" }}>
-          Scroll
-        </span>
         <motion.div
-          className="h-8 w-px"
+          className="h-10 w-px"
           style={{ backgroundColor: "var(--v-dim)" }}
           animate={{ scaleY: [1, 0.3, 1] }}
-          transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
         />
+        <span className="text-[9px] uppercase tracking-[0.3em]" style={{ color: "var(--v-dim)" }}>scroll</span>
       </motion.div>
     </section>
   );

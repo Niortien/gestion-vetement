@@ -6,31 +6,54 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@heroui/react";
 import { AnimatePresence, motion } from "framer-motion";
+import {
+  IconLayoutDashboard,
+  IconActivity,
+  IconBoxSeam,
+  IconCoin,
+  IconPackageImport,
+  IconPackageExport,
+  IconHanger,
+  IconRosetteDiscount,
+  IconBuildingStore,
+  IconUsers,
+  IconCategory2,
+  IconWorld,
+  IconLogout,
+  IconX,
+  IconMenu2,
+} from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 import { useLogout } from "@/features/auth/mutation/auth-mutations";
 import { useAuthStore } from "@/stores/authStore";
 import { useAdminStore } from "@/stores/adminStore";
 import { useBoutiques } from "@/features/boutiques/query/boutiques-queries";
 import { AdminBoutiqueSelect } from "./AdminBoutiqueSelect";
+import type { ComponentType } from "react";
 
-const ITEMS = [
-  { href: "/dashboard", label: "Dashboard" },
-  { href: "/activite", label: "Activité" },
-  { href: "/stock", label: "Stock" },
-  { href: "/caisse", label: "Caisse" },
-  { href: "/entrees", label: "Entrées" },
-  { href: "/sorties", label: "Sorties" },
-  { href: "/produits", label: "Produits" },
-  { href: "/promotions", label: "Promotions" },
+interface NavItem {
+  href: string;
+  label: string;
+  icon: ComponentType<{ size?: number; className?: string }>;
+}
+
+const ITEMS: NavItem[] = [
+  { href: "/dashboard",  label: "Dashboard",   icon: IconLayoutDashboard },
+  { href: "/activite",   label: "Activité",    icon: IconActivity },
+  { href: "/stock",      label: "Stock",        icon: IconBoxSeam },
+  { href: "/caisse",     label: "Caisse",       icon: IconCoin },
+  { href: "/entrees",    label: "Entrées",      icon: IconPackageImport },
+  { href: "/sorties",    label: "Sorties",      icon: IconPackageExport },
+  { href: "/produits",   label: "Produits",     icon: IconHanger },
+  { href: "/promotions", label: "Promotions",   icon: IconRosetteDiscount },
 ];
 
-const ADMIN_ITEMS = [
-  { href: "/admin/boutiques", label: "Boutiques" },
-  { href: "/admin/utilisateurs", label: "Utilisateurs" },
-  { href: "/admin/categories", label: "Catégories" },
+const ADMIN_ITEMS: NavItem[] = [
+  { href: "/admin/boutiques",    label: "Boutiques",    icon: IconBuildingStore },
+  { href: "/admin/utilisateurs", label: "Utilisateurs", icon: IconUsers },
+  { href: "/admin/categories",   label: "Catégories",   icon: IconCategory2 },
 ];
 
-// Badge compact dans le header pour montrer la boutique active (admin)
 function AdminBoutiqueBadge() {
   const { currentBoutiqueId } = useAdminStore();
   const { data: boutiquesRes } = useBoutiques();
@@ -48,6 +71,34 @@ function AdminBoutiqueBadge() {
   );
 }
 
+function NavLink({
+  item,
+  active,
+  onPress,
+}: {
+  item: NavItem;
+  active: boolean;
+  onPress: () => void;
+}) {
+  const Icon = item.icon;
+  return (
+    <Link
+      href={item.href}
+      onClick={onPress}
+      className={cn(
+        "flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium",
+        "border-l-2 transition-all duration-150",
+        active
+          ? "border-accent bg-accent/[0.08] text-accent"
+          : "border-transparent text-text-muted hover:border-accent/25 hover:bg-surface-high/60 hover:text-text"
+      )}
+    >
+      <Icon size={16} className="shrink-0" />
+      {item.label}
+    </Link>
+  );
+}
+
 export function MobileNav() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
@@ -61,26 +112,21 @@ export function MobileNav() {
         <div className="flex items-center gap-2.5">
           <Image
             src="/images/logo/logo.jpeg"
-            alt="Riviere"
+            alt="Dri Valé"
             height={36}
             width={120}
             className="h-9 w-auto object-contain"
             priority
           />
-          {/* Badge boutique active visible dans le header sans ouvrir le drawer */}
           {isAdmin && <AdminBoutiqueBadge />}
         </div>
         <button
           type="button"
           onClick={() => setOpen(true)}
           aria-label="Ouvrir le menu"
-          className="flex h-9 w-9 items-center justify-center rounded-lg text-text-muted transition-colors hover:bg-[var(--color-surface-high)] hover:text-text"
+          className="flex h-9 w-9 items-center justify-center rounded-lg text-text-muted transition-colors hover:bg-surface-high hover:text-text"
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-            <line x1="3" y1="6" x2="21" y2="6" />
-            <line x1="3" y1="12" x2="21" y2="12" />
-            <line x1="3" y1="18" x2="21" y2="18" />
-          </svg>
+          <IconMenu2 size={20} />
         </button>
       </header>
 
@@ -92,7 +138,7 @@ export function MobileNav() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[500] bg-black/50 backdrop-blur-sm lg:hidden"
+              className="fixed inset-0 z-[500] bg-black/60 backdrop-blur-sm lg:hidden"
               onClick={() => setOpen(false)}
             />
             <motion.nav
@@ -106,7 +152,7 @@ export function MobileNav() {
               <div className="flex items-center justify-between">
                 <Image
                   src="/images/logo/logo.jpeg"
-                  alt="Riviere"
+                  alt="Dri Valé"
                   height={36}
                   width={120}
                   className="h-9 w-auto object-contain"
@@ -117,92 +163,63 @@ export function MobileNav() {
                   aria-label="Fermer le menu"
                   className="flex h-8 w-8 items-center justify-center rounded-lg text-text-muted hover:text-text"
                 >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                    <line x1="18" y1="6" x2="6" y2="18" />
-                    <line x1="6" y1="6" x2="18" y2="18" />
-                  </svg>
+                  <IconX size={16} />
                 </button>
               </div>
 
-              {/* Sélecteur boutique admin — isolé pour ne pas appeler useBoutiques() pour vendeur */}
               {isAdmin && <AdminBoutiqueSelect />}
 
-              {/* Badge vendeur */}
               {!isAdmin && user?.boutiqueId && (
-                <div className="rounded-md border border-accent/30 bg-accent/10 px-3 py-1.5 text-xs font-semibold text-accent">
+                <div className="rounded-md border border-accent/30 bg-accent/[0.07] px-3 py-1.5 text-xs font-semibold text-accent">
                   Ma boutique
                 </div>
               )}
 
-              <nav className="flex flex-col gap-1.5">
-                {ITEMS.map((item) => {
-                  const active = pathname === item.href;
-                  return (
-                    <Button
-                      key={item.href}
-                      as={Link}
-                      href={item.href}
-                      variant={active ? "solid" : "light"}
-                      className={cn(
-                        "justify-start",
-                        active ? "bg-accent text-black" : "text-text-muted"
-                      )}
-                      onPress={() => setOpen(false)}
-                    >
-                      {item.label}
-                    </Button>
-                  );
-                })}
+              <nav className="flex flex-col gap-0.5">
+                {ITEMS.map((item) => (
+                  <NavLink
+                    key={item.href}
+                    item={item}
+                    active={pathname === item.href}
+                    onPress={() => setOpen(false)}
+                  />
+                ))}
 
                 {isAdmin && (
                   <>
-                    <p className="mt-2 px-2 text-[10px] font-semibold uppercase tracking-widest text-text-muted/60">
+                    <div className="my-2 border-t border-border/50" />
+                    <p className="mb-1 px-3 text-[9px] font-semibold uppercase tracking-widest text-text-dim">
                       Administration
                     </p>
-                    {ADMIN_ITEMS.map((item) => {
-                      const active = pathname === item.href;
-                      return (
-                        <Button
-                          key={item.href}
-                          as={Link}
-                          href={item.href}
-                          variant={active ? "solid" : "light"}
-                          className={cn(
-                            "justify-start",
-                            active ? "bg-accent text-black" : "text-text-muted"
-                          )}
-                          onPress={() => setOpen(false)}
-                        >
-                          {item.label}
-                        </Button>
-                      );
-                    })}
+                    {ADMIN_ITEMS.map((item) => (
+                      <NavLink
+                        key={item.href}
+                        item={item}
+                        active={pathname === item.href}
+                        onPress={() => setOpen(false)}
+                      />
+                    ))}
                   </>
                 )}
               </nav>
 
-              <div className="mt-auto flex flex-col gap-2">
-                <Button
-                  as={Link}
+              <div className="mt-auto flex flex-col gap-1.5">
+                <Link
                   href="/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  variant="flat"
-                  className="w-full justify-start border border-accent/30 bg-accent/10 text-accent"
-                  onPress={() => setOpen(false)}
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-2.5 rounded-md border border-accent/25 bg-accent/[0.07] px-3 py-2 text-sm font-medium text-accent transition-colors hover:bg-accent/[0.12]"
                 >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="2" y1="12" x2="22" y2="12" />
-                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z" />
-                  </svg>
+                  <IconWorld size={15} className="shrink-0" />
                   Voir le site
-                </Button>
+                </Link>
                 <Button
                   variant="light"
-                  className="w-full justify-start text-text-muted hover:text-out"
+                  className="w-full justify-start gap-2.5 text-sm text-text-muted hover:text-out"
                   onPress={() => { logout.mutate(); setOpen(false); }}
                   isLoading={logout.isPending}
+                  startContent={!logout.isPending && <IconLogout size={15} />}
                 >
                   Déconnexion
                 </Button>

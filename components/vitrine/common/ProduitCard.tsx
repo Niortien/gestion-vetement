@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -81,7 +81,7 @@ export function ProduitCard({ produit, rank, large = false }: ProduitCardProps) 
           {hasNew && !isPromo && (
             <span
               className="rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider"
-              style={{ backgroundColor: "var(--v-lime)", color: "#000" }}
+              style={{ backgroundColor: "var(--v-lime)", color: "#fff" }}
             >
               NEW
             </span>
@@ -168,7 +168,7 @@ export function ProduitCard({ produit, rank, large = false }: ProduitCardProps) 
         <motion.button
           onClick={handleQuickAdd}
           className="absolute right-3 bottom-3 flex h-8 w-8 items-center justify-center rounded-full text-xs font-black transition-colors"
-          style={{ backgroundColor: "var(--v-lime)", color: "#000" }}
+          style={{ backgroundColor: "var(--v-lime)", color: "#fff" }}
           variants={{ rest: { scale: 0, opacity: 0 }, hovered: { scale: 1, opacity: 1 } }}
           transition={{ duration: 0.2, delay: 0.1 }}
           aria-label="Ajouter au panier"

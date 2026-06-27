@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { Chip, useDisclosure } from "@heroui/react";
 import { useEffect } from "react";
@@ -37,7 +37,7 @@ export function CaisseView() {
       {/* Caisse active */}
       <SessionGuard>
         {/* Header recettes + bouton terminer */}
-        <div className="rounded-xl border border-border/80 bg-[linear-gradient(145deg,rgba(143,126,245,0.18),rgba(255,212,71,0.08))] p-4 md:p-5">
+        <div className="rounded-xl border border-border/80 bg-[linear-gradient(145deg,rgba(143,126,245,0.18),rgba(200,118,44,0.08))] p-4 md:p-5">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div>
               <p className="text-xs uppercase tracking-[0.1em] text-text-muted">Recettes du jour</p>

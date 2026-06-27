@@ -66,24 +66,24 @@ export function ActiviteVentesChart({ data, groupBy }: ActiviteVentesChartProps)
         <CartesianGrid strokeDasharray="3 3" stroke="rgba(64,96,138,0.3)" vertical={false} />
         <XAxis
           dataKey="label"
-          tick={{ fill: "#b3c3db", fontSize: 11 }}
+          tick={{ fill: "#9A9088", fontSize: 11 }}
           axisLine={false}
           tickLine={false}
         />
         <YAxis
           tickFormatter={fmt}
-          tick={{ fill: "#b3c3db", fontSize: 11 }}
+          tick={{ fill: "#9A9088", fontSize: 11 }}
           axisLine={false}
           tickLine={false}
           width={44}
         />
         <Tooltip
           contentStyle={{
-            background: "#223651",
-            border: "1px solid #40608a",
+            background: "#1D1B18",
+            border: "1px solid #332D28",
             borderRadius: "8px",
             fontSize: "12px",
-            color: "#eef5ff",
+            color: "#F0EBE3",
           }}
           formatter={(value: number, name: string) => [
             name === "Ventes"
@@ -98,8 +98,8 @@ export function ActiviteVentesChart({ data, groupBy }: ActiviteVentesChartProps)
               key={idx}
               fill={
                 entry.Ventes === max
-                  ? "#ffd447"
-                  : `rgba(255,212,71,${0.3 + (entry.Ventes / max) * 0.5})`
+                  ? "#C8762C"
+                  : `rgba(224,120,32,${0.3 + (entry.Ventes / max) * 0.5})`
               }
             />
           ))}

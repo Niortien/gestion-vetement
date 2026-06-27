@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
@@ -121,7 +121,7 @@ export function ProduitOrderPanel({ produit, variante }: ProduitOrderPanelProps)
                 className="flex flex-col items-start rounded-xl border px-3 py-2.5 text-left text-sm font-semibold transition-all"
                 style={
                   selectedBoutiqueId === bv.boutiqueId
-                    ? { borderColor: "var(--v-lime)", backgroundColor: "rgba(194,255,0,0.08)", color: "var(--v-lime)" }
+                    ? { borderColor: "var(--v-lime)", backgroundColor: "rgba(200,118,44,0.08)", color: "var(--v-lime)" }
                     : { borderColor: "var(--v-border)", color: "var(--v-muted)" }
                 }
               >
@@ -249,7 +249,7 @@ export function ProduitOrderPanel({ produit, variante }: ProduitOrderPanelProps)
                       className="flex cursor-pointer items-center gap-2 rounded-xl border px-3 py-2.5 text-sm font-semibold transition-all"
                       style={
                         livraison === mode
-                          ? { borderColor: "var(--v-lime)", backgroundColor: "rgba(194,255,0,0.08)", color: "var(--v-lime)" }
+                          ? { borderColor: "var(--v-lime)", backgroundColor: "rgba(200,118,44,0.08)", color: "var(--v-lime)" }
                           : { borderColor: "var(--v-border)", color: "var(--v-muted)" }
                       }
                     >
