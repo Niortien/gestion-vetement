@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRef } from "react";
 import { motion } from "framer-motion";
@@ -9,7 +9,7 @@ const BTS_PHOTOS = [
   { id: 3, src: "/bts-3.jpg", alt: "BTS shooting 3", caption: "Lumière de fin de journée" },
   { id: 4, src: "/bts-4.jpg", alt: "BTS shooting 4", caption: "Détail — Jordan Air 1" },
   { id: 5, src: "/bts-5.jpg", alt: "BTS shooting 5", caption: "Préparation lookbook" },
-  { id: 6, src: "/bts-6.jpg", alt: "BTS shooting 6", caption: "Équipe Riviere" },
+  { id: 6, src: "/bts-6.jpg", alt: "BTS shooting 6", caption: "Équipe Yop City" },
 ];
 
 export function LookbookBehindScenes() {
@@ -28,26 +28,26 @@ export function LookbookBehindScenes() {
           className="mb-10"
         >
           <p
-            className="mb-2 text-[10px] font-bold uppercase tracking-[0.4em]"
-            style={{ color: "var(--v-lime)" }}
+            className="mb-2 text-[10px] font-black uppercase tracking-[0.4em]"
+            style={{ color: "var(--v-gold)" }}
           >
             Dans les coulisses
           </p>
           <h2
-            className="font-black uppercase leading-none tracking-tight"
+            className="font-[var(--font-display)] font-black uppercase leading-none tracking-tight"
             style={{ fontSize: "clamp(28px,5vw,56px)", color: "var(--v-text)" }}
           >
             Behind the
             <br />
-            <span style={{ color: "var(--v-purple)" }}>Scenes</span>
+            <span style={{ color: "var(--v-hot)" }}>Scenes</span>
           </h2>
         </motion.div>
       </div>
 
-      {/* Carousel scroll horizontal */}
+      {/* Carousel horizontal */}
       <div
         ref={scrollRef}
-        className="flex gap-4 overflow-x-auto pb-4 scrollbar-none"
+        className="flex gap-4 overflow-x-auto pb-4"
         style={{ paddingLeft: "clamp(20px,5vw,80px)", scrollbarWidth: "none" }}
       >
         {BTS_PHOTOS.map((photo, i) => (
@@ -68,23 +68,20 @@ export function LookbookBehindScenes() {
                 (e.target as HTMLImageElement).style.display = "none";
               }}
             />
-            {/* Overlay placeholder */}
             <div
               className="absolute inset-0"
               style={{ background: "linear-gradient(135deg, var(--v-s2), var(--v-s3))" }}
             />
-            {/* Caption */}
             <div
               className="absolute bottom-0 left-0 right-0 translate-y-full p-4 transition-transform duration-300 group-hover:translate-y-0"
-              style={{ backgroundColor: "rgba(4,8,15,0.9)" }}
+              style={{ backgroundColor: "rgba(6,6,7,0.92)" }}
             >
-              <p className="text-xs font-bold" style={{ color: "var(--v-lime)" }}>
+              <p className="text-xs font-bold" style={{ color: "var(--v-gold)" }}>
                 {photo.caption}
               </p>
             </div>
           </motion.div>
         ))}
-        {/* Padding fin */}
         <div className="flex-shrink-0 w-5" />
       </div>
     </section>

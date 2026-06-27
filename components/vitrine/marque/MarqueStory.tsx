@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { motion } from "framer-motion";
 
@@ -21,7 +21,7 @@ const TIMELINE = [
     year: "Digital",
     title: "TikTok & WhatsApp",
     description:
-      "La boutique se retrouve sur TikTok sous le nom DRIVALÉ_SHOP. Les commandes via WhatsApp explosent. Livraisons à Abidjan (Selmer, Niangon) et expédition partout en Côte d'Ivoire et à l'étranger.",
+      "La boutique se retrouve sur TikTok et les commandes via WhatsApp explosent. Livraisons à Abidjan (Selmer, Niangon) et expédition partout en Côte d'Ivoire.",
     img: "/story-2024.jpg",
   },
   {
@@ -40,8 +40,8 @@ export function MarqueStory() {
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="mb-2 text-[10px] font-bold uppercase tracking-[0.4em]"
-        style={{ color: "var(--v-lime)" }}
+        className="mb-2 text-[10px] font-black uppercase tracking-[0.4em]"
+        style={{ color: "var(--v-gold)" }}
       >
         Notre histoire
       </motion.p>
@@ -50,14 +50,13 @@ export function MarqueStory() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ delay: 0.1 }}
-        className="mb-16 font-black uppercase leading-none tracking-tight"
+        className="mb-16 font-[var(--font-display)] font-black uppercase leading-none tracking-tight"
         style={{ fontSize: "clamp(32px,6vw,64px)", color: "var(--v-text)" }}
       >
         Timeline
       </motion.h2>
 
       <div className="relative">
-        {/* Ligne verticale */}
         <div
           className="absolute left-[18px] top-0 bottom-0 w-px md:left-1/2"
           style={{ backgroundColor: "var(--v-border)" }}
@@ -75,19 +74,18 @@ export function MarqueStory() {
                 i % 2 === 0 ? "" : "md:flex-row-reverse"
               }`}
             >
-              {/* Dot sur la ligne */}
+              {/* Dot */}
               <div
                 className="absolute left-0 top-2 flex h-9 w-9 items-center justify-center rounded-full border-2 md:left-1/2 md:-translate-x-1/2 md:top-1/2 md:-translate-y-1/2"
-                style={{ borderColor: "var(--v-lime)", backgroundColor: "var(--v-bg)", zIndex: 1 }}
+                style={{ borderColor: "var(--v-gold)", backgroundColor: "var(--v-bg)", zIndex: 1 }}
               >
-                <div className="h-2 w-2 rounded-full" style={{ backgroundColor: "var(--v-lime)" }} />
+                <div className="h-2 w-2 rounded-full" style={{ backgroundColor: "var(--v-gold)" }} />
               </div>
 
-              {/* Contenu */}
               <div className={`md:w-[45%] ${i % 2 === 0 ? "md:text-right md:pr-12" : "md:pl-12"}`}>
                 <p
                   className="mb-1 font-[var(--font-mono)] text-sm font-black"
-                  style={{ color: "var(--v-lime)" }}
+                  style={{ color: "var(--v-gold)" }}
                 >
                   {item.year}
                 </p>
@@ -99,7 +97,6 @@ export function MarqueStory() {
                 </p>
               </div>
 
-              {/* Image */}
               <div
                 className="h-32 w-full overflow-hidden rounded-xl md:w-[45%] md:h-40"
                 style={{ backgroundColor: "var(--v-s2)" }}

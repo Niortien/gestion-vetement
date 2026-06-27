@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -11,63 +11,75 @@ export function HomePromoSection() {
 
   if (!isLoading && produits.length === 0) return null;
 
-  const count = produits.length;
-
   return (
     <section
-      className="py-20"
-      style={{ background: "linear-gradient(160deg, rgba(249,115,22,0.10) 0%, var(--v-s1) 60%)" }}
+      className="relative overflow-hidden py-24"
+      style={{ background: "linear-gradient(170deg, rgba(255,51,89,0.08) 0%, var(--v-bg) 55%)" }}
     >
-      <div className="mx-auto max-w-7xl px-5">
+      {/* Glow rouge en haut */}
+      <div
+        className="pointer-events-none absolute -top-16 left-0 right-0 h-40 blur-3xl"
+        style={{ background: "linear-gradient(90deg, rgba(255,51,89,0.12) 0%, transparent 60%)" }}
+        aria-hidden
+      />
+
+      <div className="relative mx-auto max-w-7xl px-5">
         {/* Header */}
-        <div className="mb-10 flex items-end justify-between gap-4">
+        <div className="mb-12 flex items-end justify-between gap-4">
           <div>
-            <p
-              className="mb-2 text-[10px] font-bold uppercase tracking-[0.3em]"
-              style={{ color: "#f97316" }}
-            >
-              Ventes Flash
-            </p>
+            {/* Badge flash */}
+            <div className="mb-4 inline-flex items-center gap-2">
+              <span
+                className="h-2 w-2 animate-pulse rounded-full"
+                style={{ backgroundColor: "var(--v-hot)" }}
+              />
+              <span
+                className="text-[10px] font-black uppercase tracking-[0.35em]"
+                style={{ color: "var(--v-hot)" }}
+              >
+                Vente flash &bull; Prix cass&eacute;s
+              </span>
+            </div>
             <h2
-              className="font-[var(--font-display)] text-3xl font-black uppercase tracking-tight md:text-5xl"
-              style={{ color: "var(--v-text)" }}
+              className="font-[var(--font-display)] font-black uppercase leading-none tracking-tight"
+              style={{ fontSize: "clamp(36px, 6vw, 72px)", color: "var(--v-text)" }}
             >
-              Promotions
+              Promos
+              <br />
+              <span style={{ color: "var(--v-hot)" }}>du moment</span>
             </h2>
-            {!isLoading && (
-              <p className="mt-1 text-sm" style={{ color: "var(--v-muted)" }}>
-                {count} article{count > 1 ? "s" : ""} en promotion
+            {!isLoading && produits.length > 0 && (
+              <p className="mt-3 text-sm" style={{ color: "var(--v-muted)" }}>
+                {produits.length} article{produits.length > 1 ? "s" : ""} en promotion
               </p>
             )}
           </div>
           <Link
             href="/catalogue"
-            className="shrink-0 text-sm font-semibold underline-offset-4 hover:underline"
-            style={{ color: "#f97316" }}
+            className="hidden shrink-0 rounded-full border px-5 py-2 text-xs font-black uppercase tracking-widest transition-all hover:border-[var(--v-hot)] hover:text-[var(--v-hot)] md:flex items-center gap-2"
+            style={{ borderColor: "var(--v-border)", color: "var(--v-muted)" }}
           >
-            Voir tout →
+            Tout voir &rarr;
           </Link>
         </div>
 
-        {/* Skeleton */}
+        {/* Grille */}
         {isLoading ? (
-          <div className="flex gap-4 overflow-x-auto pb-4 md:grid md:grid-cols-3 md:overflow-visible md:pb-0">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
             {Array(3).fill(null).map((_, i) => (
               <div
                 key={i}
-                className="aspect-[3/4] w-[200px] shrink-0 animate-pulse rounded-2xl md:w-auto"
+                className="aspect-[3/4] animate-pulse rounded-2xl"
                 style={{ backgroundColor: "var(--v-s2)" }}
               />
             ))}
           </div>
         ) : (
-          /* Carousel mobile / grille desktop */
-          <div className="flex gap-4 overflow-x-auto pb-4 md:grid md:grid-cols-3 md:overflow-visible md:pb-0">
-            {produits.map((produit, i) => (
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+            {produits.slice(0, 6).map((produit, i) => (
               <motion.div
                 key={produit.id}
-                className="w-[200px] shrink-0 snap-start md:w-auto md:shrink"
-                initial={{ opacity: 0, y: 16 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.07, duration: 0.45 }}
@@ -77,6 +89,17 @@ export function HomePromoSection() {
             ))}
           </div>
         )}
+
+        {/* CTA mobile */}
+        <div className="mt-8 text-center md:hidden">
+          <Link
+            href="/catalogue"
+            className="inline-block rounded-full border px-6 py-3 text-xs font-black uppercase tracking-widest transition-all"
+            style={{ borderColor: "var(--v-hot)", color: "var(--v-hot)" }}
+          >
+            Voir toutes les promos &rarr;
+          </Link>
+        </div>
       </div>
     </section>
   );

@@ -30,11 +30,12 @@ import { useAdminStore } from "@/stores/adminStore";
 import { useBoutiques } from "@/features/boutiques/query/boutiques-queries";
 import { AdminBoutiqueSelect } from "./AdminBoutiqueSelect";
 import type { ComponentType } from "react";
+import type { IconProps } from "@tabler/icons-react";
 
 interface NavItem {
   href: string;
   label: string;
-  icon: ComponentType<{ size?: number; className?: string }>;
+  icon: ComponentType<IconProps>;
 }
 
 const ITEMS: NavItem[] = [

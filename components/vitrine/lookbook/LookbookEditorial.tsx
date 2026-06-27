@@ -1,6 +1,12 @@
-"use client";
+﻿"use client";
 
 import { motion } from "framer-motion";
+
+const STATS = [
+  { value: "12", label: "Pièces" },
+  { value: "3", label: "Looks" },
+  { value: "100%", label: "Abidjanais" },
+];
 
 export function LookbookEditorial() {
   return (
@@ -14,40 +20,36 @@ export function LookbookEditorial() {
           transition={{ duration: 0.6 }}
         >
           <p
-            className="mb-6 text-[10px] font-bold uppercase tracking-[0.4em]"
-            style={{ color: "var(--v-lime)" }}
+            className="mb-6 text-[10px] font-black uppercase tracking-[0.4em]"
+            style={{ color: "var(--v-gold)" }}
           >
-            L&apos;histoire derrière la collection
+            L&rsquo;histoire derri&egrave;re la collection
           </p>
           <h2
-            className="mb-8 font-black uppercase leading-tight tracking-tight"
+            className="mb-8 font-[var(--font-display)] font-black uppercase leading-tight tracking-tight"
             style={{ fontSize: "clamp(28px,5vw,52px)", color: "var(--v-text)" }}
           >
-            Inspiré par
+            Inspir&eacute; par
             <br />
-            les nuits d&apos;Abidjan
+            les nuits d&rsquo;Abidjan
           </h2>
           <p className="mb-5 text-sm leading-relaxed" style={{ color: "var(--v-muted)" }}>
-            Quand la chaleur du jour laisse place à l&apos;électricité de la nuit, Abidjan révèle
-            une autre dimension. Yopougon, Cocody, le Plateau — des spots où la mode se vit
-            sans codes imposés, où chaque look est une déclaration d&apos;identité.
+            Quand la chaleur du jour laisse place &agrave; l&rsquo;&eacute;lectricit&eacute; de la nuit, Abidjan r&eacute;v&egrave;le
+            une autre dimension. Yopougon, Cocody, le Plateau &mdash; des spots o&ugrave; la mode se vit
+            sans codes impos&eacute;s, o&ugrave; chaque look est une d&eacute;claration d&rsquo;identit&eacute;.
           </p>
           <p className="text-sm leading-relaxed" style={{ color: "var(--v-muted)" }}>
-            Dri Valé a shooté cette collection là où la ville respire : dans les ruelles,
-            sous les néons, au bord de la lagune. Des pièces pensées pour habiter ces moments.
+            Dri Val&eacute; a shoot&eacute; cette collection l&agrave; o&ugrave; la ville respire : dans les ruelles de Yop,
+            sous les n&eacute;ons, au bord de la lagune. Des pi&egrave;ces pens&eacute;es pour habiter ces moments.
           </p>
 
           {/* Stats éditoriales */}
           <div className="mt-12 grid grid-cols-3 gap-6 border-t pt-8" style={{ borderColor: "var(--v-border)" }}>
-            {[
-              { value: "12", label: "Pièces" },
-              { value: "3", label: "Looks" },
-              { value: "100%", label: "Abidjanais" },
-            ].map((stat) => (
+            {STATS.map((stat) => (
               <div key={stat.label}>
                 <p
                   className="font-[var(--font-mono)] text-2xl font-black"
-                  style={{ color: "var(--v-lime)" }}
+                  style={{ color: "var(--v-gold)" }}
                 >
                   {stat.value}
                 </p>
@@ -79,26 +81,22 @@ export function LookbookEditorial() {
                 (e.target as HTMLImageElement).style.display = "none";
               }}
             />
-            {/* Placeholder gradient */}
             <div
               className="flex h-full w-full items-end p-6"
               style={{
                 background: "linear-gradient(135deg, var(--v-s2) 0%, var(--v-s3) 100%)",
               }}
             >
-              <p
-                className="font-black text-5xl uppercase leading-none opacity-10"
-                style={{ color: "var(--v-text)" }}
-              >
+              <p className="font-black text-5xl uppercase leading-none opacity-10" style={{ color: "var(--v-text)" }}>
                 EDITORIAL
               </p>
             </div>
           </div>
 
-          {/* Accent lime */}
+          {/* Accent gold */}
           <div
             className="absolute -bottom-4 -right-4 h-24 w-24 rounded-2xl"
-            style={{ backgroundColor: "var(--v-lime)", zIndex: -1 }}
+            style={{ backgroundColor: "var(--v-gold)", opacity: 0.25, zIndex: -1 }}
           />
         </motion.div>
       </div>

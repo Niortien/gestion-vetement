@@ -1,13 +1,23 @@
-"use client";
+﻿"use client";
 
 import { motion } from "framer-motion";
 
-const WORDS = ["Authentique.", "Exclusif.", "Ivoirien."];
+const WORDS = [
+  { text: "Classé.", gold: false },
+  { text: "Stylé.", gold: true },
+  { text: "De Yop.", gold: false },
+];
+
+const STATS = [
+  { value: "200+", label: "Clients à Yop" },
+  { value: "100+", label: "Références" },
+  { value: "4.9★", label: "Note client" },
+];
 
 export function HomeBrandStatement() {
   return (
     <section
-      className="relative overflow-hidden py-24"
+      className="relative overflow-hidden py-28"
       style={{ backgroundColor: "var(--v-s1)" }}
     >
       {/* Fond texte décoratif */}
@@ -16,85 +26,105 @@ export function HomeBrandStatement() {
         aria-hidden
       >
         <span
-          className="font-[var(--font-display)] text-[20vw] font-black uppercase leading-none opacity-[0.03]"
-          style={{ color: "var(--v-text)" }}
+          className="font-[var(--font-display)] font-black uppercase leading-none"
+          style={{ fontSize: "25vw", color: "rgba(240,180,41,0.04)" }}
         >
-          DRI VALÉ
+          YOP
         </span>
       </div>
 
+      {/* Gold glow accent */}
+      <div
+        className="pointer-events-none absolute -top-32 left-1/4 h-64 w-64 rounded-full blur-3xl"
+        style={{ backgroundColor: "rgba(240,180,41,0.06)" }}
+        aria-hidden
+      />
+
       <div className="relative mx-auto max-w-7xl px-5">
-        {/* Tag */}
         <motion.p
-          className="mb-8 text-[10px] font-bold uppercase tracking-[0.3em]"
-          style={{ color: "var(--v-lime)" }}
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+          className="mb-10 text-[10px] font-black uppercase tracking-[0.35em]"
+          style={{ color: "var(--v-gold)" }}
+          initial={{ opacity: 0, x: -20 }}
+          whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
         >
-          Notre philosophie
+          Qui on est
         </motion.p>
 
         {/* Mots animés */}
         <div className="flex flex-col">
           {WORDS.map((word, i) => (
             <motion.h2
-              key={word}
-              className="font-[var(--font-display)] font-black leading-[0.9] tracking-tight"
+              key={word.text}
+              className="font-[var(--font-display)] font-black leading-[0.88] tracking-tight"
               style={{
-                fontSize: "clamp(48px, 9vw, 110px)",
-                color: i === 1 ? "var(--v-lime)" : "var(--v-text)",
-                paddingLeft: i === 1 ? "5vw" : i === 2 ? "10vw" : "0",
+                fontSize: "clamp(52px, 10vw, 120px)",
+                color: word.gold ? "var(--v-gold)" : "var(--v-text)",
+                paddingLeft: i === 1 ? "6vw" : i === 2 ? "12vw" : "0",
               }}
-              initial={{ opacity: 0, x: -40 }}
+              initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.12, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ delay: i * 0.14, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
             >
-              {word}
+              {word.text}
             </motion.h2>
           ))}
         </div>
 
         {/* Description */}
         <motion.p
-          className="mt-12 max-w-lg text-lg leading-relaxed md:ml-[10vw]"
+          className="mt-14 max-w-xl text-lg leading-relaxed md:ml-[12vw]"
           style={{ color: "var(--v-muted)" }}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.4, duration: 0.6 }}
+          transition={{ delay: 0.45, duration: 0.6 }}
         >
-          Dri Valé, c&apos;est le reflet d&apos;une génération qui refuse le compromis.
-          Des vêtements sélectionnés avec soin, des pièces importées directement des États-Unis,
-          une boutique qui fait sens. Mode d&apos;Abidjan, pour toute la Côte d&apos;Ivoire.
+          Dri Val&eacute;, c&rsquo;est Yopougon qui s&rsquo;habille bien. Des fringues import&eacute;es, s&eacute;lectionn&eacute;es pour les vrais.
+          T-shirts, kicks, polos, cargos &mdash; tout ce qu&rsquo;il faut pour &ecirc;tre le plus class&eacute; de la commune.
+          On ne fait pas dans le g&eacute;n&eacute;rique.
         </motion.p>
 
-        {/* Stats */}
-        <motion.div
-          className="mt-16 grid grid-cols-3 gap-4 border-t pt-12 md:gap-12"
-          style={{ borderColor: "var(--v-border)" }}
+        {/* Ligne citation Nouchi */}
+        <motion.blockquote
+          className="mt-8 inline-block rounded-xl border-l-4 pl-5 font-[var(--font-display)] text-base italic md:ml-[12vw]"
+          style={{ borderColor: "var(--v-gold)", color: "var(--v-gold)" }}
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.5 }}
+          transition={{ delay: 0.55 }}
         >
-          {[
-            { value: "500+", label: "Clients satisfaits" },
-            { value: "100+", label: "Références en stock" },
-            { value: "4★+", label: "Note moyenne" },
-          ].map((stat) => (
-            <div key={stat.label}>
+          &ldquo;On est l&agrave;, fr&egrave;re. Yop City represent.&rdquo;
+        </motion.blockquote>
+
+        {/* Stats */}
+        <motion.div
+          className="mt-16 grid grid-cols-3 gap-4 border-t pt-12"
+          style={{ borderColor: "var(--v-border)" }}
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.5, duration: 0.5 }}
+        >
+          {STATS.map((stat, i) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.55 + i * 0.08 }}
+            >
               <p
-                className="font-[var(--font-display)] text-3xl font-black md:text-5xl"
-                style={{ color: "var(--v-lime)" }}
+                className="font-[var(--font-display)] font-black leading-none"
+                style={{ fontSize: "clamp(28px,4vw,52px)", color: "var(--v-gold)" }}
               >
                 {stat.value}
               </p>
-              <p className="mt-1 text-xs uppercase tracking-widest" style={{ color: "var(--v-dim)" }}>
+              <p className="mt-2 text-xs uppercase tracking-widest" style={{ color: "var(--v-dim)" }}>
                 {stat.label}
               </p>
-            </div>
+            </motion.div>
           ))}
         </motion.div>
       </div>

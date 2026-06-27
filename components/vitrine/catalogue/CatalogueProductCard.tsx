@@ -59,7 +59,7 @@ export function CatalogueProductCard({ produit, priority }: CatalogueProductCard
           {/* Badge promo */}
           {isPromo && (
             <div className="absolute left-2 top-2 rounded-full px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-white"
-              style={{ backgroundColor: "#f97316" }}>
+              style={{ backgroundColor: "var(--v-hot)" }}>
               -{tauxReduction}%
             </div>
           )}

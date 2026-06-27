@@ -73,7 +73,7 @@ export function ProduitCard({ produit, rank, large = false }: ProduitCardProps) 
           {isPromo && (
             <span
               className="rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-white"
-              style={{ backgroundColor: "#f97316" }}
+              style={{ backgroundColor: "var(--v-hot)" }}
             >
               PROMO -{tauxReduction}%
             </span>

@@ -29,7 +29,7 @@ const SOCIALS = [
   {
     name: "TikTok",
     handle: "@kaypeurbienpaye1",
-    color: "#EFF6FF",
+    color: "#FAFAFA",
     href: "https://tiktok.com/@kaypeurbienpaye1",
     icon: (
       <svg width="36" height="36" viewBox="0 0 24 24" fill="currentColor">

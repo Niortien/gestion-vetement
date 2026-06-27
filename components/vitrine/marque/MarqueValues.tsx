@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { motion } from "framer-motion";
 
@@ -7,7 +7,7 @@ const VALUES = [
     num: "01",
     title: "Authenticité",
     description:
-      "Chaque pièce que nous vendons est vérifiée. Produits importés directement des États-Unis, sans replica, sans compromis. L'authentique ou rien — c'est notre engagement envers notre clientèle.",
+      "Chaque pièce que nous vendons est vérifiée. Produits importés directement, sans replica, sans compromis. L'authentique ou rien — c'est notre engagement envers notre clientèle.",
   },
   {
     num: "02",
@@ -34,8 +34,8 @@ export function MarqueValues() {
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-2 text-[10px] font-bold uppercase tracking-[0.4em]"
-          style={{ color: "var(--v-lime)" }}
+          className="mb-2 text-[10px] font-black uppercase tracking-[0.4em]"
+          style={{ color: "var(--v-gold)" }}
         >
           Ce en quoi on croit
         </motion.p>
@@ -44,7 +44,7 @@ export function MarqueValues() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.1 }}
-          className="mb-16 font-black uppercase leading-none tracking-tight"
+          className="mb-16 font-[var(--font-display)] font-black uppercase leading-none tracking-tight"
           style={{ fontSize: "clamp(32px,6vw,64px)", color: "var(--v-text)" }}
         >
           Nos valeurs
@@ -61,29 +61,24 @@ export function MarqueValues() {
               className="relative overflow-hidden rounded-2xl p-8"
               style={{ backgroundColor: "var(--v-s2)" }}
             >
-              {/* Numéro géant en fond */}
+              {/* Numéro décoratif */}
               <p
-                className="absolute right-4 top-4 font-[var(--font-mono)] font-black select-none leading-none"
-                style={{
-                  fontSize: "100px",
-                  color: "var(--v-s3)",
-                  userSelect: "none",
-                }}
+                className="pointer-events-none absolute right-4 top-4 font-[var(--font-display)] font-black leading-none select-none"
+                style={{ fontSize: "100px", color: "var(--v-s3)", userSelect: "none" }}
                 aria-hidden
               >
                 {val.num}
               </p>
 
-              {/* Contenu */}
               <div className="relative z-10">
                 <p
                   className="mb-4 font-[var(--font-mono)] text-xs font-black"
-                  style={{ color: "var(--v-lime)" }}
+                  style={{ color: "var(--v-gold)" }}
                 >
                   {val.num}
                 </p>
                 <h3
-                  className="mb-4 font-black uppercase leading-tight tracking-tight"
+                  className="mb-4 font-[var(--font-display)] font-black uppercase leading-tight tracking-tight"
                   style={{ fontSize: "clamp(22px,3vw,32px)", color: "var(--v-text)" }}
                 >
                   {val.title}
@@ -93,10 +88,9 @@ export function MarqueValues() {
                 </p>
               </div>
 
-              {/* Accent bar */}
               <div
                 className="absolute bottom-0 left-0 h-1 w-full"
-                style={{ backgroundColor: "var(--v-lime)", opacity: 0.4 }}
+                style={{ backgroundColor: "var(--v-gold)", opacity: 0.35 }}
               />
             </motion.div>
           ))}

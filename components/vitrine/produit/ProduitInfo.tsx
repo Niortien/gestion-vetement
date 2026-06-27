@@ -96,7 +96,7 @@ export function ProduitInfo({ produit, totalStock }: ProduitInfoProps) {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.3 }}
             className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-black uppercase tracking-wider text-white"
-            style={{ backgroundColor: "#f97316" }}
+            style={{ backgroundColor: "var(--v-hot)" }}
           >
             EN PROMOTION -{tauxReduction}%
           </motion.span>

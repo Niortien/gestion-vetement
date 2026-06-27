@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 interface CatalogueHeroProps {
   total: number;
@@ -16,10 +16,10 @@ export function CatalogueHero({ total, search, onSearch }: CatalogueHeroProps) {
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
             <p
-              className="mb-2 text-[10px] font-bold uppercase tracking-[0.3em]"
-              style={{ color: "var(--v-lime)" }}
+              className="mb-2 text-[10px] font-black uppercase tracking-[0.3em]"
+              style={{ color: "var(--v-gold)" }}
             >
-              Riviere Store
+              Dri Val&eacute; &mdash; Yop City
             </p>
             <h1
               className="font-[var(--font-display)] font-black uppercase leading-none tracking-tight"
@@ -35,7 +35,7 @@ export function CatalogueHero({ total, search, onSearch }: CatalogueHeroProps) {
           {/* Barre de recherche */}
           <div className="w-full max-w-sm">
             <div
-              className="flex items-center gap-3 rounded-xl border px-4 py-3 transition-colors focus-within:border-[var(--v-lime)]"
+              className="flex items-center gap-3 rounded-xl border px-4 py-3 transition-colors focus-within:border-[var(--v-gold)]"
               style={{ borderColor: "var(--v-border)", backgroundColor: "var(--v-s2)" }}
             >
               <svg
@@ -52,7 +52,7 @@ export function CatalogueHero({ total, search, onSearch }: CatalogueHeroProps) {
               </svg>
               <input
                 type="text"
-                placeholder="Rechercher un produit..."
+                placeholder="Cherche ta pièce..."
                 value={search}
                 onChange={(e) => onSearch(e.target.value)}
                 className="flex-1 bg-transparent text-sm outline-none placeholder:text-[var(--v-dim)]"
@@ -61,10 +61,10 @@ export function CatalogueHero({ total, search, onSearch }: CatalogueHeroProps) {
               {search && (
                 <button
                   onClick={() => onSearch("")}
-                  className="text-xs"
+                  className="text-xs transition-colors hover:text-[var(--v-text)]"
                   style={{ color: "var(--v-dim)" }}
                 >
-                  ✕
+                  &times;
                 </button>
               )}
             </div>
