@@ -78,11 +78,11 @@ export function ActiviteFluxChart({ data, groupBy }: ActiviteFluxChartProps) {
         />
         <Tooltip
           contentStyle={{
-            background: "#1D1B18",
-            border: "1px solid #332D28",
+            background: "#141416",
+            border: "1px solid #1E1E22",
             borderRadius: "8px",
             fontSize: "12px",
-            color: "#F0EBE3",
+            color: "#FAFAFA",
           }}
           formatter={(value: number) => [`${value.toLocaleString("fr-FR")} FCFA`]}
         />
@@ -106,7 +106,7 @@ export function ActiviteFluxChart({ data, groupBy }: ActiviteFluxChartProps) {
         <Line
           type="monotone"
           dataKey="Solde"
-          stroke="#C8762C"
+          stroke="#F0B429"
           strokeWidth={2}
           strokeDasharray="4 2"
           dot={false}

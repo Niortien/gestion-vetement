@@ -12,7 +12,7 @@ const MODE_LABELS: Record<ModePaiement, string> = {
 };
 
 const MODE_COLORS: Record<ModePaiement, string> = {
-  CASH: "#C8762C",
+  CASH: "#F0B429",
   WAVE: "#39d353",
   ORANGE_MONEY: "#ff9a3c",
   CARTE: "#8f7ef5",

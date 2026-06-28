@@ -91,7 +91,7 @@ export function SortiePaiementStep({
               className={[
                 "flex flex-col items-center gap-1.5 rounded-xl border-2 px-1 py-2.5 transition-all",
                 selected === card.mode
-                  ? "border-accent bg-[color:rgba(200,118,44,0.15)] ring-2 ring-accent ring-offset-1 ring-offset-[var(--color-surface)]"
+                  ? "border-accent bg-[color:rgba(240,180,41,0.15)] ring-2 ring-accent ring-offset-1 ring-offset-[var(--color-surface)]"
                   : "border-border/60 bg-[var(--color-surface-high)] hover:border-accent/40",
               ].join(" ")}
               aria-pressed={selected === card.mode}
