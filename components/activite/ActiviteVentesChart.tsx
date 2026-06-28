@@ -79,8 +79,8 @@ export function ActiviteVentesChart({ data, groupBy }: ActiviteVentesChartProps)
         />
         <Tooltip
           contentStyle={{
-            background: "#141416",
-            border: "1px solid #1E1E22",
+            background: "#0C1628",
+            border: "1px solid #1A2A50",
             borderRadius: "8px",
             fontSize: "12px",
             color: "#FAFAFA",
@@ -98,8 +98,8 @@ export function ActiviteVentesChart({ data, groupBy }: ActiviteVentesChartProps)
               key={idx}
               fill={
                 entry.Ventes === max
-                  ? "#F0B429"
-                  : `rgba(240,180,41,${0.3 + (entry.Ventes / max) * 0.5})`
+                  ? "#4A7AFF"
+                  : `rgba(74,122,255,${0.3 + (entry.Ventes / max) * 0.5})`
               }
             />
           ))}
