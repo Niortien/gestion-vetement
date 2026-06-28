@@ -11,7 +11,6 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    // Mark hydrated after the store has rehydrated from sessionStorage
     setHydrated(useAuthStore.persist.hasHydrated());
 
     const unsub = useAuthStore.persist.onFinishHydration(() => {
