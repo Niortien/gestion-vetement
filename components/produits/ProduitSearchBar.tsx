@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef } from "react";
-import { Chip } from "@heroui/react";
 import { IconSearch, IconX, IconLoader2, IconTag } from "@tabler/icons-react";
 import { useCategoriesList } from "@/features/produits/query/produits-queries";
 import type { Categorie } from "@/types";
