@@ -18,27 +18,36 @@ function notifyPendingRequests(token: string | null): void {
 }
 
 function toAppError(error: AxiosError<ApiErrorResponse>): AppError {
-  const payload = error.response?.data as
+  if (!error.response) {
+    const isTimeout = error.code === "ECONNABORTED";
+    return {
+      code: 503,
+      message: isTimeout
+        ? "Le serveur met trop de temps à répondre. Réessaie dans quelques secondes."
+        : "Connexion impossible. Vérifie ta connexion internet.",
+      details: undefined,
+    };
+  }
+
+  const payload = error.response.data as
     | (ApiErrorResponse & { error?: { code?: string; message?: string | string[]; details?: Record<string, unknown> } })
     | undefined;
-  const statusCode = payload?.statusCode ?? error.response?.status ?? 500;
+  const statusCode = payload?.statusCode ?? error.response.status;
   const rawMessage = payload?.error?.message ?? payload?.message;
-  const message = Array.isArray(rawMessage)
-    ? rawMessage.join(" · ")
-    : (rawMessage ?? "Erreur serveur");
+  const message = Array.isArray(rawMessage) ? rawMessage.join(" · ") : rawMessage;
   const details = payload?.error?.details ?? payload?.details;
 
   if (statusCode === 500) {
     return {
       code: 500,
-      message: message !== "Erreur serveur" ? message : "Erreur serveur. Reessaie dans quelques secondes.",
+      message: "Erreur serveur. Réessaie dans quelques secondes.",
       details,
     };
   }
 
   return {
     code: statusCode,
-    message,
+    message: message ?? "Erreur inconnue.",
     details,
   };
 }
@@ -46,7 +55,7 @@ function toAppError(error: AxiosError<ApiErrorResponse>): AppError {
 export const api = axios.create({
   baseURL: `${getBaseUrl()}/api/v1`,
   headers: { "Content-Type": "application/json" },
-  timeout: 60_000,
+  timeout: 15_000,
 });
 
 api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
