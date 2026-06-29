@@ -37,6 +37,34 @@ interface RecuPrintProps {
   totalAvantRemise?: string;
 }
 
+function printRecu() {
+  const content = document.getElementById("recu-print-root");
+  if (!content) return;
+
+  const w = window.open("", "_blank", "width=350,height=700,toolbar=0,menubar=0");
+  if (!w) {
+    window.print();
+    return;
+  }
+
+  const style = w.document.createElement("style");
+  style.textContent = [
+    "@page { size: 80mm auto; margin: 0; }",
+    "body { font-family: monospace; font-size: 10px; width: 80mm;",
+    "       margin: 0; padding: 3mm 3mm 2mm; line-height: 1.3; color: #000; }",
+    "div { page-break-inside: avoid; break-inside: avoid; }",
+  ].join("\n");
+  w.document.head.appendChild(style);
+
+  const clone = content.cloneNode(true) as HTMLElement;
+  clone.style.display = "block";
+  w.document.body.appendChild(clone);
+
+  w.focus();
+  w.print();
+  w.close();
+}
+
 export function RecuPrint({
   isOpen,
   onClose,
@@ -219,7 +247,7 @@ export function RecuPrint({
             </Button>
             <Button
               className="flex-1 bg-accent font-semibold text-black"
-              onPress={() => window.print()}
+              onPress={printRecu}
             >
               🖨 Imprimer
             </Button>
