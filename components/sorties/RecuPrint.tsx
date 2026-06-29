@@ -145,6 +145,18 @@ export function RecuPrint({
         )}
         <div style={{ borderTop: "1px dashed #000", margin: "4px 0" }} />
         <div style={{ textAlign: "center", fontSize: 9 }}>Merci pour votre achat !</div>
+        <div style={{
+          textAlign: "center",
+          marginTop: 10,
+          fontSize: 16,
+          fontWeight: "bold",
+          fontStyle: "italic",
+          letterSpacing: 4,
+          color: "#bbb",
+          lineHeight: 1,
+        }}>
+          Dri Valé
+        </div>
       </div>
 
       {/* Modal visuelle */}
@@ -239,6 +251,9 @@ export function RecuPrint({
 
               <div className="my-2 border-t border-dashed border-gray-300" />
               <p className="text-center text-[10px] text-gray-500">Merci pour votre achat !</p>
+              <p className="mt-3 text-center text-lg font-bold italic tracking-[0.3em] text-gray-300">
+                Dri Valé
+              </p>
             </div>
           </ModalBody>
           <ModalFooter className="gap-3">
