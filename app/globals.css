@@ -334,7 +334,15 @@ input[type="number"] {
     On utilise "absolute" (pas "fixed") car position:fixed en impression
     est rendu à la position écran par certains navigateurs (bug Chrome/Edge)
     ce qui causait le texte au milieu de la feuille.
+    html/body doivent être overflow:visible pour que l'élément absolu ne soit
+    pas clippé — HeroUI Modal injecte overflow:hidden sur body quand elle est ouverte.
   */
+  html,
+  body {
+    overflow: visible !important;
+    height: auto !important;
+  }
+
   body {
     visibility: hidden;
   }
@@ -356,5 +364,10 @@ input[type="number"] {
 
   #recu-print-root * {
     visibility: visible;
+  }
+
+  /* Empêche une ligne produit d'être coupée en deux entre deux pages */
+  #recu-print-root > div {
+    break-inside: avoid;
   }
 }
