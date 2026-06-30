@@ -7,6 +7,7 @@ interface AuthUser {
   email: string;
   role: Role;
   boutiqueId: string | null;
+  boutiqueName: string | null;
 }
 
 interface AuthState {
