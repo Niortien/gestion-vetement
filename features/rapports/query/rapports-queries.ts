@@ -72,6 +72,7 @@ export function useTopProduits(params: TopProduitsParams) {
     queryKey: rapportKeys.topProduits(effectiveParams),
     queryFn: () => getTopProduits(effectiveParams),
     enabled: !!token,
+    staleTime: DASHBOARD_STALE,
   });
 }
 
@@ -83,6 +84,7 @@ export function useFluxTresorerie(params: FluxTresorerieParams) {
     queryKey: rapportKeys.fluxTresorerie(effectiveParams),
     queryFn: () => getFluxTresorerie(effectiveParams),
     enabled: !!token,
+    staleTime: DASHBOARD_STALE,
   });
 }
 
