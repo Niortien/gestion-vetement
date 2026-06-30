@@ -78,8 +78,8 @@ export function ActiviteFluxChart({ data, groupBy }: ActiviteFluxChartProps) {
         />
         <Tooltip
           contentStyle={{
-            background: "#141416",
-            border: "1px solid #1E1E22",
+            background: "#0C1628",
+            border: "1px solid #1A2A50",
             borderRadius: "8px",
             fontSize: "12px",
             color: "#FAFAFA",
@@ -106,7 +106,7 @@ export function ActiviteFluxChart({ data, groupBy }: ActiviteFluxChartProps) {
         <Line
           type="monotone"
           dataKey="Solde"
-          stroke="#F0B429"
+          stroke="#4A7AFF"
           strokeWidth={2}
           strokeDasharray="4 2"
           dot={false}

@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/react";
 import { ModePaiement } from "@/types";
 import { formatDateFr } from "@/lib/dateUtils";
+import { useAuthStore } from "@/stores/authStore";
+import { getBoutiqueContact } from "@/lib/boutiqueConfig";
 
 export interface RecuLigne {
   produitNom: string;
@@ -79,6 +81,9 @@ export function RecuPrint({
   remiseMontant,
   totalAvantRemise,
 }: RecuPrintProps) {
+  const boutiqueName = useAuthStore((s) => s.user?.boutiqueName ?? null);
+  const contact = getBoutiqueContact(boutiqueName);
+
   const showCash = modePaiement === ModePaiement.CASH && !!montantRecu;
   const showRemise = !!remiseMontant && parseFloat(remiseMontant) > 0;
 
@@ -94,7 +99,15 @@ export function RecuPrint({
       <div id="recu-print-root" aria-hidden="true" style={{ display: "none" }}>
         <div style={{ textAlign: "center", marginBottom: 4 }}>
           <div style={{ fontSize: 15, fontWeight: "bold", letterSpacing: 3 }}>DRI VALÉ</div>
-          <div style={{ fontSize: 9 }}>Dri Valé — Gestion Boutique</div>
+          {boutiqueName && (
+            <div style={{ fontSize: 10, fontWeight: "bold", marginTop: 1 }}>{boutiqueName}</div>
+          )}
+          {contact && (
+            <div style={{ fontSize: 9, marginTop: 1 }}>{contact.telephones.join(" / ")}</div>
+          )}
+          {!boutiqueName && (
+            <div style={{ fontSize: 9 }}>Dri Valé — Gestion Boutique</div>
+          )}
         </div>
         <div style={{ borderTop: "1px dashed #000", margin: "4px 0" }} />
         <div style={{ fontSize: 9 }}>
@@ -145,6 +158,7 @@ export function RecuPrint({
         )}
         <div style={{ borderTop: "1px dashed #000", margin: "4px 0" }} />
         <div style={{ textAlign: "center", fontSize: 9 }}>Merci pour votre achat !</div>
+        <div style={{ textAlign: "center", fontSize: 9, fontStyle: "italic" }}>Sortez toujours bien habillé</div>
         <div style={{
           textAlign: "center",
           marginTop: 10,
@@ -180,7 +194,15 @@ export function RecuPrint({
               {/* En-tête */}
               <div className="mb-2 text-center">
                 <p className="text-base font-bold tracking-[0.25em]">DRI VALÉ</p>
-                <p className="text-[10px] text-gray-500">Boutique · Stock & Caisse</p>
+                {boutiqueName && (
+                  <p className="text-[11px] font-semibold text-gray-800">{boutiqueName}</p>
+                )}
+                {contact && (
+                  <p className="text-[10px] text-gray-500">{contact.telephones.join(" / ")}</p>
+                )}
+                {!boutiqueName && (
+                  <p className="text-[10px] text-gray-500">Boutique · Stock & Caisse</p>
+                )}
               </div>
               <div className="my-2 border-t border-dashed border-gray-300" />
 
@@ -251,6 +273,7 @@ export function RecuPrint({
 
               <div className="my-2 border-t border-dashed border-gray-300" />
               <p className="text-center text-[10px] text-gray-500">Merci pour votre achat !</p>
+              <p className="text-center text-[10px] italic text-gray-400">Sortez toujours bien habillé</p>
               <p className="mt-3 text-center text-lg font-bold italic tracking-[0.3em] text-gray-300">
                 Dri Valé
               </p>

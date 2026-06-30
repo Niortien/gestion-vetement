@@ -13,7 +13,7 @@ interface SessionDetailDrawerProps {
 }
 
 const MODE_COLORS: Record<string, string> = {
-  CASH: "border-[#F0B429]/30 bg-[#F0B429]/10 text-[#F0B429]",
+  CASH: "border-[#4A7AFF]/30 bg-[#4A7AFF]/10 text-[#4A7AFF]",
   WAVE: "border-[#39d353]/30 bg-[#39d353]/10 text-[#39d353]",
   ORANGE_MONEY: "border-[#ff9a3c]/30 bg-[#ff9a3c]/10 text-[#ff9a3c]",
   CARTE: "border-[#8f7ef5]/30 bg-[#8f7ef5]/10 text-[#8f7ef5]",
