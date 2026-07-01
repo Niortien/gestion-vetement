@@ -28,7 +28,7 @@ export function VariantePicker({ isOpen, onClose, onSelect, onDone, excludedVari
   const [expandedProduitId, setExpandedProduitId] = useState<string | null>(null);
   const [addedCount, setAddedCount] = useState(0);
 
-  const { data, isLoading } = useProduitsList({ limit: 50, isActif: true });
+  const { data, isLoading } = useProduitsList({ limit: 200 });
   const produits = data?.data ?? [];
 
   const filtered = useMemo(() => {
