@@ -12,13 +12,13 @@ const displayFont = Montserrat({
 const bodyFont = Poppins({
   variable: "--font-body",
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["400", "600"],
 });
 
 const monoFont = JetBrains_Mono({
   variable: "--font-mono",
   subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["400"],
 });
 
 export const metadata: Metadata = {
@@ -36,6 +36,11 @@ export default function RootLayout({
       lang="fr"
       className={`${displayFont.variable} ${bodyFont.variable} ${monoFont.variable} h-full antialiased dark`}
     >
+      <head>
+        <link rel="preconnect" href="https://res.cloudinary.com" />
+        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+        <link rel="preconnect" href="https://dri-vale.org" crossOrigin="anonymous" />
+      </head>
       <body className="min-h-full bg-base text-text font-[var(--font-body)] flex flex-col">
         <Providers>{children}</Providers>
       </body>
