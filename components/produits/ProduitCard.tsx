@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Card, CardBody } from "@heroui/react";
 import { CurrencyDisplay } from "@/components/common/CurrencyDisplay";
 import { StockBadge } from "@/components/common/StockBadge";
@@ -29,11 +30,12 @@ export function ProduitCard({ produit, onPress }: ProduitCardProps) {
     >
       <div className="relative aspect-[3/4] w-full overflow-hidden bg-[color:rgba(20,32,50,0.9)]">
         {imageUrl && !imgError ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             src={imageUrl}
             alt={produit.nom}
-            className="h-full w-full object-contain"
+            fill
+            sizes="(max-width: 768px) 50vw, (max-width: 1280px) 33vw, 25vw"
+            className="object-contain"
             onError={() => setImgError(true)}
           />
         ) : (

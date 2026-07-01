@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import type { Produit } from "@/types";
 import { useVitrineStore } from "@/stores/vitrineStore";
@@ -46,14 +47,14 @@ export function ProduitCard({ produit, rank, large = false }: ProduitCardProps) 
     >
       <Link href={`/boutique/${produit.id}`} className="block h-full w-full">
         {/* Image */}
-        <div className="h-full w-full overflow-hidden" style={{ backgroundColor: "var(--v-s2)" }}>
+        <div className="relative h-full w-full overflow-hidden" style={{ backgroundColor: "var(--v-s2)" }}>
           {imageUrl ? (
-            <motion.img
+            <Image
               src={imageUrl}
               alt={produit.nom}
-              className="h-full w-full object-cover"
-              variants={{ rest: { scale: 1 }, hovered: { scale: 1.06 } }}
-              transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+              fill
+              sizes="(max-width: 768px) 50vw, (max-width: 1280px) 33vw, 25vw"
+              className="object-cover transition-transform duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)] group-hover:scale-[1.06]"
             />
           ) : (
             <div className="flex h-full items-center justify-center text-5xl opacity-10">👟</div>

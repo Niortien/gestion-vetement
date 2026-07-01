@@ -1,7 +1,6 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { AnimatePresence } from "framer-motion";
 import { CommandBar } from "@/components/common/CommandBar";
 import { MobileNav } from "@/components/common/MobileNav";
 import { Sidebar } from "@/components/common/Sidebar";
@@ -17,7 +16,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
       <MobileNav />
       <Sidebar />
       <main className="relative flex-1 overflow-x-hidden overflow-y-auto p-4 md:p-6">
-        <AnimatePresence mode="wait">{children}</AnimatePresence>
+        {children}
       </main>
       <CommandBar />
     </div>
