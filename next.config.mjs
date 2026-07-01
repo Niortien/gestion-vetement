@@ -4,7 +4,7 @@ const nextConfig = {
     remotePatterns: [
       { protocol: "https", hostname: "dri-vale.org" },
       { protocol: "https", hostname: "**.dri-vale.org" },
-      { protocol: "https", hostname: "res.cloudinary.com" },
+      { protocol: "https", hostname: "res.cloudinary.com", pathname: "/dtxmfwslf/**" },
     ],
     formats: ["image/avif", "image/webp"],
   },
