@@ -25,6 +25,7 @@ export enum TypeSortie {
   PERTE = "PERTE",
   DON = "DON",
   RETOUR_FOURNISSEUR = "RETOUR_FOURNISSEUR",
+  DEPENSE = "DEPENSE",
 }
 
 export enum ModePaiement {

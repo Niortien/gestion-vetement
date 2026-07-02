@@ -29,6 +29,7 @@ const TYPE_LABELS: Record<TypeSortie, string> = {
   PERTE: "Perte",
   DON: "Don",
   RETOUR_FOURNISSEUR: "Retour",
+  DEPENSE: "Dépense",
 };
 
 const TYPE_COLORS: Record<TypeSortie, string> = {
@@ -36,6 +37,7 @@ const TYPE_COLORS: Record<TypeSortie, string> = {
   PERTE: "bg-[color:rgba(255,77,109,0.15)] text-[var(--color-out)]",
   DON: "bg-[color:rgba(143,126,245,0.15)] text-purple-400",
   RETOUR_FOURNISSEUR: "bg-[color:rgba(100,160,255,0.15)] text-blue-400",
+  DEPENSE: "bg-[color:rgba(255,154,60,0.15)] text-[var(--color-return)]",
 };
 
 function ReprintButton({ sortieId }: { sortieId: string }) {

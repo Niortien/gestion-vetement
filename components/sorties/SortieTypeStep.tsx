@@ -44,6 +44,14 @@ const TYPE_CARDS: TypeCard[] = [
     color: "border-[var(--color-in)] bg-[color:rgba(57,211,83,0.10)]",
     requiresSession: false,
   },
+  {
+    type: TypeSortie.DEPENSE,
+    label: "Dépense",
+    icon: "💸",
+    description: "Frais ou charge sans vente associée.",
+    color: "border-[var(--color-out)] bg-[color:rgba(255,154,60,0.10)]",
+    requiresSession: false,
+  },
 ];
 
 interface SortieTypeStepProps {

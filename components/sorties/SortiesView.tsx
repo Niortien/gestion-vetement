@@ -34,6 +34,7 @@ const TYPE_FILTERS: { key: TypeSortie | null; label: string }[] = [
   { key: TypeSortie.PERTE, label: "Pertes" },
   { key: TypeSortie.DON, label: "Dons" },
   { key: TypeSortie.RETOUR_FOURNISSEUR, label: "Retours" },
+  { key: TypeSortie.DEPENSE, label: "Dépenses" },
 ];
 
 export function SortiesView() {

@@ -16,6 +16,7 @@ const TYPE_LABELS: Record<TypeSortie, string> = {
   PERTE: "Perte",
   DON: "Don",
   RETOUR_FOURNISSEUR: "Retour fournisseur",
+  DEPENSE: "Dépense",
 };
 
 interface SortieFeedItemProps {
