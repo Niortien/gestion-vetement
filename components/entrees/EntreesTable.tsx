@@ -162,7 +162,7 @@ export function EntreesTable({ data }: EntreesTableProps) {
         isOpen={!!deleteTarget}
         onClose={() => setDeleteTarget(null)}
         onConfirm={() => {
-          if (deleteTarget)
+          if (deleteTarget && !deleteMutation.isPending)
             deleteMutation.mutate(deleteTarget.id, {
               onSuccess: () => setDeleteTarget(null),
             });

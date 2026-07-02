@@ -236,7 +236,9 @@ export function SortiesTable({ data }: SortiesTableProps) {
         isOpen={!!deleteTarget}
         onClose={() => setDeleteTarget(null)}
         onConfirm={() => {
-          if (deleteTarget) deleteMutation.mutate(deleteTarget.id, { onSuccess: () => setDeleteTarget(null) });
+          if (deleteTarget && !deleteMutation.isPending) {
+            deleteMutation.mutate(deleteTarget.id, { onSuccess: () => setDeleteTarget(null) });
+          }
         }}
         title="Supprimer la sortie"
         message={`Supprimer ${deleteTarget?.reference ?? "cette sortie"} ? Le stock sera restauré si elle n'était pas encore annulée.`}

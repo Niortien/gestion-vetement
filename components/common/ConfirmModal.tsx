@@ -56,6 +56,7 @@ export function ConfirmModal({
           <Button
             className={`flex-1 font-semibold ${danger ? "bg-[var(--color-out)] text-white" : "bg-accent text-black"}`}
             isLoading={isLoading}
+            isDisabled={isLoading}
             onPress={onConfirm}
           >
             {confirmLabel}
