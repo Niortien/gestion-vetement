@@ -48,7 +48,7 @@ const TYPE_CARDS: TypeCard[] = [
     type: TypeSortie.DEPENSE,
     label: "Dépense",
     icon: "💸",
-    description: "Frais ou charge sans vente associée.",
+    description: "Argent sorti de la boutique (nourriture, don, frais divers...), sans produit.",
     color: "border-[var(--color-out)] bg-[color:rgba(255,154,60,0.10)]",
     requiresSession: false,
   },
