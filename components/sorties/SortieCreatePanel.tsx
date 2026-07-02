@@ -380,15 +380,16 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
                   Type : <span className="font-semibold text-[var(--color-out)]">{selectedType}</span>
                 </p>
               )}
-              <Input
-                variant="underlined"
-                placeholder={isDepense ? "Description de la dépense (ex : nourriture, don à un employé...)" : "Notes (optionnel)"}
-                value={sortieNotes}
-                onValueChange={setSortieNotes}
-                size="sm"
-                isRequired={isDepense}
-                classNames={{ input: "text-sm text-text-muted" }}
-              />
+              {!isDepense && (
+                <Input
+                  variant="underlined"
+                  placeholder="Notes (optionnel)"
+                  value={sortieNotes}
+                  onValueChange={setSortieNotes}
+                  size="sm"
+                  classNames={{ input: "text-sm text-text-muted" }}
+                />
+              )}
               {selectedType !== TypeSortie.VENTE && (
                 <Input
                   type="date"
@@ -403,16 +404,31 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
               )}
 
               {isDepense ? (
-                <Input
-                  size="sm"
-                  variant="bordered"
-                  label="Montant"
-                  placeholder="0"
-                  value={depenseMontant}
-                  onValueChange={(v) => { if (/^\d*$/.test(v)) setDepenseMontant(v); }}
-                  inputMode="numeric"
-                  endContent={<span className="shrink-0 text-xs text-text-dim">FCFA</span>}
-                />
+                <section className="space-y-3 rounded-lg border border-border/80 bg-[color:rgba(81,34,68,0.25)] p-4">
+                  <p className="text-xs uppercase tracking-wide text-text-muted">Détails de la dépense</p>
+                  <Input
+                    variant="bordered"
+                    label="Description"
+                    labelPlacement="outside"
+                    placeholder="Ex : nourriture, don à un employé..."
+                    value={sortieNotes}
+                    onValueChange={setSortieNotes}
+                    size="sm"
+                    isRequired
+                  />
+                  <Input
+                    size="sm"
+                    variant="bordered"
+                    label="Montant"
+                    labelPlacement="outside"
+                    placeholder="0"
+                    value={depenseMontant}
+                    onValueChange={(v) => { if (/^\d*$/.test(v)) setDepenseMontant(v); }}
+                    inputMode="numeric"
+                    isRequired
+                    endContent={<span className="shrink-0 text-xs text-text-dim">FCFA</span>}
+                  />
+                </section>
               ) : (
                 <section className="rounded-lg border border-border/80 bg-[color:rgba(81,34,68,0.25)] p-4">
                   <div className="mb-3 flex items-center justify-between">
