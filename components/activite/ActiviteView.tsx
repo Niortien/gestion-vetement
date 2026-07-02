@@ -14,7 +14,7 @@ import {
 } from "@internationalized/date";
 import { useLocale } from "react-aria";
 import { PageWrapper } from "@/components/common/PageWrapper";
-import { useVentes, useFluxTresorerie, useTopProduits, useStockValeur } from "@/features/rapports/query/rapports-queries";
+import { useVentes, useFluxTresorerie, useTopProduits, useStockValeur, useDepenses } from "@/features/rapports/query/rapports-queries";
 import { useStockAlertes } from "@/features/stock/query/stock-queries";
 import { useResumeJour } from "@/features/caisse/query/caisse-queries";
 import { useUiStore, type RapportGroupBy } from "@/stores/uiStore";
@@ -126,6 +126,7 @@ export function ActiviteView() {
   const { data: stockValeur } = useStockValeur();
   const { data: alertes } = useStockAlertes();
   const { data: resume } = useResumeJour();
+  const { data: depensesData, isLoading: depensesLoading } = useDepenses(params);
 
   const ventes = Array.isArray(ventesData?.data) ? ventesData.data : [];
   const flux = Array.isArray(fluxData?.data) ? fluxData.data : [];
@@ -149,7 +150,9 @@ export function ActiviteView() {
   );
   const valeurStock = parseFloat(stockValeur?.data?.valeurTotaleVente || "0");
   const nbAlertes = alertes?.data?.length ?? 0;
-  const isKpiLoading = ventesLoading || fluxLoading;
+  const totalDepenses = parseFloat(depensesData?.data?.totalDepenses || "0");
+  const nombreDepenses = depensesData?.data?.nombreDepenses ?? 0;
+  const isKpiLoading = ventesLoading || fluxLoading || depensesLoading;
   const rangeLabel = formatRange(dateRange);
 
   return (
@@ -227,6 +230,8 @@ export function ActiviteView() {
         cashOut={cashOut}
         valeurStock={valeurStock}
         nbAlertes={nbAlertes}
+        totalDepenses={totalDepenses}
+        nombreDepenses={nombreDepenses}
         isLoading={isKpiLoading}
       />
 

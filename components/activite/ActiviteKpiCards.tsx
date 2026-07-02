@@ -10,6 +10,8 @@ interface ActiviteKpiCardsProps {
   cashOut: number;
   valeurStock: number;
   nbAlertes: number;
+  totalDepenses: number;
+  nombreDepenses: number;
   isLoading: boolean;
 }
 
@@ -48,13 +50,15 @@ export function ActiviteKpiCards({
   cashOut,
   valeurStock,
   nbAlertes,
+  totalDepenses,
+  nombreDepenses,
   isLoading,
 }: ActiviteKpiCardsProps) {
   const benefice = cashIn - cashOut;
   const beneficePositif = benefice >= 0;
 
   return (
-    <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
+    <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7">
       <KpiCard
         label="Ventes"
         value={<CurrencyDisplay montant={String(totalVentes)} tone="cash" size="sm" />}
@@ -98,6 +102,13 @@ export function ActiviteKpiCards({
         value={<CurrencyDisplay montant={String(valeurStock)} tone="default" size="sm" />}
         accent="before:bg-[var(--color-border-active)]"
         sub={nbAlertes > 0 ? `⚠ ${nbAlertes} alerte${nbAlertes !== 1 ? "s" : ""}` : "Aucune alerte"}
+        isLoading={isLoading}
+      />
+      <KpiCard
+        label="Dépenses"
+        value={<CurrencyDisplay montant={String(totalDepenses)} tone="out" size="sm" />}
+        accent="before:bg-[var(--color-out)]"
+        sub={`${nombreDepenses} dépense${nombreDepenses !== 1 ? "s" : ""}`}
         isLoading={isLoading}
       />
     </div>

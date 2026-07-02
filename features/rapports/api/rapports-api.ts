@@ -23,6 +23,12 @@ export interface FluxTresorerieParams {
   boutiqueId?: string;
 }
 
+export interface DepensesParams {
+  dateDebut: string;
+  dateFin: string;
+  boutiqueId?: string;
+}
+
 export interface ExportParams {
   dateDebut?: string;
   dateFin?: string;
@@ -75,6 +81,12 @@ export const getTopProduits = (params: TopProduitsParams) =>
 export const getFluxTresorerie = (params: FluxTresorerieParams) =>
   apiGet<Array<{ periode: string; entrees: string; sorties: string; solde: string }>>(
     "/rapports/flux-tresorerie",
+    params as unknown as Record<string, unknown>
+  );
+
+export const getDepenses = (params: DepensesParams) =>
+  apiGet<{ totalDepenses: string; nombreDepenses: number }>(
+    "/rapports/depenses",
     params as unknown as Record<string, unknown>
   );
 

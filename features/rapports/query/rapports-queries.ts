@@ -6,11 +6,13 @@ import { useBoutiqueId } from "@/hooks/useBoutiqueId";
 import {
   exportExcel,
   exportPdf,
+  getDepenses,
   getFluxTresorerie,
   getResumeDashboard,
   getStockValeur,
   getTopProduits,
   getVentes,
+  type DepensesParams,
   type ExportParams,
   type FluxTresorerieParams,
   type RapportVentesParams,
@@ -25,6 +27,7 @@ export const rapportKeys = {
   stockValeur: (boutiqueId?: string) => ["rapports", "stock-valeur", boutiqueId] as const,
   topProduits: (params: TopProduitsParams) => ["rapports", "top-produits", params] as const,
   fluxTresorerie: (params: FluxTresorerieParams) => ["rapports", "flux-tresorerie", params] as const,
+  depenses: (params: DepensesParams) => ["rapports", "depenses", params] as const,
 };
 
 const DASHBOARD_STALE = 5 * 60 * 1000; // 5 min — données non temps-réel
@@ -83,6 +86,18 @@ export function useFluxTresorerie(params: FluxTresorerieParams) {
   return useQuery({
     queryKey: rapportKeys.fluxTresorerie(effectiveParams),
     queryFn: () => getFluxTresorerie(effectiveParams),
+    enabled: !!token,
+    staleTime: DASHBOARD_STALE,
+  });
+}
+
+export function useDepenses(params: DepensesParams) {
+  const token = useAuthStore((s) => s.accessToken);
+  const boutiqueId = useBoutiqueId();
+  const effectiveParams = { ...params, boutiqueId };
+  return useQuery({
+    queryKey: rapportKeys.depenses(effectiveParams),
+    queryFn: () => getDepenses(effectiveParams),
     enabled: !!token,
     staleTime: DASHBOARD_STALE,
   });
