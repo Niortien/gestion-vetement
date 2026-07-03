@@ -22,10 +22,12 @@ export function CartDrawer() {
     const message = buildWhatsappMessage({
       lignes: cart.map((item) => ({
         produitNom: item.produit.nom,
+        sku: item.produit.sku,
         couleur: item.variante.couleur,
         taille: String(item.variante.taille),
         quantite: item.quantite,
         prix: parseFloat(item.produit.prixVente || "0"),
+        boutiqueNom: item.variante.boutique?.nom,
       })),
       clientNom: "À préciser",
       clientTel: "À préciser",

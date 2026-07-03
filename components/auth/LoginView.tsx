@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Button, Input } from "@heroui/react";
 import { IconEye, IconEyeOff } from "@tabler/icons-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -94,6 +95,9 @@ export function LoginView() {
         <Button className="w-full bg-accent text-black" onPress={() => void onSubmit()} isLoading={isSubmitting}>
           Se connecter
         </Button>
+        <Link href="/forgot-password" className="block text-center text-sm text-default-500 hover:underline">
+          Mot de passe oublié ?
+        </Link>
       </div>
     </section>
   );

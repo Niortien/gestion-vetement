@@ -68,10 +68,12 @@ export function ProduitOrderPanel({ produit, variante }: ProduitOrderPanelProps)
       lignes: [
         {
           produitNom: produit.nom,
+          sku: produit.sku,
           couleur: effectiveVariante.couleur,
           taille: String(effectiveVariante.taille),
           quantite,
           prix,
+          boutiqueNom: effectiveVariante.boutique?.nom,
         },
       ],
       clientNom: values.clientNom,
