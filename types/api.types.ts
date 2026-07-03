@@ -30,6 +30,7 @@ export interface Boutique {
   adresse: string | null;
   ville: string | null;
   whatsapp: string | null;
+  isActive?: boolean;
   createdAt: string;
   updatedAt: string;
 }

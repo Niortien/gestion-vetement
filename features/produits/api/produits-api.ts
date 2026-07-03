@@ -59,6 +59,19 @@ export interface UpdateVarianteBody {
   taille?: string;
   couleur?: string;
   seuilAlerte?: number;
+  boutiqueId?: string | null;
+}
+
+export interface ReassignBoutiqueConflict {
+  varianteId: string;
+  taille: string;
+  couleur: string;
+}
+
+export interface ReassignBoutiqueResult {
+  movedCount: number;
+  conflicts: ReassignBoutiqueConflict[];
+  produit: Produit;
 }
 
 export interface AdjustStockBody {
@@ -85,6 +98,10 @@ export const createProduit = (body: CreateProduitBody, boutiqueIds?: string[]) =
 
 export const updateProduit = (id: string, body: UpdateProduitBody) =>
   apiPatch<Produit, UpdateProduitBody>(`/produits/${id}`, body);
+
+// Réattribue toutes les variantes du produit à une boutique (ou null = catalogue global)
+export const reassignProduitBoutique = (id: string, boutiqueId: string | null) =>
+  apiPatch<ReassignBoutiqueResult, { boutiqueId: string | null }>(`/produits/${id}/boutique`, { boutiqueId });
 
 export const addVarianteToProduit = (produitId: string, body: AddVarianteBody) =>
   apiPost<Variante, AddVarianteBody>(`/produits/${produitId}/variantes`, body);

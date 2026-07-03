@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
-import { Button, Checkbox, Chip, Input, Skeleton, Slider, Spinner } from "@heroui/react";
+import { Button, Checkbox, Chip, Input, Select, SelectItem, Skeleton, Slider, Spinner } from "@heroui/react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import type { AppError } from "@/types";
@@ -18,7 +18,7 @@ import {
 import { getMotionVariant, panelSlide } from "@/lib/motionVariants";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useCategoriesList, produitKeys } from "@/features/produits/query/produits-queries";
-import { useCreateProduit, useUpdateProduit } from "@/features/produits/mutation/produits-mutations";
+import { useCreateProduit, useUpdateProduit, useReassignProduitBoutique } from "@/features/produits/mutation/produits-mutations";
 import { addVarianteToProduit, adjustVarianteStock, deleteVariante, updateVariante } from "@/features/produits/api/produits-api";
 import { useBoutiqueId } from "@/hooks/useBoutiqueId";
 import { useBoutiques } from "@/features/boutiques/query/boutiques-queries";
@@ -42,12 +42,72 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
   const user = useAuthStore((s) => s.user);
   const isAdmin = user?.role === "ADMIN";
   const defaultBoutiqueId = useBoutiqueId();
-  const { data: boutiquesRes } = useBoutiques(isAdmin && isNew);
-  const boutiques = boutiquesRes?.data ?? [];
+  const { data: boutiquesRes } = useBoutiques(isAdmin);
+  const boutiques = useMemo(() => boutiquesRes?.data ?? [], [boutiquesRes]);
+  const boutiquesActives = useMemo(() => boutiques.filter((b) => b.isActive !== false), [boutiques]);
   const [selectedBoutiqueIds, setSelectedBoutiqueIds] = useState<string[]>(
     defaultBoutiqueId ? [defaultBoutiqueId] : []
   );
   const isPending = createMutation.isPending || updateMutation.isPending;
+
+  /* ── réattribution boutique (correction d'erreur de saisie) ─ */
+  const reassignMutation = useReassignProduitBoutique(produit?.id ?? "");
+  const [reassignBoutiqueId, setReassignBoutiqueId] = useState<string>("");
+  const [varianteBoutiquePending, setVarianteBoutiquePending] = useState<string | null>(null);
+
+  const produitBoutiqueIds = useMemo(
+    () => [...new Set((produit?.variantes ?? []).map((v) => v.boutiqueId ?? "GLOBAL"))],
+    [produit?.variantes]
+  );
+
+  const reassignBoutiqueItems = useMemo(
+    () => [
+      { key: "__global__", label: "Catalogue global (aucune)" },
+      ...boutiquesActives.map((b) => ({ key: b.id, label: b.nom + (b.ville ? ` · ${b.ville}` : "") })),
+    ],
+    [boutiquesActives]
+  );
+
+  const varianteBoutiqueItems = useMemo(
+    () => [
+      { key: "__global__", label: "Catalogue global" },
+      ...boutiques.map((b) => ({ key: b.id, label: b.nom })),
+    ],
+    [boutiques]
+  );
+
+  const handleReassignBoutique = async () => {
+    if (!produit) return;
+    const cible = reassignBoutiqueId || null;
+    try {
+      const { data } = await reassignMutation.mutateAsync(cible);
+      if (data.conflicts.length > 0) {
+        toast(
+          `${data.movedCount} variante(s) déplacée(s), ${data.conflicts.length} en conflit (taille/couleur déjà présente dans la boutique cible)`,
+          { icon: "⚠️" }
+        );
+      } else if (data.movedCount === 0) {
+        toast("Aucune variante à déplacer");
+      } else {
+        toast.success(`${data.movedCount} variante(s) réattribuée(s)`);
+      }
+    } catch {
+      // toast d'erreur géré par onError de la mutation
+    }
+  };
+
+  const handleVarianteBoutiqueChange = async (varianteId: string, boutiqueId: string | null) => {
+    setVarianteBoutiquePending(varianteId);
+    try {
+      await updateVariante(varianteId, { boutiqueId });
+      await qc.invalidateQueries({ queryKey: produitKeys.all });
+      toast.success("Boutique de la variante mise à jour");
+    } catch (err) {
+      toast.error((err as AppError)?.message ?? "Conflit : cette taille/couleur existe déjà dans cette boutique");
+    } finally {
+      setVarianteBoutiquePending(null);
+    }
+  };
 
   /* ── catégories ─────────────────────────────────────────── */
   const { data: categoriesData, isLoading: catsLoading } = useCategoriesList();
@@ -400,6 +460,72 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
               <p className="mt-2 text-[11px] text-in/80">
                 Les variantes seront dupliquées pour chaque boutique sélectionnée
               </p>
+            )}
+          </section>
+        )}
+
+        {/* RÉATTRIBUTION BOUTIQUE (admin, édition d'un produit existant) */}
+        {!isNew && isAdmin && produit && (
+          <section className="rounded-lg border border-border/80 bg-[color:rgba(45,69,103,0.4)] p-4">
+            <p className="mb-1 text-xs uppercase tracking-[0.08em] text-text-muted">Boutique</p>
+            <p className="mb-3 text-[11px] text-text-muted/70">
+              {produitBoutiqueIds.length === 0
+                ? "Aucune variante"
+                : produitBoutiqueIds.length > 1
+                  ? "Les variantes sont réparties sur plusieurs boutiques (voir détail ci-dessous)"
+                  : produitBoutiqueIds[0] === "GLOBAL"
+                    ? "Actuellement : catalogue global (aucune boutique)"
+                    : `Actuellement : ${boutiques.find((b) => b.id === produitBoutiqueIds[0])?.nom ?? "boutique inconnue"}`}
+            </p>
+            <div className="flex items-end gap-2">
+              <Select
+                size="sm"
+                label="Réattribuer tout à"
+                items={reassignBoutiqueItems}
+                selectedKeys={reassignBoutiqueId ? new Set([reassignBoutiqueId]) : new Set(["__global__"])}
+                onSelectionChange={(keys) => {
+                  const val = Array.from(keys)[0] as string | undefined;
+                  setReassignBoutiqueId(val === "__global__" ? "" : (val ?? ""));
+                }}
+                className="flex-1"
+                aria-label="Nouvelle boutique"
+              >
+                {(item) => <SelectItem key={item.key}>{item.label}</SelectItem>}
+              </Select>
+              <Button
+                size="sm"
+                variant="flat"
+                className="bg-accent text-black"
+                isLoading={reassignMutation.isPending}
+                onPress={handleReassignBoutique}
+              >
+                Réattribuer
+              </Button>
+            </div>
+
+            {/* Détail par variante si réparties sur plusieurs boutiques */}
+            {produitBoutiqueIds.length > 1 && (
+              <div className="mt-3 space-y-1.5">
+                {(produit.variantes ?? []).map((v) => (
+                  <div key={v.id} className="flex items-center justify-between gap-2 text-xs">
+                    <span className="text-text-muted">{v.taille} · {v.couleur}</span>
+                    <Select
+                      size="sm"
+                      items={varianteBoutiqueItems}
+                      selectedKeys={new Set([v.boutiqueId ?? "__global__"])}
+                      isDisabled={varianteBoutiquePending === v.id}
+                      onSelectionChange={(keys) => {
+                        const val = Array.from(keys)[0] as string | undefined;
+                        void handleVarianteBoutiqueChange(v.id, val === "__global__" ? null : (val ?? null));
+                      }}
+                      className="max-w-[180px]"
+                      aria-label={`Boutique de la variante ${v.taille} ${v.couleur}`}
+                    >
+                      {(item) => <SelectItem key={item.key}>{item.label}</SelectItem>}
+                    </Select>
+                  </div>
+                ))}
+              </div>
             )}
           </section>
         )}
