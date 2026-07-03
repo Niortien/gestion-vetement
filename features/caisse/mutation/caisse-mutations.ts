@@ -57,9 +57,10 @@ export function useFermerSession() {
 
 export function useAddTransaction() {
   const qc = useQueryClient();
+  const boutiqueId = useBoutiqueId();
   const addTransaction = useCaisseStore((s) => s.addTransaction);
   return useMutation({
-    mutationFn: (body: CreateTransactionBody) => createTransaction(body),
+    mutationFn: (body: CreateTransactionBody) => createTransaction(body, boutiqueId),
     onMutate: async (body) => {
       const optimistic: Transaction = {
         id: `optimistic-${Date.now()}`,

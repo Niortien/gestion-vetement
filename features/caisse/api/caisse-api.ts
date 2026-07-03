@@ -51,8 +51,8 @@ export const fermerSession = (id: string, body: FermerSessionBody) =>
 export const listSessionTransactions = (sessionId: string, params?: SessionTransactionsParams) =>
   apiGet<Transaction[]>(`/caisse/sessions/${sessionId}/transactions`, params as Record<string, unknown> | undefined);
 
-export const createTransaction = (body: CreateTransactionBody) =>
-  apiPost<Transaction, CreateTransactionBody>("/caisse/transactions", body);
+export const createTransaction = (body: CreateTransactionBody, boutiqueId?: string) =>
+  apiPost<Transaction, CreateTransactionBody>("/caisse/transactions", body, boutiqueId ? { boutiqueId } : undefined);
 
 export const getResumeJour = (boutiqueId?: string) =>
   apiGet<ResumeJour>("/caisse/resume-jour", boutiqueId ? { boutiqueId } : undefined);
