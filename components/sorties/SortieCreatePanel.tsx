@@ -409,7 +409,6 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
                   <Input
                     variant="bordered"
                     label="Description"
-                    labelPlacement="outside"
                     placeholder="Ex : nourriture, don à un employé..."
                     value={sortieNotes}
                     onValueChange={setSortieNotes}
@@ -420,7 +419,6 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
                     size="sm"
                     variant="bordered"
                     label="Montant"
-                    labelPlacement="outside"
                     placeholder="0"
                     value={depenseMontant}
                     onValueChange={(v) => { if (/^\d*$/.test(v)) setDepenseMontant(v); }}
