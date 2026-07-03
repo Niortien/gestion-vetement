@@ -46,8 +46,8 @@ function fmt(v: number): string {
 export function ActiviteFluxChart({ data, groupBy }: ActiviteFluxChartProps) {
   const chartData = data.map((d) => ({
     label: formatLabel(d.periode, groupBy),
-    "Cash entrant": Math.round(parseFloat(d.entrees || "0")),
-    "Cash sortant": Math.round(parseFloat(d.sorties || "0")),
+    "Cash entrant": Math.round(parseFloat(d.sorties || "0")),
+    "Cash sortant": Math.round(parseFloat(d.entrees || "0")),
     Solde: Math.round(parseFloat(d.solde || "0")),
   }));
 

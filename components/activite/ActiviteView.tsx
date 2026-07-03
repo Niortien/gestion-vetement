@@ -141,11 +141,11 @@ export function ActiviteView() {
     [ventes]
   );
   const cashIn = useMemo(
-    () => flux.reduce((acc, f) => acc + parseFloat(f.entrees || "0"), 0),
+    () => flux.reduce((acc, f) => acc + parseFloat(f.sorties || "0"), 0),
     [flux]
   );
   const cashOut = useMemo(
-    () => flux.reduce((acc, f) => acc + parseFloat(f.sorties || "0"), 0),
+    () => flux.reduce((acc, f) => acc + parseFloat(f.entrees || "0"), 0),
     [flux]
   );
   const valeurStock = parseFloat(stockValeur?.data?.valeurTotaleVente || "0");
