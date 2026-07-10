@@ -79,7 +79,6 @@ export function CatalogueGrid({ categorieId, taille, search, inStockOnly }: Cata
         {filtered.map((produit, i) => (
           <motion.div
             key={produit.id}
-            className={i === 0 ? "col-span-2" : ""}
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: Math.min(i * 0.04, 0.4), duration: 0.4 }}
