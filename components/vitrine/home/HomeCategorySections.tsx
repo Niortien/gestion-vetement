@@ -15,7 +15,7 @@ function MiniCard({ produit }: { produit: Produit }) {
     <Link
       href={`/boutique/${produit.id}`}
       className="relative flex-shrink-0 overflow-hidden rounded-xl"
-      style={{ width: 160, backgroundColor: "var(--v-s2)" }}
+      style={{ width: 132, backgroundColor: "var(--v-s2)" }}
     >
       {/* Image */}
       <div className="relative" style={{ aspectRatio: "3/4" }}>
@@ -81,7 +81,7 @@ function MiniCardSkeleton() {
   return (
     <div
       className="flex-shrink-0 animate-pulse rounded-xl"
-      style={{ width: 160, aspectRatio: "3/4", backgroundColor: "var(--v-s2)" }}
+      style={{ width: 132, aspectRatio: "3/4", backgroundColor: "var(--v-s2)" }}
     />
   );
 }
