@@ -3,11 +3,24 @@
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { Chip, Spinner } from "@heroui/react";
+import { Chip, DateRangePicker, Spinner } from "@heroui/react";
+import {
+  endOfMonth,
+  endOfWeek,
+  getLocalTimeZone,
+  startOfMonth,
+  startOfWeek,
+  today,
+  type DateValue,
+} from "@internationalized/date";
+import { useLocale } from "react-aria";
 import { IconArrowLeft } from "@tabler/icons-react";
 import { PageWrapper } from "@/components/common/PageWrapper";
 import { CurrencyDisplay } from "@/components/common/CurrencyDisplay";
 import { useRecetteHebdomadaire } from "@/features/rapports/query/rapports-queries";
+import { useSortiesList } from "@/features/sorties/query/sorties-queries";
+import { TypeSortie } from "@/types";
+import { SortiesTable } from "@/components/sorties/SortiesTable";
 import { formatSemaineLabel } from "./formatSemaine";
 
 const RecetteHebdomadaireChart = dynamic(
@@ -22,28 +35,69 @@ const RecetteHebdomadaireChart = dynamic(
   }
 );
 
-const NB_SEMAINES_OPTIONS = [
-  { key: 8, label: "8 semaines" },
-  { key: 12, label: "12 semaines" },
-  { key: 26, label: "26 semaines" },
-  { key: 52, label: "52 semaines" },
-];
+type DateRange = { start: DateValue; end: DateValue };
+
+function dvToISO(dv: DateValue, endOfDay: boolean): string {
+  const d = dv.toDate(getLocalTimeZone());
+  if (endOfDay) d.setHours(23, 59, 59, 0);
+  else d.setHours(0, 0, 0, 0);
+  return d.toISOString();
+}
+
+function formatRange(range: DateRange): string {
+  const fmt = (dv: DateValue) =>
+    dv.toDate(getLocalTimeZone()).toLocaleDateString("fr-FR", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  const s = fmt(range.start);
+  const e = fmt(range.end);
+  return s === e ? s : `${s} — ${e}`;
+}
 
 export function RecetteHebdomadaireView() {
-  const [nbSemaines, setNbSemaines] = useState(12);
+  const { locale } = useLocale();
+  const now = useMemo(() => today(getLocalTimeZone()), []);
 
-  const params = useMemo(() => {
-    const fin = new Date();
-    const debut = new Date();
-    debut.setDate(debut.getDate() - nbSemaines * 7);
-    return {
-      dateDebut: debut.toISOString().slice(0, 10),
-      dateFin: fin.toISOString().slice(0, 10),
-    };
-  }, [nbSemaines]);
+  const presets = useMemo(
+    () => [
+      { label: "Aujourd'hui", value: { start: now, end: now } },
+      { label: "Cette semaine", value: { start: startOfWeek(now, locale), end: endOfWeek(now, locale) } },
+      { label: "4 semaines", value: { start: now.subtract({ weeks: 3 }), end: now } },
+      { label: "12 semaines", value: { start: now.subtract({ weeks: 11 }), end: now } },
+      { label: "Ce mois", value: { start: startOfMonth(now), end: endOfMonth(now) } },
+      { label: "52 semaines", value: { start: now.subtract({ weeks: 51 }), end: now } },
+    ],
+    [locale, now]
+  );
+
+  const [dateRange, setDateRange] = useState<DateRange>({
+    start: now.subtract({ weeks: 11 }),
+    end: now,
+  });
+
+  const isPresetActive = (p: DateRange) =>
+    dateRange.start.compare(p.start) === 0 && dateRange.end.compare(p.end) === 0;
+
+  const params = useMemo(
+    () => ({
+      dateDebut: dvToISO(dateRange.start, false),
+      dateFin: dvToISO(dateRange.end, true),
+    }),
+    [dateRange]
+  );
 
   const { data, isLoading } = useRecetteHebdomadaire(params);
   const semaines = Array.isArray(data?.data) ? data.data : [];
+
+  const { data: depensesData } = useSortiesList({
+    type: TypeSortie.DEPENSE,
+    dateDebut: params.dateDebut,
+    dateFin: params.dateFin,
+    limit: 100,
+  });
+  const depenses = depensesData?.pages.flatMap((page) => page.data) ?? [];
 
   const totaux = useMemo(
     () =>
@@ -58,6 +112,8 @@ export function RecetteHebdomadaireView() {
     [semaines]
   );
 
+  const rangeLabel = formatRange(dateRange);
+
   return (
     <PageWrapper>
       <div className="flex flex-col gap-2">
@@ -68,29 +124,52 @@ export function RecetteHebdomadaireView() {
           <IconArrowLeft size={14} />
           Retour à l&apos;activité
         </Link>
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <h1 className="font-[var(--font-display)] text-2xl text-[var(--color-cash)] md:text-3xl">
-            Recettes par semaine
-          </h1>
-          <div className="flex flex-wrap gap-1.5">
-            {NB_SEMAINES_OPTIONS.map((opt) => (
-              <Chip
-                key={opt.key}
-                variant="flat"
-                className={
-                  nbSemaines === opt.key
-                    ? "cursor-pointer bg-[var(--color-cash)] font-semibold text-black"
-                    : "cursor-pointer bg-[var(--color-surface-high)] text-text-muted hover:text-text"
-                }
-                onClick={() => setNbSemaines(opt.key)}
-              >
-                {opt.label}
-              </Chip>
-            ))}
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <h1 className="font-[var(--font-display)] text-2xl text-[var(--color-cash)] md:text-3xl">
+              Recettes par semaine
+            </h1>
+            <p className="mt-1 font-[var(--font-mono)] text-xs text-text-muted">{rangeLabel}</p>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <DateRangePicker
+              aria-label="Période d'analyse (choisir la même date pour un jour précis)"
+              value={dateRange}
+              onChange={(val) => val && setDateRange(val)}
+              maxValue={now}
+              visibleMonths={2}
+              size="sm"
+              classNames={{
+                base: "max-w-[340px]",
+                inputWrapper:
+                  "border border-border/60 bg-[var(--color-surface-high)] shadow-none hover:border-accent/50 focus-within:!border-accent/70 h-9",
+                segment: "text-text focus:bg-accent/20",
+                separator: "text-text-dim",
+                calendarContent: "bg-[var(--color-surface)] border border-border/60 rounded-xl shadow-xl",
+              }}
+            />
+            <div className="flex flex-wrap gap-1.5">
+              {presets.map((p) => (
+                <Chip
+                  key={p.label}
+                  variant="flat"
+                  className={
+                    isPresetActive(p.value)
+                      ? "cursor-pointer bg-[var(--color-cash)] font-semibold text-black"
+                      : "cursor-pointer bg-[var(--color-surface-high)] text-text-muted hover:text-text"
+                  }
+                  onClick={() => setDateRange(p.value)}
+                >
+                  {p.label}
+                </Chip>
+              ))}
+            </div>
           </div>
         </div>
         <p className="text-xs text-text-muted">
-          Recette nette = ventes de la semaine moins les dépenses enregistrées sur la même semaine.
+          Recette nette = ventes de la semaine moins les dépenses enregistrées sur la même semaine. Choisis la
+          même date de début et de fin dans le calendrier pour analyser un jour précis.
         </p>
       </div>
 
@@ -126,7 +205,9 @@ export function RecetteHebdomadaireView() {
 
       {/* Détail par semaine */}
       <div className="rounded-xl border border-border/60 bg-[var(--color-surface)] p-4">
-        <h2 className="mb-4 text-xs font-semibold uppercase tracking-widest text-text-muted">Détail</h2>
+        <h2 className="mb-4 text-xs font-semibold uppercase tracking-widest text-text-muted">
+          Détail par semaine
+        </h2>
         {isLoading ? (
           <div className="flex h-32 items-center justify-center">
             <Spinner size="sm" />
@@ -166,6 +247,14 @@ export function RecetteHebdomadaireView() {
             </table>
           </div>
         )}
+      </div>
+
+      {/* Détail des dépenses de la période */}
+      <div className="flex flex-col gap-3">
+        <h2 className="text-xs font-semibold uppercase tracking-widest text-text-muted">
+          Dépenses détaillées — {rangeLabel} ({depenses.length})
+        </h2>
+        <SortiesTable data={depenses} />
       </div>
     </PageWrapper>
   );

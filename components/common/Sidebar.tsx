@@ -18,6 +18,7 @@ import {
   IconCategory2,
   IconWorld,
   IconLogout,
+  IconReportMoney,
 } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 import { useLogout } from "@/features/auth/mutation/auth-mutations";
@@ -33,8 +34,9 @@ interface NavItem {
 }
 
 const ITEMS: NavItem[] = [
-  { href: "/dashboard",  label: "Dashboard",   icon: IconLayoutDashboard },
-  { href: "/activite",   label: "Activité",    icon: IconActivity },
+  { href: "/dashboard",             label: "Dashboard",     icon: IconLayoutDashboard },
+  { href: "/activite",              label: "Activité",      icon: IconActivity },
+  { href: "/activite/hebdomadaire", label: "Recette hebdo", icon: IconReportMoney },
   { href: "/stock",      label: "Stock",        icon: IconBoxSeam },
   { href: "/caisse",     label: "Caisse",       icon: IconCoin },
   { href: "/entrees",    label: "Entrées",      icon: IconPackageImport },
