@@ -39,9 +39,15 @@ export function CaisseView() {
         {/* Header recettes + bouton terminer */}
         <div className="rounded-xl border border-border/80 bg-[linear-gradient(145deg,rgba(143,126,245,0.18),rgba(74,122,255,0.10))] p-4 md:p-5">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-            <div>
-              <p className="text-xs uppercase tracking-[0.1em] text-text-muted">Recettes du jour</p>
-              <CurrencyDisplay montant={resume?.totalVentes ?? "0"} size="xl" tone="accent" className="mt-2" />
+            <div className="flex flex-wrap gap-6">
+              <div>
+                <p className="text-xs uppercase tracking-[0.1em] text-text-muted">Recettes du jour</p>
+                <CurrencyDisplay montant={resume?.totalVentes ?? "0"} size="xl" tone="accent" className="mt-2" />
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-[0.1em] text-text-muted">Montant à déposer</p>
+                <CurrencyDisplay montant={resume?.montantADeposer ?? "0"} size="xl" tone="cash" className="mt-2" />
+              </div>
             </div>
             <Button
               size="sm"

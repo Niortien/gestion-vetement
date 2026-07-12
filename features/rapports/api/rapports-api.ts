@@ -29,6 +29,19 @@ export interface DepensesParams {
   boutiqueId?: string;
 }
 
+export interface RecetteHebdomadaireParams {
+  dateDebut?: string;
+  dateFin?: string;
+  boutiqueId?: string;
+}
+
+export interface RecetteHebdomadaire {
+  semaine: string;
+  totalVentes: string;
+  totalDepenses: string;
+  recetteNette: string;
+}
+
 export interface ExportParams {
   dateDebut?: string;
   dateFin?: string;
@@ -87,6 +100,12 @@ export const getFluxTresorerie = (params: FluxTresorerieParams) =>
 export const getDepenses = (params: DepensesParams) =>
   apiGet<{ totalDepenses: string; nombreDepenses: number }>(
     "/rapports/depenses",
+    params as unknown as Record<string, unknown>
+  );
+
+export const getRecetteHebdomadaire = (params: RecetteHebdomadaireParams = {}) =>
+  apiGet<RecetteHebdomadaire[]>(
+    "/rapports/recette-hebdomadaire",
     params as unknown as Record<string, unknown>
   );
 

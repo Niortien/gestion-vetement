@@ -8,6 +8,7 @@ import {
   exportPdf,
   getDepenses,
   getFluxTresorerie,
+  getRecetteHebdomadaire,
   getResumeDashboard,
   getStockValeur,
   getTopProduits,
@@ -16,6 +17,7 @@ import {
   type ExportParams,
   type FluxTresorerieParams,
   type RapportVentesParams,
+  type RecetteHebdomadaireParams,
   type ResumeDashboardParams,
   type TopProduitsParams,
 } from "../api/rapports-api";
@@ -28,6 +30,7 @@ export const rapportKeys = {
   topProduits: (params: TopProduitsParams) => ["rapports", "top-produits", params] as const,
   fluxTresorerie: (params: FluxTresorerieParams) => ["rapports", "flux-tresorerie", params] as const,
   depenses: (params: DepensesParams) => ["rapports", "depenses", params] as const,
+  recetteHebdomadaire: (params: RecetteHebdomadaireParams) => ["rapports", "recette-hebdomadaire", params] as const,
 };
 
 const DASHBOARD_STALE = 5 * 60 * 1000; // 5 min — données non temps-réel
@@ -98,6 +101,18 @@ export function useDepenses(params: DepensesParams) {
   return useQuery({
     queryKey: rapportKeys.depenses(effectiveParams),
     queryFn: () => getDepenses(effectiveParams),
+    enabled: !!token,
+    staleTime: DASHBOARD_STALE,
+  });
+}
+
+export function useRecetteHebdomadaire(params: RecetteHebdomadaireParams = {}) {
+  const token = useAuthStore((s) => s.accessToken);
+  const boutiqueId = useBoutiqueId();
+  const effectiveParams = { ...params, boutiqueId };
+  return useQuery({
+    queryKey: rapportKeys.recetteHebdomadaire(effectiveParams),
+    queryFn: () => getRecetteHebdomadaire(effectiveParams),
     enabled: !!token,
     staleTime: DASHBOARD_STALE,
   });

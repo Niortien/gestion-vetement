@@ -1,8 +1,10 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Chip, DateRangePicker, Spinner } from "@heroui/react";
+import { IconArrowRight } from "@tabler/icons-react";
 import {
   endOfMonth,
   endOfWeek,
@@ -281,6 +283,18 @@ export function ActiviteView() {
                   {resume.data.totalTransactions}
                 </span>
               </div>
+              <div>
+                <span className="text-text-muted">Dépenses : </span>
+                <span className="[font-family:var(--font-mono)] font-semibold text-[var(--color-out)]">
+                  {parseFloat(resume.data.totalDepenses || "0").toLocaleString("fr-FR")} FCFA
+                </span>
+              </div>
+              <div>
+                <span className="text-text-muted">À déposer en caisse : </span>
+                <span className="[font-family:var(--font-mono)] font-semibold text-[var(--color-cash)]">
+                  {parseFloat(resume.data.montantADeposer || "0").toLocaleString("fr-FR")} FCFA
+                </span>
+              </div>
             </div>
             <ActivitePaiementBreakdown resume={resume.data} />
           </div>
@@ -290,6 +304,15 @@ export function ActiviteView() {
           </p>
         )}
       </SectionCard>
+
+      {/* Lien vers le rapport hebdomadaire */}
+      <Link
+        href="/activite/hebdomadaire"
+        className="flex w-fit items-center gap-1.5 text-sm font-medium text-accent hover:underline"
+      >
+        Voir les recettes par semaine
+        <IconArrowRight size={15} />
+      </Link>
     </PageWrapper>
   );
 }

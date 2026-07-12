@@ -28,6 +28,8 @@ export interface ResumeJour {
   totalVentes: string;
   totalTransactions: number;
   totalAchats: string;
+  totalDepenses: string;
   beneficeNet: string;
+  montantADeposer: string;
   parModePaiement: Partial<Record<ModePaiement, string>>;
 }
