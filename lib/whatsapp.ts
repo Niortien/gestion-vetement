@@ -1,8 +1,8 @@
 export interface WhatsappOrderLine {
   produitNom: string;
   sku?: string;
-  couleur: string;
-  taille: string;
+  couleur?: string;
+  taille?: string;
   quantite: number;
   prix: number;
   boutiqueNom?: string;
@@ -24,7 +24,10 @@ export function buildWhatsappMessage(order: WhatsappOrder): string {
     .map((l) => {
       const refLine = l.sku ? `\n   Réf : ${l.sku}` : "";
       const boutiqueLine = l.boutiqueNom ? `\n   Boutique : ${l.boutiqueNom}` : "";
-      return `📦 *${l.produitNom}*${refLine}\n   Couleur : ${l.couleur} | Taille : ${l.taille} | Qté : ${l.quantite}\n   Prix unitaire : ${l.prix.toLocaleString("fr-FR")} FCFA | Sous-total : ${(l.quantite * l.prix).toLocaleString("fr-FR")} FCFA${boutiqueLine}`;
+      const varianteLine = (l.couleur || l.taille)
+        ? `\n   ${[l.couleur && `Couleur : ${l.couleur}`, l.taille && `Taille : ${l.taille}`].filter(Boolean).join(" | ")} | Qté : ${l.quantite}`
+        : `\n   Qté : ${l.quantite}`;
+      return `📦 *${l.produitNom}*${refLine}${varianteLine}\n   Prix unitaire : ${l.prix.toLocaleString("fr-FR")} FCFA | Sous-total : ${(l.quantite * l.prix).toLocaleString("fr-FR")} FCFA${boutiqueLine}`;
     })
     .join("\n\n");
 

@@ -58,22 +58,23 @@ export function ProduitOrderPanel({ produit, variante }: ProduitOrderPanelProps)
 
   const prix = parseFloat(produit.prixVente || "0");
   const effectiveVariante = activeBoutiqueVariante ?? variante;
-  const canOrder = !!effectiveVariante && effectiveVariante.quantiteStock > 0 &&
+  const canWhatsApp = boutiquesWithStock.length <= 1 || !!selectedBoutiqueId;
+  const canAddToCart = !!effectiveVariante && effectiveVariante.quantiteStock > 0 &&
     (boutiquesWithStock.length <= 1 || !!selectedBoutiqueId);
-  const maxQte = effectiveVariante ? Math.min(effectiveVariante.quantiteStock, 10) : 1;
+  const canOrder = canWhatsApp;
+  const maxQte = effectiveVariante ? Math.min(effectiveVariante.quantiteStock, 10) : 10;
 
   const onSubmit = (values: OrderForm) => {
-    if (!effectiveVariante) return;
     const message = buildWhatsappMessage({
       lignes: [
         {
           produitNom: produit.nom,
           sku: produit.sku,
-          couleur: effectiveVariante.couleur,
-          taille: String(effectiveVariante.taille),
+          couleur: effectiveVariante?.couleur,
+          taille: effectiveVariante?.taille != null ? String(effectiveVariante.taille) : undefined,
           quantite,
           prix,
-          boutiqueNom: effectiveVariante.boutique?.nom,
+          boutiqueNom: effectiveVariante?.boutique?.nom,
         },
       ],
       clientNom: values.clientNom,
@@ -82,7 +83,7 @@ export function ProduitOrderPanel({ produit, variante }: ProduitOrderPanelProps)
       adresse: values.adresse,
       notes: values.notes,
     });
-    const whatsappNum = effectiveVariante.boutique?.whatsapp;
+    const whatsappNum = effectiveVariante?.boutique?.whatsapp;
     window.open(buildWhatsappUrl(message, whatsappNum), "_blank");
   };
 
@@ -97,12 +98,6 @@ export function ProduitOrderPanel({ produit, variante }: ProduitOrderPanelProps)
       className="rounded-2xl border p-5 space-y-5"
       style={{ borderColor: "var(--v-border)", backgroundColor: "var(--v-s2)" }}
     >
-      {/* Sélection variante manquante */}
-      {!variante && (
-        <p className="text-sm text-center py-2" style={{ color: "var(--v-muted)" }}>
-          ← Sélectionne une taille et une couleur
-        </p>
-      )}
       {variante && boutiquesWithStock.length === 0 && (
         <p className="text-sm text-center py-2" style={{ color: "var(--v-red)" }}>
           Cette variante est en rupture de stock
@@ -311,9 +306,10 @@ export function ProduitOrderPanel({ produit, variante }: ProduitOrderPanelProps)
       {/* Bouton panier secondaire */}
       <button
         onClick={handleAddToCart}
-        disabled={!canOrder}
+        disabled={!canAddToCart}
         className="flex w-full items-center justify-center gap-2 rounded-xl border py-3 text-sm font-semibold uppercase tracking-wider transition-all hover:border-[var(--v-text)] hover:text-[var(--v-text)] disabled:cursor-not-allowed disabled:opacity-30"
         style={{ borderColor: "var(--v-border)", color: "var(--v-muted)" }}
+        title={!canAddToCart ? "Sélectionne une taille et une couleur pour ajouter au panier" : undefined}
       >
         + Ajouter au panier
       </button>
