@@ -11,7 +11,7 @@ export function LookbookView() {
       <LookbookHero />
       <LookbookEditorial />
       <LookbookGrid />
-      <LookbookOutfit />
+      {/* <LookbookOutfit /> */}
       <LookbookBehindScenes />
       <LookbookWhatsapp />
     </>
