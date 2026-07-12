@@ -20,7 +20,7 @@ export function LookbookHero() {
         <div
           className="absolute inset-0"
           style={{
-            backgroundImage: "url('/lookbook-hero.jpg')",
+            backgroundImage: "url('/images/dri_style/boutique-facade.jpg')",
             backgroundSize: "cover",
             backgroundPosition: "center 20%",
           }}

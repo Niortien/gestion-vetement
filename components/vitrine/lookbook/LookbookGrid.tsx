@@ -3,8 +3,8 @@
 import { motion } from "framer-motion";
 
 const GRID_ITEMS = [
-  { id: 1, src: "/lookbook-grid-1.jpg", alt: "Look 1", tall: true },
-  { id: 2, src: "/lookbook-grid-2.jpg", alt: "Look 2", tall: false },
+  { id: 1, src: "/images/dri_style/boutique-interieur-1.jpg", alt: "L'ambiance du shop — Dri Valé", tall: true },
+  { id: 2, src: "/images/dri_style/boutique-interieur-3.jpg", alt: "Pièces en boutique — Dri Valé", tall: false },
   { id: 3, src: "/lookbook-grid-3.jpg", alt: "Look 3", tall: false },
   { id: 4, src: "/lookbook-grid-4.jpg", alt: "Look 4", tall: false },
   { id: 5, src: "/lookbook-grid-5.jpg", alt: "Look 5", tall: true },

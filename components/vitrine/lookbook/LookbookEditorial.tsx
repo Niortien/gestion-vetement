@@ -74,8 +74,8 @@ export function LookbookEditorial() {
             style={{ backgroundColor: "var(--v-s2)" }}
           >
             <img
-              src="/lookbook-editorial.jpg"
-              alt="Editorial Abidjan Nights"
+              src="/images/dri_style/boutique-interieur-2.jpg"
+              alt="Boutique Dri Valé — collection"
               className="h-full w-full object-cover"
               onError={(e) => {
                 (e.target as HTMLImageElement).style.display = "none";
