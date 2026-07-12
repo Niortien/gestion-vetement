@@ -1,20 +1,27 @@
-﻿"use client";
+"use client";
 
-import { useRef } from "react";
 import { motion } from "framer-motion";
 
-const BTS_PHOTOS = [
-  { id: 1, src: "/bts-1.jpg", alt: "BTS shooting 1", caption: "Setup — Almadies" },
-  { id: 2, src: "/bts-2.jpg", alt: "BTS shooting 2", caption: "Entre deux shots" },
-  { id: 3, src: "/bts-3.jpg", alt: "BTS shooting 3", caption: "Lumière de fin de journée" },
-  { id: 4, src: "/bts-4.jpg", alt: "BTS shooting 4", caption: "Détail — Jordan Air 1" },
-  { id: 5, src: "/bts-5.jpg", alt: "BTS shooting 5", caption: "Préparation lookbook" },
-  { id: 6, src: "/bts-6.jpg", alt: "BTS shooting 6", caption: "Équipe Yop City" },
+const LOOKS = [
+  {
+    id: 1,
+    src: "/images/dri_style/look-selfie-lacoste.jpg",
+    alt: "Client Dri Valé — look Lacoste",
+    pieces: ["T-shirt Lacoste", "Short DSQUARED2", "Sandales à carreaux"],
+    tag: "Look du jour",
+  },
+  {
+    id: 2,
+    src: "/images/dri_style/client-sacs-drivale.jpg",
+    alt: "Client Dri Valé — sortie boutique",
+    pieces: ["Débardeur Off-White", "Cargo tie-dye"],
+    tag: "Fresh out the shop",
+  },
 ];
 
-export function LookbookBehindScenes() {
-  const scrollRef = useRef<HTMLDivElement>(null);
+const WHATSAPP_NUMBER = "2250767602389";
 
+export function LookbookBehindScenes() {
   return (
     <section
       className="overflow-hidden py-20"
@@ -31,57 +38,125 @@ export function LookbookBehindScenes() {
             className="mb-2 text-[10px] font-black uppercase tracking-[0.4em]"
             style={{ color: "var(--v-gold)" }}
           >
-            Dans les coulisses
+            Notre communauté
           </p>
           <h2
             className="font-[var(--font-display)] font-black uppercase leading-none tracking-tight"
             style={{ fontSize: "clamp(28px,5vw,56px)", color: "var(--v-text)" }}
           >
-            Behind the
+            Ils portent
             <br />
-            <span style={{ color: "var(--v-hot)" }}>Scenes</span>
+            <span style={{ color: "var(--v-hot)" }}>Dri Valé</span>
           </h2>
         </motion.div>
       </div>
 
-      {/* Carousel horizontal */}
+      {/* Carrousel horizontal */}
       <div
-        ref={scrollRef}
         className="flex gap-4 overflow-x-auto pb-4"
         style={{ paddingLeft: "clamp(20px,5vw,80px)", scrollbarWidth: "none" }}
       >
-        {BTS_PHOTOS.map((photo, i) => (
+        {LOOKS.map((look, i) => (
           <motion.div
-            key={photo.id}
+            key={look.id}
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: i * 0.07, duration: 0.4 }}
-            className="group relative flex-shrink-0 overflow-hidden rounded-xl"
-            style={{ width: "280px", aspectRatio: "3/4", backgroundColor: "var(--v-s2)" }}
+            transition={{ delay: i * 0.1, duration: 0.4 }}
+            className="group flex-shrink-0"
+            style={{ width: "260px" }}
           >
-            <img
-              src={photo.src}
-              alt={photo.alt}
-              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-              onError={(e) => {
-                (e.target as HTMLImageElement).style.display = "none";
-              }}
-            />
+            {/* Photo */}
             <div
-              className="absolute inset-0"
-              style={{ background: "linear-gradient(135deg, var(--v-s2), var(--v-s3))" }}
-            />
-            <div
-              className="absolute bottom-0 left-0 right-0 translate-y-full p-4 transition-transform duration-300 group-hover:translate-y-0"
-              style={{ backgroundColor: "rgba(6,6,7,0.92)" }}
+              className="relative overflow-hidden rounded-xl"
+              style={{ aspectRatio: "3/4", backgroundColor: "var(--v-s2)" }}
             >
-              <p className="text-xs font-bold" style={{ color: "var(--v-gold)" }}>
-                {photo.caption}
-              </p>
+              <img
+                src={look.src}
+                alt={look.alt}
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = "none";
+                }}
+              />
+              {/* Gradient bas */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "linear-gradient(to top, rgba(6,6,7,0.75) 0%, transparent 50%)",
+                }}
+              />
+              {/* Tag */}
+              <div
+                className="absolute left-3 top-3 rounded-full px-3 py-1"
+                style={{ backgroundColor: "var(--v-hot)" }}
+              >
+                <p className="text-[9px] font-black uppercase tracking-widest text-white">
+                  {look.tag}
+                </p>
+              </div>
+            </div>
+
+            {/* Pièces portées */}
+            <div className="mt-3 space-y-1 px-1">
+              {look.pieces.map((piece) => (
+                <p
+                  key={piece}
+                  className="text-xs"
+                  style={{ color: "var(--v-muted)" }}
+                >
+                  — {piece}
+                </p>
+              ))}
             </div>
           </motion.div>
         ))}
+
+        {/* Carte CTA — soumettre son look */}
+        <motion.a
+          href={`https://wa.me/${WHATSAPP_NUMBER}?text=Bonjour%2C%20je%20veux%20partager%20mon%20look%20Dri%20Val%C3%A9%20%F0%9F%94%A5`}
+          target="_blank"
+          rel="noopener noreferrer"
+          initial={{ opacity: 0, x: 30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.25, duration: 0.4 }}
+          className="group flex-shrink-0 flex flex-col items-center justify-center rounded-xl border-2 border-dashed transition-colors"
+          style={{
+            width: "260px",
+            aspectRatio: "3/4",
+            borderColor: "var(--v-border)",
+            backgroundColor: "var(--v-s2)",
+          }}
+          whileHover={{ borderColor: "var(--v-gold)" } as never}
+        >
+          <p
+            className="text-4xl font-black"
+            style={{ color: "var(--v-gold)" }}
+          >
+            +
+          </p>
+          <p
+            className="mt-3 text-center text-sm font-bold leading-snug px-6"
+            style={{ color: "var(--v-text)" }}
+          >
+            Ton look ici
+          </p>
+          <p
+            className="mt-2 text-center text-[11px] leading-relaxed px-6"
+            style={{ color: "var(--v-muted)" }}
+          >
+            Envoie ta photo via WhatsApp et rejoins la communauté
+          </p>
+          <p
+            className="mt-4 text-[10px] font-black uppercase tracking-widest"
+            style={{ color: "var(--v-gold)" }}
+          >
+            Envoyer →
+          </p>
+        </motion.a>
+
         <div className="flex-shrink-0 w-5" />
       </div>
     </section>
