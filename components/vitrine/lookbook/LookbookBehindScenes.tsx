@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { usePublicLookbookPhotos } from "@/features/lookbook-photos/query/public-lookbook-photos-queries";
 
 const LOOKS = [
   {
@@ -22,6 +23,9 @@ const LOOKS = [
 const WHATSAPP_NUMBER = "2250767602389";
 
 export function LookbookBehindScenes() {
+  const { data: res } = usePublicLookbookPhotos();
+  const clientPhotos = res?.data ?? [];
+
   return (
     <section
       className="overflow-hidden py-20"
@@ -110,6 +114,55 @@ export function LookbookBehindScenes() {
                 </p>
               ))}
             </div>
+          </motion.div>
+        ))}
+
+        {clientPhotos.map((photo, i) => (
+          <motion.div
+            key={photo.id}
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: (LOOKS.length + i) * 0.1, duration: 0.4 }}
+            className="group flex-shrink-0"
+            style={{ width: "260px" }}
+          >
+            {/* Photo */}
+            <div
+              className="relative overflow-hidden rounded-xl"
+              style={{ aspectRatio: "3/4", backgroundColor: "var(--v-s2)" }}
+            >
+              <img
+                src={photo.url}
+                alt={photo.nom ? `${photo.nom} — client Dri Valé` : "Client Dri Valé"}
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+              {/* Gradient bas */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "linear-gradient(to top, rgba(6,6,7,0.75) 0%, transparent 50%)",
+                }}
+              />
+              {/* Tag */}
+              <div
+                className="absolute left-3 top-3 rounded-full px-3 py-1"
+                style={{ backgroundColor: "var(--v-gold)" }}
+              >
+                <p className="text-[9px] font-black uppercase tracking-widest text-black">
+                  Client Dri Valé
+                </p>
+              </div>
+            </div>
+
+            {photo.nom && (
+              <div className="mt-3 px-1">
+                <p className="text-xs" style={{ color: "var(--v-muted)" }}>
+                  — {photo.nom}
+                </p>
+              </div>
+            )}
           </motion.div>
         ))}
 

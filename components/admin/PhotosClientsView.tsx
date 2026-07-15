@@ -21,6 +21,7 @@ import { readFileAsDataUrl } from "@/lib/files";
 import { useAdminLookbookPhotos } from "@/features/lookbook-photos/query/lookbook-photos-queries";
 import {
   useDeleteLookbookPhoto,
+  useUpdateLookbookPhotoPubliee,
   useUpdateLookbookPhotoStatut,
   useUploadLookbookPhoto,
 } from "@/features/lookbook-photos/mutation/lookbook-photos-mutations";
@@ -55,6 +56,7 @@ export function PhotosClientsView() {
   const photos = res?.data ?? [];
 
   const updateStatut = useUpdateLookbookPhotoStatut();
+  const updatePubliee = useUpdateLookbookPhotoPubliee();
   const deleteMutation = useDeleteLookbookPhoto();
   const uploadMutation = useUploadLookbookPhoto();
 
@@ -164,6 +166,11 @@ export function PhotosClientsView() {
                 fill
                 className="object-cover transition-transform group-hover:scale-105"
               />
+              {photo.publiee && (
+                <span className="absolute right-2 top-2 rounded-full bg-accent px-2 py-0.5 text-[10px] font-bold text-black">
+                  Publiée
+                </span>
+              )}
             </div>
             <div className="flex items-center justify-between gap-2 p-2">
               <span className="truncate text-xs font-medium text-text">
@@ -237,6 +244,17 @@ export function PhotosClientsView() {
                         Marquer traité
                       </Button>
                     )}
+                    <Button
+                      size="sm"
+                      variant="flat"
+                      color={selected.publiee ? "default" : "primary"}
+                      isLoading={updatePubliee.isPending}
+                      onPress={() =>
+                        updatePubliee.mutate({ id: selected.id, publiee: !selected.publiee })
+                      }
+                    >
+                      {selected.publiee ? "Retirer du site" : "Publier sur le site"}
+                    </Button>
                     <Button
                       size="sm"
                       variant="flat"

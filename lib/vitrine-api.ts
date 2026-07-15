@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { Produit, Categorie, LookbookPhoto } from "@/types";
+import type { Produit, Categorie, LookbookPhoto, PublicLookbookPhoto } from "@/types";
 
 function getBaseUrl(): string {
   const raw = process.env.NEXT_PUBLIC_API_URL?.trim();
@@ -67,4 +67,9 @@ export const uploadLookbookPhoto = (
 ): Promise<VitrineSingleResponse<LookbookPhoto>> =>
   publicApi
     .post<VitrineSingleResponse<LookbookPhoto>>("/lookbook-photos", body)
+    .then((r) => r.data);
+
+export const getPublicLookbookPhotos = (): Promise<VitrineSingleResponse<PublicLookbookPhoto[]>> =>
+  publicApi
+    .get<VitrineSingleResponse<PublicLookbookPhoto[]>>("/lookbook-photos/publiees")
     .then((r) => r.data);
