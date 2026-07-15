@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { uploadLookbookPhoto } from "@/lib/vitrine-api";
+import { readFileAsDataUrl } from "@/lib/files";
 
 const MAX_SIZE_BYTES = 5 * 1024 * 1024;
 
@@ -16,15 +17,6 @@ const schema = z.object({
   message: z.string().optional(),
 });
 type FormData = z.infer<typeof schema>;
-
-function readFileAsDataUrl(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = () => reject(reader.error);
-    reader.readAsDataURL(file);
-  });
-}
 
 export function LookbookPhotoUpload() {
   const fileInputRef = useRef<HTMLInputElement>(null);
