@@ -74,7 +74,7 @@ export function LookbookWhatsapp() {
         </motion.a>
 
         <p className="mt-4 text-[11px]" style={{ color: "var(--v-dim)" }}>
-          R&eacute;ponse garantie sous 30 min &mdash; Lun&mdash;Sam 9h&mdash;20h
+          R&eacute;ponse garantie sous 30 min &mdash; Lun-Dim, 9h-21h
         </p>
       </div>
     </section>

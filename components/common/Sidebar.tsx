@@ -19,6 +19,7 @@ import {
   IconWorld,
   IconLogout,
   IconReportMoney,
+  IconPhoto,
 } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 import { useLogout } from "@/features/auth/mutation/auth-mutations";
@@ -46,9 +47,10 @@ const ITEMS: NavItem[] = [
 ];
 
 const ADMIN_ITEMS: NavItem[] = [
-  { href: "/admin/boutiques",    label: "Boutiques",    icon: IconBuildingStore },
-  { href: "/admin/utilisateurs", label: "Utilisateurs", icon: IconUsers },
-  { href: "/admin/categories",   label: "Catégories",   icon: IconCategory2 },
+  { href: "/admin/boutiques",      label: "Boutiques",     icon: IconBuildingStore },
+  { href: "/admin/utilisateurs",   label: "Utilisateurs",  icon: IconUsers },
+  { href: "/admin/categories",     label: "Catégories",    icon: IconCategory2 },
+  { href: "/admin/photos-clients", label: "Photos clients", icon: IconPhoto },
 ];
 
 function StarMotif() {

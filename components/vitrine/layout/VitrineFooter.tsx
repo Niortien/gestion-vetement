@@ -81,6 +81,9 @@ export function VitrineFooter() {
               {WA_ICON}
               WhatsApp direct
             </a>
+            <p className="mt-3 text-[11px]" style={{ color: "var(--v-dim)" }}>
+              R&eacute;ponse garantie sous 30 min &mdash; Lun-Dim, 9h-21h
+            </p>
           </div>
 
           {/* Liens */}
@@ -116,11 +119,29 @@ export function VitrineFooter() {
             >
               Nous trouver
             </p>
-            <ul className="space-y-2 text-sm" style={{ color: "var(--v-muted)" }}>
-              <li>Ananeraie Oasis, Yopougon</li>
-              <li>Quartier Maroc, Abidjan</li>
+            <ul className="space-y-3 text-sm" style={{ color: "var(--v-muted)" }}>
+              <li>
+                <p>Oasis Ananeraie, Yopougon</p>
+                <a
+                  href="tel:+2250710444625"
+                  className="text-xs font-bold transition-colors hover:text-[#25D366]"
+                  style={{ color: "var(--v-dim)" }}
+                >
+                  07 10 44 46 25
+                </a>
+              </li>
+              <li>
+                <p>Toit rouge, Yopougon</p>
+                <a
+                  href="tel:+2250767602389"
+                  className="text-xs font-bold transition-colors hover:text-[#25D366]"
+                  style={{ color: "var(--v-dim)" }}
+                >
+                  07 67 60 23 89
+                </a>
+              </li>
               <li className="pt-2" style={{ color: "var(--v-dim)", fontSize: "11px" }}>
-                Lun&mdash;Sam &bull; 9h &mdash; 20h
+                24h/24 &bull; 7j/7
               </li>
               <li>
                 <a
@@ -161,7 +182,7 @@ export function VitrineFooter() {
           className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t pt-8 text-xs"
           style={{ borderColor: "var(--v-border)", color: "var(--v-dim)" }}
         >
-          <span>&copy; 2025 Dri Val&eacute; Boutique. Tous droits r&eacute;serv&eacute;s.</span>
+          <span>&copy; 2026 Dri Val&eacute; Boutique. Tous droits r&eacute;serv&eacute;s.</span>
           <span className="font-bold tracking-wider" style={{ color: "var(--v-gold)" }}>
             YOP CITY &hearts;
           </span>

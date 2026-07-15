@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { Produit, Categorie } from "@/types";
+import type { Produit, Categorie, LookbookPhoto } from "@/types";
 
 function getBaseUrl(): string {
   const raw = process.env.NEXT_PUBLIC_API_URL?.trim();
@@ -54,3 +54,17 @@ export const getVitrineProduit = (id: string): Promise<VitrineSingleResponse<Pro
 
 export const getVitrineCategories = (): Promise<VitrineSingleResponse<Categorie[]>> =>
   publicApi.get<VitrineSingleResponse<Categorie[]>>("/produits/categories").then((r) => r.data);
+
+export interface UploadLookbookPhotoBody {
+  photo: string; // data URL base64
+  nom?: string;
+  telephone?: string;
+  message?: string;
+}
+
+export const uploadLookbookPhoto = (
+  body: UploadLookbookPhotoBody
+): Promise<VitrineSingleResponse<LookbookPhoto>> =>
+  publicApi
+    .post<VitrineSingleResponse<LookbookPhoto>>("/lookbook-photos", body)
+    .then((r) => r.data);
