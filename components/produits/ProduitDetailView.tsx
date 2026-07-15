@@ -8,6 +8,7 @@ import { CurrencyDisplay } from "@/components/common/CurrencyDisplay";
 import { StockBadge } from "@/components/common/StockBadge";
 import { FlowTag } from "@/components/common/FlowTag";
 import { EmptyRiver } from "@/components/common/EmptyRiver";
+import { useAuthStore } from "@/stores/authStore";
 import { useProduit, useProduitMouvements } from "@/features/produits/query/produits-queries";
 import {
   useAddProduitImage,
@@ -243,6 +244,7 @@ export function ProduitDetailView({ id }: ProduitDetailViewProps) {
   const router = useRouter();
   const [showPanel, setShowPanel] = useState(false);
   const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
+  const isAdmin = useAuthStore((s) => s.user?.role === "ADMIN");
 
   const { data, isLoading, error } = useProduit(id);
   const { data: mouvData, isLoading: mouvLoading } = useProduitMouvements(id, { limit: 10 });
@@ -422,7 +424,7 @@ export function ProduitDetailView({ id }: ProduitDetailViewProps) {
                     <th className="pb-2 pr-4 font-normal">Couleur</th>
                     <th className="pb-2 pr-4 font-normal">Stock</th>
                     <th className="pb-2 pr-4 font-normal">Seuil</th>
-                    <th className="pb-2 pr-4 font-normal">Ajuster</th>
+                    {isAdmin && <th className="pb-2 pr-4 font-normal">Ajuster</th>}
                     <th className="pb-2 font-normal">Suppr.</th>
                   </tr>
                 </thead>
@@ -437,9 +439,11 @@ export function ProduitDetailView({ id }: ProduitDetailViewProps) {
                           <StockBadge value={v.quantiteStock} isAlert={isAlerte} />
                         </td>
                         <td className="py-2 pr-4 font-[var(--font-mono)] text-text-muted">{v.seuilAlerte}</td>
-                        <td className="py-2 pr-4">
-                          <AdjustCell varianteId={v.id} />
-                        </td>
+                        {isAdmin && (
+                          <td className="py-2 pr-4">
+                            <AdjustCell varianteId={v.id} />
+                          </td>
+                        )}
                         <td className="py-2">
                           <DeleteVarianteCell variante={v} produitId={id} />
                         </td>
