@@ -84,6 +84,9 @@ export function RecuPrint({
   const boutiqueName = useAuthStore((s) => s.user?.boutiqueName ?? null);
   const contact = getBoutiqueContact(boutiqueName);
 
+  const now = new Date();
+  const isFeteIndependance = now.getMonth() === 7 && (now.getDate() === 7 || now.getDate() === 8);
+
   const showCash = modePaiement === ModePaiement.CASH && !!montantRecu;
   const showRemise = !!remiseMontant && parseFloat(remiseMontant) > 0;
 
@@ -159,6 +162,11 @@ export function RecuPrint({
         <div style={{ borderTop: "1px dashed #000", margin: "4px 0" }} />
         <div style={{ textAlign: "center", fontSize: 9 }}>Merci pour votre achat !</div>
         <div style={{ textAlign: "center", fontSize: 9, fontStyle: "italic" }}>Sortez toujours bien habillé</div>
+        {isFeteIndependance && (
+          <div style={{ textAlign: "center", fontSize: 10, fontWeight: "bold", marginTop: 4, letterSpacing: 1 }}>
+            🇨🇮 Bonne fête d&apos;indépendance ! 🇨🇮
+          </div>
+        )}
         <div style={{
           textAlign: "center",
           marginTop: 10,
@@ -274,6 +282,11 @@ export function RecuPrint({
               <div className="my-2 border-t border-dashed border-gray-300" />
               <p className="text-center text-[10px] text-gray-500">Merci pour votre achat !</p>
               <p className="text-center text-[10px] italic text-gray-400">Sortez toujours bien habillé</p>
+              {isFeteIndependance && (
+                <p className="mt-1 text-center text-[11px] font-bold text-orange-600">
+                  🇨🇮 Bonne fête d&apos;indépendance ! 🇨🇮
+                </p>
+              )}
               <p className="mt-3 text-center text-lg font-bold italic tracking-[0.3em] text-gray-300">
                 Dri Valé
               </p>
