@@ -16,7 +16,7 @@ interface CatalogueGridProps {
 export function CatalogueGrid({ categorieId, taille, search, inStockOnly }: CatalogueGridProps) {
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
-  const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
+  const { data, isLoading, isError, isFetchingNextPage, hasNextPage, fetchNextPage } =
     useVitrineProduits({
       limit: 12,
       ...(categorieId  ? { categorieId }  : {}),
@@ -58,6 +58,20 @@ export function CatalogueGrid({ categorieId, taille, search, inStockOnly }: Cata
             </div>
           ))}
         </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex flex-col items-center gap-4 py-24 text-center">
+        <span className="text-5xl opacity-20">⚠️</span>
+        <p className="text-sm font-bold" style={{ color: "var(--v-muted)" }}>
+          Impossible de charger les produits.
+        </p>
+        <p className="text-xs" style={{ color: "var(--v-dim)" }}>
+          Vérifie ta connexion ou réessaie dans quelques secondes.
+        </p>
       </div>
     );
   }

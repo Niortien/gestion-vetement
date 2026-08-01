@@ -8,7 +8,7 @@ const GRID_ITEMS = [
   { id: 3, src: "/images/dri_style/client-sacs-drivale.jpg", alt: "Client Dri Valé — sortie boutique", tall: false },
   { id: 4, src: "/images/dri_style/look-selfie-lacoste.jpg", alt: "Look du jour — Lacoste x DSQUARED2", tall: false },
   { id: 5, src: "/images/dri_style/boutique-sneakers.jpg", alt: "Boutique Dri Valé — mur sneakers", tall: true },
-  { id: 6, src: "/lookbook-grid-6.jpg", alt: "Look 6", tall: false },
+  { id: 6, src: "/images/dri_style/dri_style6.jpeg", alt: "Style Dri Valé", tall: false },
 ];
 
 function GridCell({
