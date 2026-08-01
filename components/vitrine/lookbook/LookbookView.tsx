@@ -3,6 +3,8 @@ import { LookbookEditorial } from "./LookbookEditorial";
 import { LookbookGrid } from "./LookbookGrid";
 import { LookbookBehindScenes } from "./LookbookBehindScenes";
 import { LookbookWhatsapp } from "./LookbookWhatsapp";
+// import { LookbookPhotoUpload } from "./LookbookPhotoUpload";
+
 export function LookbookView() {
   return (
     <>
@@ -12,6 +14,7 @@ export function LookbookView() {
       {/* <LookbookOutfit /> */}
       <LookbookBehindScenes />
       <LookbookWhatsapp />
+      {/* <LookbookPhotoUpload /> */}
     </>
   );
 }
