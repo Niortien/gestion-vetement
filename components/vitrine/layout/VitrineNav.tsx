@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { useVitrineStore } from "@/stores/vitrineStore";
-import { useAuthStore } from "@/stores/authStore";
 
 const NAV_LINKS = [
   { href: "/catalogue", label: "Catalogue" },
@@ -17,7 +16,6 @@ const NAV_LINKS = [
 export function VitrineNav() {
   const pathname    = usePathname();
   const [open, setOpen] = useState(false);
-  const authUser    = useAuthStore((s) => s.user);
   const cart        = useVitrineStore((s) => s.cart);
   const setCartOpen = useVitrineStore((s) => s.setCartOpen);
   const theme       = useVitrineStore((s) => s.theme);
@@ -74,15 +72,6 @@ export function VitrineNav() {
           </nav>
 
           <div className="flex items-center gap-1.5">
-            {authUser && (
-              <Link
-                href="/dashboard"
-                className="hidden items-center gap-1.5 rounded-lg border px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest transition-all hover:border-[var(--v-gold)] hover:text-[var(--v-gold)] md:flex"
-                style={{ borderColor: "var(--v-border)", color: "var(--v-dim)" }}
-              >
-                Admin
-              </Link>
-            )}
 
             <button
               onClick={toggleTheme}
