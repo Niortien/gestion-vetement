@@ -20,7 +20,7 @@ const LOOKS = [
   },
 ];
 
-const WHATSAPP_NUMBER = "2250767602389";
+const WHATSAPP_NUMBER = "2250709294468";
 
 export function LookbookBehindScenes() {
   const { data: res } = usePublicLookbookPhotos();
