@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -13,10 +13,10 @@ export function HomePromoSection() {
 
   return (
     <section
-      className="relative overflow-hidden py-24"
+      className="relative overflow-hidden py-20"
       style={{ background: "linear-gradient(170deg, rgba(255,51,89,0.08) 0%, var(--v-bg) 55%)" }}
     >
-      {/* Glow rouge en haut */}
+      {/* Glow rouge */}
       <div
         className="pointer-events-none absolute -top-16 left-0 right-0 h-40 blur-3xl"
         style={{ background: "linear-gradient(90deg, rgba(255,51,89,0.12) 0%, transparent 60%)" }}
@@ -27,17 +27,10 @@ export function HomePromoSection() {
         {/* Header */}
         <div className="mb-12 flex items-end justify-between gap-4">
           <div>
-            {/* Badge flash */}
             <div className="mb-4 inline-flex items-center gap-2">
-              <span
-                className="h-2 w-2 animate-pulse rounded-full"
-                style={{ backgroundColor: "var(--v-hot)" }}
-              />
-              <span
-                className="text-[10px] font-black uppercase tracking-[0.35em]"
-                style={{ color: "var(--v-hot)" }}
-              >
-                Vente flash &bull; Prix cass&eacute;s
+              <span className="h-2 w-2 animate-pulse rounded-full" style={{ backgroundColor: "var(--v-hot)" }} />
+              <span className="text-[10px] font-black uppercase tracking-[0.35em]" style={{ color: "var(--v-hot)" }}>
+                Vente flash &bull; Prix cassés
               </span>
             </div>
             <h2
@@ -63,19 +56,15 @@ export function HomePromoSection() {
           </Link>
         </div>
 
-        {/* Grille */}
+        {/* Grille mobile : 2 colonnes uniformes */}
         {isLoading ? (
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
-            {Array(3).fill(null).map((_, i) => (
-              <div
-                key={i}
-                className="aspect-[3/4] animate-pulse rounded-2xl"
-                style={{ backgroundColor: "var(--v-s2)" }}
-              />
+          <div className="grid grid-cols-2 gap-4 md:hidden">
+            {Array(4).fill(null).map((_, i) => (
+              <div key={i} className="aspect-square animate-pulse rounded-2xl" style={{ backgroundColor: "var(--v-s2)" }} />
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+          <div className="grid grid-cols-2 gap-4 md:hidden">
             {produits.slice(0, 6).map((produit, i) => (
               <motion.div
                 key={produit.id}
@@ -87,6 +76,45 @@ export function HomePromoSection() {
                 <ProduitCard produit={produit} />
               </motion.div>
             ))}
+          </div>
+        )}
+
+        {/* Grille desktop : grande carte gauche + 2×2 droite */}
+        {isLoading ? (
+          <div className="hidden md:flex md:gap-4">
+            <div className="flex-[0_0_40%] aspect-[3/4] animate-pulse rounded-2xl" style={{ backgroundColor: "var(--v-s2)" }} />
+            <div className="flex-1 grid grid-cols-2 gap-4">
+              {Array(4).fill(null).map((_, i) => (
+                <div key={i} className="aspect-square animate-pulse rounded-2xl" style={{ backgroundColor: "var(--v-s2)" }} />
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="hidden md:flex md:gap-4 md:items-start">
+            {/* Grande carte — premier produit promo */}
+            <motion.div
+              className="flex-[0_0_40%]"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              <ProduitCard produit={produits[0]} large />
+            </motion.div>
+            {/* Grille 2×2 — produits suivants */}
+            <div className="flex-1 grid grid-cols-2 gap-4">
+              {produits.slice(1, 5).map((produit, i) => (
+                <motion.div
+                  key={produit.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: (i + 1) * 0.07, duration: 0.45 }}
+                >
+                  <ProduitCard produit={produit} />
+                </motion.div>
+              ))}
+            </div>
           </div>
         )}
 

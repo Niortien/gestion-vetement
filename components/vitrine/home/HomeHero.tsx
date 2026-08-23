@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -12,12 +12,12 @@ export function HomeHero() {
       className="relative flex min-h-[100svh] flex-col overflow-hidden"
       style={{ backgroundColor: "var(--v-bg)" }}
     >
-      {/* Glow or — ambiance prestige */}
+      {/* Glow or */}
       <div
         className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 h-[500px] w-[700px] rounded-full"
         style={{ background: "radial-gradient(ellipse, rgba(240,180,41,0.12) 0%, transparent 68%)" }}
       />
-      {/* Grain texture overlay */}
+      {/* Grain texture */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
@@ -27,8 +27,12 @@ export function HomeHero() {
         }}
       />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-5 pb-12 pt-28">
-        <div className="max-w-3xl">
+      {/* Main content — split gauche/droite sur desktop */}
+      <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 flex-col md:flex-row md:items-center gap-8 px-5 pb-12 pt-28">
+
+        {/* ── COLONNE GAUCHE : texte ── */}
+        <div className="flex flex-col justify-center md:flex-[0_0_55%]">
+
           {/* Eyebrow badge */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -39,10 +43,7 @@ export function HomeHero() {
               className="inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.25em]"
               style={{ borderColor: "var(--v-border-gold)", color: "var(--v-gold)" }}
             >
-              <span
-                className="h-1.5 w-1.5 rounded-full animate-pulse"
-                style={{ backgroundColor: "var(--v-hot)" }}
-              />
+              <span className="h-1.5 w-1.5 rounded-full animate-pulse" style={{ backgroundColor: "var(--v-hot)" }} />
               Nouveaux drops disponibles
             </span>
           </motion.div>
@@ -54,68 +55,57 @@ export function HomeHero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.65, delay: 0.1 }}
           >
-            <span
-              className="block"
-              style={{
-                fontSize: "clamp(64px, 12vw, 140px)",
-                color: "var(--v-text)",
-              }}
-            >
+            <span className="block" style={{ fontSize: "clamp(56px, 10vw, 130px)", color: "var(--v-text)" }}>
               SOIS LE
             </span>
             <span
               className="block"
               style={{
-                fontSize: "clamp(64px, 12vw, 140px)",
+                fontSize: "clamp(56px, 10vw, 130px)",
                 color: "var(--v-gold)",
                 textShadow: "0 0 60px rgba(240,180,41,0.3)",
               }}
             >
               PLUS STYLÉ
             </span>
-            <span
-              className="block"
-              style={{
-                fontSize: "clamp(64px, 12vw, 140px)",
-                color: "var(--v-text)",
-              }}
-            >
+            <span className="block" style={{ fontSize: "clamp(56px, 10vw, 130px)", color: "var(--v-text)" }}>
               DE YOP.
             </span>
           </motion.h1>
 
           {/* Slogan */}
           <motion.div
-            className="mt-8 flex items-center gap-3"
+            className="mt-6 flex items-center gap-3"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <span style={{ color: "var(--v-gold)", fontSize: 18 }}>★</span>
+            <span style={{ color: "var(--v-gold)", fontSize: 16 }}>★</span>
             <p
-              className="font-[var(--font-display)] text-base font-black uppercase tracking-[0.12em] md:text-lg"
+              className="font-[var(--font-display)] text-sm font-black uppercase tracking-[0.12em] md:text-base"
               style={{ color: "var(--v-gold)" }}
             >
               Sortez toujours bien habillé
             </p>
-            <span style={{ color: "var(--v-gold)", fontSize: 18 }}>★</span>
+            <span style={{ color: "var(--v-gold)", fontSize: 16 }}>★</span>
           </motion.div>
 
           {/* Tagline */}
           <motion.p
-            className="mt-4 max-w-md text-sm leading-relaxed"
+            className="mt-3 max-w-md text-sm leading-relaxed"
             style={{ color: "var(--v-muted)" }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
             Vêtements, sneakers et accessoires importés. Directo depuis
-            Yopougon — <span style={{ color: "var(--v-text)", fontWeight: 600 }}>100% authentique.</span>
+            Yopougon —{" "}
+            <span style={{ color: "var(--v-text)", fontWeight: 600 }}>100% authentique.</span>
           </motion.p>
 
           {/* CTAs */}
           <motion.div
-            className="mt-10 flex flex-wrap items-center gap-4"
+            className="mt-8 flex flex-wrap items-center gap-4"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.5 }}
@@ -144,9 +134,9 @@ export function HomeHero() {
             </a>
           </motion.div>
 
-          {/* Stats sociales */}
+          {/* Stats */}
           <motion.div
-            className="mt-12 flex items-center gap-6"
+            className="mt-10 flex items-center gap-8"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.75 }}
@@ -167,6 +157,46 @@ export function HomeHero() {
             ))}
           </motion.div>
         </div>
+
+        {/* ── COLONNE DROITE : image éditoriale (desktop uniquement) ── */}
+        <motion.div
+          className="hidden md:flex md:flex-1 md:items-center md:justify-end"
+          initial={{ opacity: 0, x: 30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.9, delay: 0.35 }}
+          aria-hidden
+        >
+          <div
+            className="relative w-full overflow-hidden rounded-2xl"
+            style={{ maxHeight: "78vh", aspectRatio: "3/4" }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/dri_style/dir_hero.jpeg"
+              alt="Dri Valé — style Yopougon"
+              className="h-full w-full object-cover object-center"
+            />
+            {/* Fondu gauche pour le blend avec le fond */}
+            <div
+              className="absolute inset-0"
+              style={{ background: "linear-gradient(to right, var(--v-bg) 0%, transparent 22%)" }}
+            />
+            {/* Fondu bas */}
+            <div
+              className="absolute inset-0"
+              style={{ background: "linear-gradient(to top, var(--v-bg) 0%, transparent 28%)" }}
+            />
+            {/* Étiquette décorative */}
+            <div
+              className="absolute bottom-6 left-6 rounded-full border px-4 py-1.5"
+              style={{ borderColor: "var(--v-border-gold)", backdropFilter: "blur(8px)", backgroundColor: "rgba(0,0,0,0.4)" }}
+            >
+              <p className="text-[10px] font-black uppercase tracking-[0.22em]" style={{ color: "var(--v-gold)" }}>
+                Yopougon · Abidjan
+              </p>
+            </div>
+          </div>
+        </motion.div>
       </div>
 
       {/* Bande dorée en bas */}
@@ -177,7 +207,7 @@ export function HomeHero() {
 
       {/* Scroll indicator */}
       <motion.div
-        className="absolute bottom-8 right-8 flex flex-col items-center gap-2"
+        className="absolute bottom-8 right-8 hidden md:flex flex-col items-center gap-2"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2 }}

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { getWhatsappUrl } from "@/lib/whatsapp";
@@ -34,42 +34,41 @@ export function VitrineFooter() {
       className="border-t"
       style={{ borderColor: "var(--v-border)", backgroundColor: "var(--v-s1)" }}
     >
-      {/* Top statement */}
-      <div
-        className="border-b py-10 text-center"
-        style={{ borderColor: "var(--v-border)" }}
-      >
+      {/* Bandeau signature haut */}
+      <div className="border-b py-10 text-center" style={{ borderColor: "var(--v-border)" }}>
         <p
           className="font-[var(--font-display)] font-black uppercase leading-none tracking-tight"
           style={{ fontSize: "clamp(28px, 6vw, 64px)", color: "var(--v-text)" }}
         >
           Yop City.{" "}
-          <span style={{ color: "var(--v-gold)" }}>On est l&agrave;.</span>
+          <span style={{ color: "var(--v-gold)" }}>On est là.</span>
         </p>
         <p className="mt-3 flex items-center justify-center gap-2 text-sm font-bold" style={{ color: "var(--v-gold)" }}>
           <span>★</span>
-          <span>Sortez toujours bien habill&eacute;</span>
+          <span>Sortez toujours bien habillé</span>
           <span>★</span>
         </p>
         <p className="mt-1 text-xs" style={{ color: "var(--v-muted)" }}>
-          Dri Val&eacute; &mdash; La boutique des jeunes class&eacute;s de Yopougon.
+          Dri Valé &mdash; La boutique des jeunes classés de Yopougon.
         </p>
       </div>
 
       <div className="mx-auto max-w-7xl px-5 py-14">
+        {/* Grid principal */}
         <div className="grid grid-cols-2 gap-10 md:grid-cols-4">
+
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <p
               className="font-[var(--font-display)] text-xl font-black tracking-[0.18em]"
               style={{ color: "var(--v-text)" }}
             >
-              DRI VAL&Eacute;
+              DRI VALÉ
             </p>
             <p className="mt-3 text-sm leading-relaxed" style={{ color: "var(--v-muted)" }}>
-              V&ecirc;tements et accessoires import&eacute;s.
+              Vêtements et accessoires importés.
               <br />
-              Yopougon &middot; Abidjan &mdash; C&ocirc;te d&rsquo;Ivoire.
+              Yopougon &middot; Abidjan &mdash; Côte d&rsquo;Ivoire.
             </p>
             <a
               href={waUrl}
@@ -82,17 +81,14 @@ export function VitrineFooter() {
               WhatsApp direct
             </a>
             <p className="mt-3 text-[11px]" style={{ color: "var(--v-dim)" }}>
-              R&eacute;ponse garantie sous 30 min &mdash; Lun-Dim, 9h-21h
+              Réponse garantie sous 30 min &mdash; Lun-Dim, 9h-21h
             </p>
           </div>
 
           {/* Liens */}
           {FOOTER_LINKS.map((group) => (
             <div key={group.group}>
-              <p
-                className="mb-5 text-[10px] font-black uppercase tracking-[0.28em]"
-                style={{ color: "var(--v-gold)" }}
-              >
+              <p className="mb-5 text-[10px] font-black uppercase tracking-[0.28em]" style={{ color: "var(--v-gold)" }}>
                 {group.group}
               </p>
               <ul className="space-y-3">
@@ -111,12 +107,9 @@ export function VitrineFooter() {
             </div>
           ))}
 
-          {/* Contact */}
+          {/* Nous trouver */}
           <div>
-            <p
-              className="mb-5 text-[10px] font-black uppercase tracking-[0.28em]"
-              style={{ color: "var(--v-gold)" }}
-            >
+            <p className="mb-5 text-[10px] font-black uppercase tracking-[0.28em]" style={{ color: "var(--v-gold)" }}>
               Nous trouver
             </p>
             <ul className="space-y-3 text-sm" style={{ color: "var(--v-muted)" }}>
@@ -140,7 +133,7 @@ export function VitrineFooter() {
                   07 67 60 23 89
                 </a>
               </li>
-              <li className="pt-2" style={{ color: "var(--v-dim)", fontSize: "11px" }}>
+              <li className="pt-1" style={{ color: "var(--v-dim)", fontSize: "11px" }}>
                 24h/24 &bull; 7j/7
               </li>
               <li>
@@ -154,35 +147,34 @@ export function VitrineFooter() {
                 </a>
               </li>
             </ul>
-
-            {/* Paiements */}
-            <div className="mt-6">
-              <p
-                className="mb-2 text-[10px] font-black uppercase tracking-[0.2em]"
-                style={{ color: "var(--v-dim)" }}
-              >
-                On accepte
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {["Wave", "Orange Money", "Cash"].map((m) => (
-                  <span
-                    key={m}
-                    className="rounded-md px-2.5 py-1 text-[10px] font-bold"
-                    style={{ backgroundColor: "var(--v-s2)", color: "var(--v-muted)", border: "1px solid var(--v-border)" }}
-                  >
-                    {m}
-                  </span>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
 
+        {/* Bande paiements — pleine largeur sous le grid */}
         <div
-          className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t pt-8 text-xs"
+          className="mt-10 flex flex-wrap items-center gap-3 border-t pt-7"
+          style={{ borderColor: "var(--v-border)" }}
+        >
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] shrink-0" style={{ color: "var(--v-dim)" }}>
+            On accepte
+          </p>
+          {["Wave", "Orange Money", "MTN Money", "Cash"].map((m) => (
+            <span
+              key={m}
+              className="rounded-md px-3 py-1 text-[10px] font-bold"
+              style={{ backgroundColor: "var(--v-s2)", color: "var(--v-muted)", border: "1px solid var(--v-border)" }}
+            >
+              {m}
+            </span>
+          ))}
+        </div>
+
+        {/* Copyright */}
+        <div
+          className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t pt-8 text-xs"
           style={{ borderColor: "var(--v-border)", color: "var(--v-dim)" }}
         >
-          <span>&copy; 2026 Dri Val&eacute; Boutique. Tous droits r&eacute;serv&eacute;s.</span>
+          <span>&copy; 2026 Dri Valé Boutique. Tous droits réservés.</span>
           <span className="font-bold tracking-wider" style={{ color: "var(--v-gold)" }}>
             YOP CITY &hearts;
           </span>

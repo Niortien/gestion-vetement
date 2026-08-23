@@ -1,12 +1,12 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useVitrineCategories, useVitrineProduits } from "@/features/vitrine/query/vitrine-queries";
 import type { Categorie, Produit } from "@/types";
 
-/* ── Carte produit ultra-simple pour mobile ── */
-function MiniCard({ produit }: { produit: Produit }) {
+/* ── Carte produit mini ── */
+function MiniCard({ produit, fullWidth }: { produit: Produit; fullWidth?: boolean }) {
   const prix = parseFloat(produit.prixVente || "0");
   const prixPromo = produit.enPromo && produit.prixPromo ? parseFloat(produit.prixPromo) : null;
   const imageUrl = produit.imageUrl ?? produit.images?.[0]?.url;
@@ -14,36 +14,24 @@ function MiniCard({ produit }: { produit: Produit }) {
   return (
     <Link
       href={`/boutique/${produit.id}`}
-      className="relative flex-shrink-0 overflow-hidden rounded-xl"
-      style={{ width: 132, backgroundColor: "var(--v-s2)" }}
+      className={`relative overflow-hidden rounded-xl ${fullWidth ? "block w-full" : "flex-shrink-0"}`}
+      style={{ width: fullWidth ? "100%" : 132, backgroundColor: "var(--v-s2)" }}
     >
-      {/* Image */}
       <div className="relative" style={{ aspectRatio: "3/4" }}>
         {imageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={imageUrl}
-            alt={produit.nom}
-            className="h-full w-full object-cover"
-          />
+          <img src={imageUrl} alt={produit.nom} className="h-full w-full object-cover" />
         ) : (
-          <div
-            className="flex h-full w-full items-center justify-center text-4xl opacity-[0.08]"
-            style={{ backgroundColor: "var(--v-s3)" }}
-          >
+          <div className="flex h-full w-full items-center justify-center text-4xl opacity-[0.08]" style={{ backgroundColor: "var(--v-s3)" }}>
             &#128248;
           </div>
         )}
 
-        {/* Overlay bas */}
         <div
           className="absolute inset-0"
-          style={{
-            background: "linear-gradient(to top, rgba(6,6,7,0.95) 0%, rgba(6,6,7,0.3) 45%, transparent 70%)",
-          }}
+          style={{ background: "linear-gradient(to top, rgba(6,6,7,0.95) 0%, rgba(6,6,7,0.3) 45%, transparent 70%)" }}
         />
 
-        {/* Badge promo */}
         {prixPromo !== null && (
           <div
             className="absolute left-2 top-2 rounded-md px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-white"
@@ -53,22 +41,13 @@ function MiniCard({ produit }: { produit: Produit }) {
           </div>
         )}
 
-        {/* Info bas */}
         <div className="absolute bottom-0 left-0 right-0 p-2.5">
-          <p
-            className="line-clamp-2 text-[11px] font-bold uppercase leading-tight"
-            style={{ color: "var(--v-text)" }}
-          >
+          <p className="line-clamp-2 text-[11px] font-bold uppercase leading-tight" style={{ color: "var(--v-text)" }}>
             {produit.nom}
           </p>
-          <p
-            className="mt-1 font-[var(--font-mono)] text-[11px] font-black"
-            style={{ color: "var(--v-gold)" }}
-          >
+          <p className="mt-1 font-[var(--font-mono)] text-[11px] font-black" style={{ color: "var(--v-gold)" }}>
             {(prixPromo ?? prix).toLocaleString("fr-FR")}
-            <span className="ml-0.5 text-[9px] font-normal" style={{ color: "var(--v-muted)" }}>
-              FCFA
-            </span>
+            <span className="ml-0.5 text-[9px] font-normal" style={{ color: "var(--v-muted)" }}>FCFA</span>
           </p>
         </div>
       </div>
@@ -76,17 +55,16 @@ function MiniCard({ produit }: { produit: Produit }) {
   );
 }
 
-/* Skeleton d'une carte */
-function MiniCardSkeleton() {
+function MiniCardSkeleton({ fullWidth }: { fullWidth?: boolean }) {
   return (
     <div
-      className="flex-shrink-0 animate-pulse rounded-xl"
-      style={{ width: 132, aspectRatio: "3/4", backgroundColor: "var(--v-s2)" }}
+      className={`animate-pulse rounded-xl ${fullWidth ? "w-full" : "flex-shrink-0"}`}
+      style={{ width: fullWidth ? "100%" : 132, aspectRatio: "3/4", backgroundColor: "var(--v-s2)" }}
     />
   );
 }
 
-/* ── Section pour UNE catégorie ── */
+/* ── Section d'une catégorie ── */
 function OneCategorySection({ categorie }: { categorie: Categorie }) {
   const { data, isLoading } = useVitrineProduits({ categorieId: categorie.id, limit: 10 });
   const produits = data?.pages[0]?.data ?? [];
@@ -99,15 +77,12 @@ function OneCategorySection({ categorie }: { categorie: Categorie }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.45 }}
-      className="py-8"
+      className="py-6"
     >
-      {/* Header catégorie */}
-      <div className="mb-4 flex items-center justify-between px-4">
+      {/* Header */}
+      <div className="mb-4 flex items-center justify-between px-4 md:px-0">
         <div>
-          <p
-            className="text-[9px] font-black uppercase tracking-[0.3em]"
-            style={{ color: "var(--v-gold)" }}
-          >
+          <p className="text-[9px] font-black uppercase tracking-[0.3em]" style={{ color: "var(--v-gold)" }}>
             Collection
           </p>
           <h2
@@ -126,14 +101,22 @@ function OneCategorySection({ categorie }: { categorie: Categorie }) {
         </Link>
       </div>
 
-      {/* Scroll horizontal */}
+      {/* Mobile : scroll horizontal */}
       <div
-        className="flex gap-3 overflow-x-auto pb-2"
+        className="flex gap-3 overflow-x-auto pb-2 md:hidden"
         style={{ paddingLeft: 16, paddingRight: 16, scrollbarWidth: "none" }}
       >
         {isLoading
           ? Array(5).fill(null).map((_, i) => <MiniCardSkeleton key={i} />)
           : produits.map((p) => <MiniCard key={p.id} produit={p} />)
+        }
+      </div>
+
+      {/* Desktop : grille 5 colonnes */}
+      <div className="hidden md:grid md:grid-cols-5 md:gap-4">
+        {isLoading
+          ? Array(5).fill(null).map((_, i) => <MiniCardSkeleton key={i} fullWidth />)
+          : produits.slice(0, 5).map((p) => <MiniCard key={p.id} produit={p} fullWidth />)
         }
       </div>
     </motion.section>
@@ -147,12 +130,12 @@ export function HomeCategorySections() {
 
   if (isLoading) {
     return (
-      <div className="py-8 space-y-8">
+      <div className="mx-auto max-w-7xl px-5 md:px-16 py-8 space-y-8">
         {Array(3).fill(null).map((_, i) => (
-          <div key={i} className="px-4 space-y-3">
+          <div key={i} className="space-y-3">
             <div className="h-6 w-32 animate-pulse rounded" style={{ backgroundColor: "var(--v-s2)" }} />
-            <div className="flex gap-3">
-              {Array(4).fill(null).map((__, j) => <MiniCardSkeleton key={j} />)}
+            <div className="flex gap-3 md:grid md:grid-cols-5">
+              {Array(5).fill(null).map((__, j) => <MiniCardSkeleton key={j} />)}
             </div>
           </div>
         ))}
@@ -161,17 +144,11 @@ export function HomeCategorySections() {
   }
 
   return (
-    <div
-      className="border-t"
-      style={{ borderColor: "var(--v-border)" }}
-    >
-      {/* Séparateur titre section */}
-      <div className="px-4 pt-10 pb-2">
-        <p
-          className="text-[9px] font-black uppercase tracking-[0.35em]"
-          style={{ color: "var(--v-hot)" }}
-        >
-          &#x25cf; Explore par cat&eacute;gorie
+    <div className="border-t" style={{ borderColor: "var(--v-border)" }}>
+      {/* Titre section */}
+      <div className="mx-auto max-w-7xl px-5 md:px-16 pt-10 pb-2">
+        <p className="text-[9px] font-black uppercase tracking-[0.35em]" style={{ color: "var(--v-hot)" }}>
+          &#x25cf; Explore par catégorie
         </p>
         <h2
           className="mt-1 font-[var(--font-display)] text-2xl font-black uppercase"
@@ -183,9 +160,11 @@ export function HomeCategorySections() {
         </h2>
       </div>
 
-      {categories.map((cat) => (
-        <OneCategorySection key={cat.id} categorie={cat} />
-      ))}
+      <div className="mx-auto max-w-7xl px-5 md:px-16 pb-8">
+        {categories.map((cat) => (
+          <OneCategorySection key={cat.id} categorie={cat} />
+        ))}
+      </div>
     </div>
   );
 }
