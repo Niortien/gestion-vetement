@@ -16,7 +16,7 @@ interface CatalogueGridProps {
 export function CatalogueGrid({ categorieId, taille, search, inStockOnly }: CatalogueGridProps) {
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
-  const { data, isLoading, isError, isFetchingNextPage, hasNextPage, fetchNextPage } =
+  const { data, isLoading, isError, isFetching, isFetchingNextPage, hasNextPage, fetchNextPage } =
     useVitrineProduits({
       limit: 12,
       ...(categorieId  ? { categorieId }  : {}),
@@ -44,23 +44,23 @@ export function CatalogueGrid({ categorieId, taille, search, inStockOnly }: Cata
     return () => obs.disconnect();
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  if (isLoading) {
-    return (
-      <div className="mx-auto max-w-7xl px-5 py-12">
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-          {Array(8).fill(null).map((_, i) => (
-            <div key={i} className="animate-pulse">
-              <div className="aspect-[3/4] rounded-xl" style={{ backgroundColor: "var(--v-s2)" }} />
-              <div className="mt-3 space-y-2">
-                <div className="h-3 w-3/4 rounded" style={{ backgroundColor: "var(--v-s2)" }} />
-                <div className="h-3 w-1/2 rounded" style={{ backgroundColor: "var(--v-s2)" }} />
-              </div>
+  const skeleton = (
+    <div className="mx-auto max-w-7xl px-5 py-12">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+        {Array(8).fill(null).map((_, i) => (
+          <div key={i} className="animate-pulse">
+            <div className="aspect-[3/4] rounded-xl" style={{ backgroundColor: "var(--v-s2)" }} />
+            <div className="mt-3 space-y-2">
+              <div className="h-3 w-3/4 rounded" style={{ backgroundColor: "var(--v-s2)" }} />
+              <div className="h-3 w-1/2 rounded" style={{ backgroundColor: "var(--v-s2)" }} />
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
-    );
-  }
+    </div>
+  );
+
+  if (isLoading) return skeleton;
 
   if (isError) {
     return (
@@ -75,6 +75,9 @@ export function CatalogueGrid({ categorieId, taille, search, inStockOnly }: Cata
       </div>
     );
   }
+
+  // During background refetch with no cached data yet, show skeleton instead of empty state
+  if (filtered.length === 0 && isFetching) return skeleton;
 
   if (filtered.length === 0) {
     return (

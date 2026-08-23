@@ -26,7 +26,8 @@ export function useVitrineProduits(params: VitrineProduitParams = {}) {
       const totalPages = lastPage.meta.pageCount ?? 1;
       return current < totalPages ? current + 1 : undefined;
     },
-    staleTime: 60_000,
+    staleTime: 5 * 60_000,
+    refetchOnWindowFocus: false,
   });
 }
 
