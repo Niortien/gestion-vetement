@@ -11,7 +11,7 @@ function getBaseUrl(): string {
 const publicApi = axios.create({
   baseURL: `${getBaseUrl()}/api/v1`,
   headers: { "Content-Type": "application/json" },
-  timeout: 10_000,
+  timeout: 25_000,
 });
 
 export interface VitrineProduitParams {
