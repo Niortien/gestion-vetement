@@ -1,12 +1,18 @@
 "use client";
 
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import {
   getVitrineCategories,
   getVitrineProduit,
   getVitrineProduits,
   type VitrineProduitParams,
 } from "@/lib/vitrine-api";
+
+function shouldRetry(failureCount: number, error: unknown): boolean {
+  if (axios.isAxiosError(error) && error.response?.status === 404) return false;
+  return failureCount < 3;
+}
 
 export const vitrineKeys = {
   all: ["vitrine"] as const,
@@ -28,7 +34,7 @@ export function useVitrineProduits(params: VitrineProduitParams = {}) {
     },
     staleTime: 5 * 60_000,
     refetchOnWindowFocus: false,
-    retry: 3,
+    retry: shouldRetry,
     retryDelay: (attempt) => Math.min(2_000 * 2 ** attempt, 15_000),
   });
 }
@@ -40,7 +46,7 @@ export function useVitrineProduit(id: string) {
     enabled: !!id,
     staleTime: 5 * 60_000,
     refetchOnWindowFocus: false,
-    retry: 3,
+    retry: shouldRetry,
     retryDelay: (attempt) => Math.min(2_000 * 2 ** attempt, 15_000),
   });
 }
