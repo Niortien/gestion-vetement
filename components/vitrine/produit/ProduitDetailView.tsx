@@ -31,7 +31,7 @@ export function ProduitDetailView({ id }: ProduitDetailViewProps) {
     );
   }
 
-  if (isError || (!isLoading && !data?.data)) {
+  if (isError || !data?.data) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-4 px-5">
         <p className="text-5xl">¯\_(ツ)_/¯</p>
