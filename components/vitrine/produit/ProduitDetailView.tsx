@@ -16,7 +16,7 @@ interface ProduitDetailViewProps {
 }
 
 export function ProduitDetailView({ id }: ProduitDetailViewProps) {
-  const { data, isLoading, isError } = useVitrineProduit(id);
+  const { data, isLoading, isError, refetch, isFetching } = useVitrineProduit(id);
   const [selectedTaille, setSelectedTaille] = useState<Taille | null>(null);
   const [selectedCouleur, setSelectedCouleur] = useState<string | null>(null);
 
@@ -31,11 +31,19 @@ export function ProduitDetailView({ id }: ProduitDetailViewProps) {
     );
   }
 
-  if (isError || !data?.data) {
+  if (isError || (!isLoading && !data?.data)) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-4 px-5">
         <p className="text-5xl">¯\_(ツ)_/¯</p>
         <p className="text-sm" style={{ color: "var(--v-muted)" }}>Produit introuvable</p>
+        <button
+          onClick={() => refetch()}
+          disabled={isFetching}
+          className="mt-2 rounded-full px-6 py-2 text-xs font-bold uppercase tracking-widest transition-all hover:opacity-80 disabled:opacity-40"
+          style={{ backgroundColor: "var(--v-lime)", color: "#000" }}
+        >
+          {isFetching ? "Chargement…" : "Réessayer"}
+        </button>
       </div>
     );
   }

@@ -38,7 +38,10 @@ export function useVitrineProduit(id: string) {
     queryKey: vitrineKeys.produit(id),
     queryFn: () => getVitrineProduit(id),
     enabled: !!id,
-    staleTime: 60_000,
+    staleTime: 5 * 60_000,
+    refetchOnWindowFocus: false,
+    retry: 3,
+    retryDelay: (attempt) => Math.min(2_000 * 2 ** attempt, 15_000),
   });
 }
 
