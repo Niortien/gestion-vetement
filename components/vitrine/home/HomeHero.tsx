@@ -9,7 +9,7 @@ const waUrl = getWhatsappUrl("Allo Dri Valé, je veux voir vos nouveautés 🔥"
 export function HomeHero() {
   return (
     <section
-      className="relative flex min-h-[100svh] flex-col overflow-hidden"
+      className="relative flex flex-col overflow-hidden md:min-h-[100svh]"
       style={{ backgroundColor: "var(--v-bg)" }}
     >
       {/* Glow or */}
@@ -27,8 +27,38 @@ export function HomeHero() {
         }}
       />
 
+      {/* ── Image éditoriale mobile — bandeau pleine largeur en tête de section ── */}
+      <motion.div
+        className="relative h-[52svh] w-full md:hidden"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6 }}
+        aria-hidden
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/images/dri_style/dir_hero.jpeg"
+          alt="Dri Valé — style Yopougon"
+          className="h-full w-full object-cover object-top"
+        />
+        {/* Fondu bas pour raccorder au fond de la section */}
+        <div
+          className="absolute inset-x-0 bottom-0 h-32"
+          style={{ background: "linear-gradient(to top, var(--v-bg) 0%, transparent 100%)" }}
+        />
+        {/* Étiquette décorative — même contenu que la version desktop */}
+        <div
+          className="absolute bottom-4 left-5 rounded-full border px-3 py-1"
+          style={{ borderColor: "var(--v-border-gold)", backdropFilter: "blur(8px)", backgroundColor: "rgba(0,0,0,0.4)" }}
+        >
+          <p className="text-[10px] font-black uppercase tracking-[0.22em]" style={{ color: "var(--v-gold)" }}>
+            Yopougon · Abidjan
+          </p>
+        </div>
+      </motion.div>
+
       {/* Main content — split gauche/droite sur desktop */}
-      <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 flex-col md:flex-row md:items-center gap-8 px-5 pb-12 pt-28">
+      <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 flex-col md:flex-row md:items-center gap-8 px-5 pb-12 pt-6 md:pt-28">
 
         {/* ── COLONNE GAUCHE : texte ── */}
         <div className="flex flex-col justify-center md:flex-[0_0_55%]">
