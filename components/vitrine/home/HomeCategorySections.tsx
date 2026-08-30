@@ -66,10 +66,11 @@ function MiniCardSkeleton({ fullWidth }: { fullWidth?: boolean }) {
 
 /* ── Section d'une catégorie ── */
 function OneCategorySection({ categorie }: { categorie: Categorie }) {
-  const { data, isLoading } = useVitrineProduits({ categorieId: categorie.id, limit: 10 });
+  const { data, isLoading, isError } = useVitrineProduits({ categorieId: categorie.id, limit: 10 });
   const produits = data?.pages[0]?.data ?? [];
 
-  if (!isLoading && produits.length === 0) return null;
+  // Ne masquer la section que si le vide est confirmé (pas d'erreur réseau en cours/échouée)
+  if (!isLoading && !isError && produits.length === 0) return null;
 
   return (
     <motion.section
@@ -101,24 +102,32 @@ function OneCategorySection({ categorie }: { categorie: Categorie }) {
         </Link>
       </div>
 
-      {/* Mobile : scroll horizontal */}
-      <div
-        className="flex gap-3 overflow-x-auto pb-2 md:hidden"
-        style={{ paddingLeft: 16, paddingRight: 16, scrollbarWidth: "none" }}
-      >
-        {isLoading
-          ? Array(5).fill(null).map((_, i) => <MiniCardSkeleton key={i} />)
-          : produits.map((p) => <MiniCard key={p.id} produit={p} />)
-        }
-      </div>
+      {isError ? (
+        <p className="px-4 text-xs md:px-0" style={{ color: "var(--v-muted)" }}>
+          Connexion au serveur impossible pour le moment.
+        </p>
+      ) : (
+        <>
+          {/* Mobile : scroll horizontal */}
+          <div
+            className="flex gap-3 overflow-x-auto pb-2 md:hidden"
+            style={{ paddingLeft: 16, paddingRight: 16, scrollbarWidth: "none" }}
+          >
+            {isLoading
+              ? Array(5).fill(null).map((_, i) => <MiniCardSkeleton key={i} />)
+              : produits.map((p) => <MiniCard key={p.id} produit={p} />)
+            }
+          </div>
 
-      {/* Desktop : grille 5 colonnes */}
-      <div className="hidden md:grid md:grid-cols-5 md:gap-4">
-        {isLoading
-          ? Array(5).fill(null).map((_, i) => <MiniCardSkeleton key={i} fullWidth />)
-          : produits.slice(0, 5).map((p) => <MiniCard key={p.id} produit={p} fullWidth />)
-        }
-      </div>
+          {/* Desktop : grille 5 colonnes */}
+          <div className="hidden md:grid md:grid-cols-5 md:gap-4">
+            {isLoading
+              ? Array(5).fill(null).map((_, i) => <MiniCardSkeleton key={i} fullWidth />)
+              : produits.slice(0, 5).map((p) => <MiniCard key={p.id} produit={p} fullWidth />)
+            }
+          </div>
+        </>
+      )}
     </motion.section>
   );
 }

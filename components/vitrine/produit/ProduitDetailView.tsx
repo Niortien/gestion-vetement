@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import axios from "axios";
 import { useVitrineProduit } from "@/features/vitrine/query/vitrine-queries";
 import { Taille } from "@/types";
 import { ProduitGallery } from "./ProduitGallery";
@@ -16,7 +17,7 @@ interface ProduitDetailViewProps {
 }
 
 export function ProduitDetailView({ id }: ProduitDetailViewProps) {
-  const { data, isLoading, isError, refetch, isFetching } = useVitrineProduit(id);
+  const { data, isLoading, isError, error, refetch, isFetching } = useVitrineProduit(id);
   const [selectedTaille, setSelectedTaille] = useState<Taille | null>(null);
   const [selectedCouleur, setSelectedCouleur] = useState<string | null>(null);
 
@@ -32,10 +33,13 @@ export function ProduitDetailView({ id }: ProduitDetailViewProps) {
   }
 
   if (isError || !data?.data) {
+    const isNotFound = axios.isAxiosError(error) && error.response?.status === 404;
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-4 px-5">
         <p className="text-5xl">¯\_(ツ)_/¯</p>
-        <p className="text-sm" style={{ color: "var(--v-muted)" }}>Produit introuvable</p>
+        <p className="text-sm" style={{ color: "var(--v-muted)" }}>
+          {isNotFound ? "Produit introuvable" : "Connexion au serveur impossible"}
+        </p>
         <button
           onClick={() => refetch()}
           disabled={isFetching}

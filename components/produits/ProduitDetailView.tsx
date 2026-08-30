@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 import { Button, Chip, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Spinner, useDisclosure } from "@heroui/react";
 import { PageWrapper } from "@/components/common/PageWrapper";
 import { CurrencyDisplay } from "@/components/common/CurrencyDisplay";
@@ -267,9 +268,10 @@ export function ProduitDetailView({ id }: ProduitDetailViewProps) {
   }
 
   if (!produit || error) {
+    const isNotFound = axios.isAxiosError(error) && error.response?.status === 404;
     return (
       <PageWrapper>
-        <EmptyRiver message="Produit introuvable." />
+        <EmptyRiver message={isNotFound ? "Produit introuvable." : "Connexion au serveur impossible."} />
         <Button variant="light" className="text-text-muted" onPress={() => router.back()}>
           ← Retour
         </Button>

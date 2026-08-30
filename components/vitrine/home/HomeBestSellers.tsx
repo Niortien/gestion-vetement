@@ -5,7 +5,7 @@ import { useVitrineProduits } from "@/features/vitrine/query/vitrine-queries";
 import { ProduitCard } from "@/components/vitrine/common/ProduitCard";
 
 export function HomeBestSellers() {
-  const { data, isLoading } = useVitrineProduits({ limit: 4 });
+  const { data, isLoading, isError } = useVitrineProduits({ limit: 4 });
   const produits = data?.pages[0]?.data ?? [];
 
   return (
@@ -40,6 +40,10 @@ export function HomeBestSellers() {
               />
             ))}
           </div>
+        ) : isError ? (
+          <p className="py-12 text-center text-sm" style={{ color: "var(--v-muted)" }}>
+            Connexion au serveur impossible pour le moment.
+          </p>
         ) : produits.length === 0 ? (
           <p className="py-12 text-center text-sm" style={{ color: "var(--v-muted)" }}>
             Produits bientôt disponibles

@@ -9,10 +9,15 @@ import {
   type VitrineProduitParams,
 } from "@/lib/vitrine-api";
 
+// Ne retenter qu'en l'absence de réponse HTTP (timeout / coupure réseau / handshake TLS
+// échoué — fréquent sur cet hébergement mutualisé). Toute réponse HTTP reçue (4xx/5xx,
+// y compris 404) ne se résoudra pas par un simple retry immédiat.
 function shouldRetry(failureCount: number, error: unknown): boolean {
-  if (axios.isAxiosError(error) && error.response?.status === 404) return false;
-  return failureCount < 3;
+  if (axios.isAxiosError(error) && error.response) return false;
+  return failureCount < 2;
 }
+
+const retryDelay = (attempt: number) => Math.min(1_000 * 2 ** attempt, 5_000);
 
 export const vitrineKeys = {
   all: ["vitrine"] as const,
@@ -35,7 +40,7 @@ export function useVitrineProduits(params: VitrineProduitParams = {}) {
     staleTime: 5 * 60_000,
     refetchOnWindowFocus: false,
     retry: shouldRetry,
-    retryDelay: (attempt) => Math.min(2_000 * 2 ** attempt, 15_000),
+    retryDelay,
   });
 }
 
@@ -47,7 +52,7 @@ export function useVitrineProduit(id: string) {
     staleTime: 5 * 60_000,
     refetchOnWindowFocus: false,
     retry: shouldRetry,
-    retryDelay: (attempt) => Math.min(2_000 * 2 ** attempt, 15_000),
+    retryDelay,
   });
 }
 
@@ -56,5 +61,7 @@ export function useVitrineCategories() {
     queryKey: vitrineKeys.categories(),
     queryFn: getVitrineCategories,
     staleTime: 300_000,
+    retry: shouldRetry,
+    retryDelay,
   });
 }
