@@ -12,18 +12,14 @@ export function LookbookHero() {
   return (
     <section
       ref={ref}
-      className="relative flex min-h-screen items-end overflow-hidden"
+      className="relative flex min-h-[100svh] items-end overflow-hidden"
       style={{ backgroundColor: "var(--v-bg)" }}
     >
       {/* Fond parallax */}
       <motion.div style={{ y }} className="absolute inset-0">
         <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: "url('/images/dri_style/dir_hero.jpeg')",
-            backgroundSize: "cover",
-            backgroundPosition: "center 20%",
-          }}
+          className="absolute inset-0 bg-cover bg-top md:bg-[position:center_20%]"
+          style={{ backgroundImage: "url('/images/dri_style/dir_hero.jpeg')" }}
         />
         <div
           className="absolute inset-0"

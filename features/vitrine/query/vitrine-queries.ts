@@ -14,10 +14,10 @@ import {
 // y compris 404) ne se résoudra pas par un simple retry immédiat.
 function shouldRetry(failureCount: number, error: unknown): boolean {
   if (axios.isAxiosError(error) && error.response) return false;
-  return failureCount < 2;
+  return failureCount < 3;
 }
 
-const retryDelay = (attempt: number) => Math.min(1_000 * 2 ** attempt, 5_000);
+const retryDelay = (attempt: number) => Math.min(1_000 * 2 ** attempt, 8_000);
 
 export const vitrineKeys = {
   all: ["vitrine"] as const,
