@@ -7,11 +7,18 @@ function getBaseUrl(): string {
   return /\/api\/v1$/i.test(url) ? url.replace(/\/api\/v1$/i, "") : url;
 }
 
-// Axios public — aucun intercepteur auth (routes marquées @Public() côté backend)
+// Proxy Vercel avec cache — évite le cold start PHP côté utilisateur
+const cachedApi = axios.create({
+  baseURL: "/api/vitrine",
+  headers: { "Content-Type": "application/json" },
+  timeout: 10_000,
+});
+
+// Axios public — pour les routes sans cache (lookbook, etc.)
 const publicApi = axios.create({
   baseURL: `${getBaseUrl()}/api/v1`,
   headers: { "Content-Type": "application/json" },
-  timeout: 20_000,
+  timeout: 25_000,
 });
 
 export interface VitrineProduitParams {
@@ -43,17 +50,17 @@ export interface VitrineSingleResponse<T> {
 export const getVitrineProduits = (
   params: VitrineProduitParams = {}
 ): Promise<VitrinePageResponse<Produit>> =>
-  publicApi
+  cachedApi
     .get<VitrinePageResponse<Produit>>("/produits", {
       params: { ...params, isActif: true },
     })
     .then((r) => r.data);
 
 export const getVitrineProduit = (id: string): Promise<VitrineSingleResponse<Produit>> =>
-  publicApi.get<VitrineSingleResponse<Produit>>(`/produits/${id}`).then((r) => r.data);
+  cachedApi.get<VitrineSingleResponse<Produit>>(`/produits/${id}`).then((r) => r.data);
 
 export const getVitrineCategories = (): Promise<VitrineSingleResponse<Categorie[]>> =>
-  publicApi.get<VitrineSingleResponse<Categorie[]>>("/produits/categories").then((r) => r.data);
+  cachedApi.get<VitrineSingleResponse<Categorie[]>>("/categories").then((r) => r.data);
 
 export interface UploadLookbookPhotoBody {
   photo: string; // data URL base64
