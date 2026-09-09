@@ -3,8 +3,20 @@
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import type { Produit } from "@/types";
+import type { Produit, VarianteBoutique } from "@/types";
 import { useVitrineStore } from "@/stores/vitrineStore";
+
+function getBoutiques(variantes: Produit["variantes"]): VarianteBoutique[] {
+  const seen = new Set<string>();
+  const result: VarianteBoutique[] = [];
+  for (const v of variantes ?? []) {
+    if (v.quantiteStock > 0 && v.boutique && !seen.has(v.boutique.id)) {
+      seen.add(v.boutique.id);
+      result.push(v.boutique);
+    }
+  }
+  return result;
+}
 
 interface ProduitCardProps {
   produit: Produit;
@@ -25,6 +37,7 @@ export function ProduitCard({ produit, rank, large = false }: ProduitCardProps) 
   const totalStock = (produit.variantes ?? []).reduce((s, v) => s + v.quantiteStock, 0);
   const firstVariante = produit.variantes?.[0];
   const hasNew = isNew(produit.createdAt);
+  const boutiques = getBoutiques(produit.variantes);
 
   const isPromo = produit.enPromo && !!produit.prixPromo;
   const prixPromo = isPromo ? parseFloat(produit.prixPromo!) : null;
@@ -104,6 +117,22 @@ export function ProduitCard({ produit, rank, large = false }: ProduitCardProps) 
             style={{ color: "var(--v-text)" }}
           >
             {String(rank).padStart(2, "0")}
+          </div>
+        )}
+
+        {/* Boutique tag — bas gauche, toujours visible */}
+        {boutiques.length > 0 && (
+          <div className="absolute bottom-[72px] left-3 flex flex-col gap-1">
+            {boutiques.map((b) => (
+              <span
+                key={b.id}
+                className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide backdrop-blur-sm"
+                style={{ backgroundColor: "rgba(0,0,0,0.45)", color: "rgba(255,255,255,0.75)", border: "1px solid rgba(255,255,255,0.12)" }}
+              >
+                <span style={{ color: "var(--v-lime)", fontSize: 7 }}>◆</span>
+                {b.nom}
+              </span>
+            ))}
           </div>
         )}
 

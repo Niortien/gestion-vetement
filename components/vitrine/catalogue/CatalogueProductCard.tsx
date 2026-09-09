@@ -2,8 +2,20 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import type { Produit } from "@/types";
+import type { Produit, VarianteBoutique } from "@/types";
 import { useVitrineStore } from "@/stores/vitrineStore";
+
+function getBoutiques(variantes: Produit["variantes"]): VarianteBoutique[] {
+  const seen = new Set<string>();
+  const result: VarianteBoutique[] = [];
+  for (const v of variantes ?? []) {
+    if (v.quantiteStock > 0 && v.boutique && !seen.has(v.boutique.id)) {
+      seen.add(v.boutique.id);
+      result.push(v.boutique);
+    }
+  }
+  return result;
+}
 
 interface CatalogueProductCardProps {
   produit: Produit;
@@ -19,6 +31,7 @@ export function CatalogueProductCard({ produit, priority }: CatalogueProductCard
   const tailles = [...new Set((produit.variantes ?? []).map((v) => v.taille))];
   const totalStock = (produit.variantes ?? []).reduce((s, v) => s + v.quantiteStock, 0);
   const firstVariante = produit.variantes?.[0];
+  const boutiques = getBoutiques(produit.variantes);
 
   const isPromo = produit.enPromo && !!produit.prixPromo;
   const prixPromo = isPromo ? parseFloat(produit.prixPromo!) : null;
@@ -120,6 +133,21 @@ export function CatalogueProductCard({ produit, priority }: CatalogueProductCard
                 style={{ borderColor: "var(--v-border)", color: "var(--v-dim)" }}
               >
                 {t}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Boutiques disponibles */}
+        {boutiques.length > 0 && (
+          <div className="mt-2 flex flex-wrap items-center gap-1.5">
+            <svg width="8" height="10" viewBox="0 0 8 10" fill="none" aria-hidden>
+              <path d="M4 0C1.79 0 0 1.79 0 4c0 3 4 6 4 6s4-3 4-6c0-2.21-1.79-4-4-4zm0 5.5A1.5 1.5 0 1 1 4 2.5a1.5 1.5 0 0 1 0 3z"
+                fill="currentColor" style={{ color: "var(--v-lime)" }} />
+            </svg>
+            {boutiques.map((b, i) => (
+              <span key={b.id} className="text-[10px] font-semibold" style={{ color: "var(--v-dim)" }}>
+                {b.nom}{i < boutiques.length - 1 ? " ·" : ""}
               </span>
             ))}
           </div>
