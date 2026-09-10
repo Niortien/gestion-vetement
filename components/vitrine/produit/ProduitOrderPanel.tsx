@@ -57,7 +57,14 @@ export function ProduitOrderPanel({ produit, variante }: ProduitOrderPanelProps)
   }, [boutiquesWithStock, selectedBoutiqueId, variante]);
 
   const prix = parseFloat(produit.prixVente || "0");
-  const effectiveVariante = activeBoutiqueVariante ?? variante;
+
+  // Si aucune variante sélectionnée, prendre la première avec une boutique ayant un whatsapp
+  const fallbackVariante = useMemo(
+    () => (produit.variantes ?? []).find((v) => v.boutique?.whatsapp) ?? (produit.variantes ?? [])[0] ?? null,
+    [produit.variantes]
+  );
+
+  const effectiveVariante = activeBoutiqueVariante ?? variante ?? fallbackVariante;
   const canWhatsApp = boutiquesWithStock.length <= 1 || !!selectedBoutiqueId;
   const canAddToCart = !!effectiveVariante && effectiveVariante.quantiteStock > 0 &&
     (boutiquesWithStock.length <= 1 || !!selectedBoutiqueId);
