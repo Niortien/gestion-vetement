@@ -65,6 +65,10 @@ export function ProduitOrderPanel({ produit, variante }: ProduitOrderPanelProps)
   const maxQte = effectiveVariante ? Math.min(effectiveVariante.quantiteStock, 10) : 10;
 
   const onSubmit = (values: OrderForm) => {
+    console.log("[WA DEBUG] variante prop:", variante?.id, variante?.boutique?.nom, variante?.boutique?.whatsapp);
+    console.log("[WA DEBUG] boutiquesWithStock:", boutiquesWithStock.map(v => `${v.boutique?.nom}|${v.boutique?.whatsapp}|stock=${v.quantiteStock}`));
+    console.log("[WA DEBUG] activeBoutiqueVariante:", activeBoutiqueVariante?.boutique?.nom, activeBoutiqueVariante?.boutique?.whatsapp);
+    console.log("[WA DEBUG] effectiveVariante:", effectiveVariante?.boutique?.nom, effectiveVariante?.boutique?.whatsapp);
     const message = buildWhatsappMessage({
       lignes: [
         {
