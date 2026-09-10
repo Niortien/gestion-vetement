@@ -13,7 +13,7 @@ export async function GET(
   try {
     res = await fetch(url, {
       signal: AbortSignal.timeout(28_000),
-      next: { revalidate: 300 },
+      next: { revalidate: 60 },
     });
   } catch {
     return NextResponse.json({ error: "upstream timeout" }, { status: 504 });
