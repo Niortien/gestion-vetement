@@ -45,24 +45,29 @@ function MiniCard({ produit, fullWidth }: { produit: Produit; fullWidth?: boolea
           style={{ background: "linear-gradient(to top, rgba(6,6,7,0.95) 0%, rgba(6,6,7,0.3) 45%, transparent 70%)" }}
         />
 
-        {prixPromo !== null && (
-          <div
-            className="absolute left-2 top-2 rounded-md px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-white"
-            style={{ backgroundColor: "var(--v-hot)" }}
-          >
-            -{Math.round(((prix - prixPromo) / prix) * 100)}%
-          </div>
-        )}
+        <div className="absolute left-0 top-0 flex flex-col gap-1 p-2">
+          {prixPromo !== null && (
+            <div
+              className="rounded-md px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-white"
+              style={{ backgroundColor: "var(--v-hot)" }}
+            >
+              -{Math.round(((prix - prixPromo) / prix) * 100)}%
+            </div>
+          )}
+          {boutiqueLabel && (
+            <div
+              className="rounded-md px-2 py-1 text-[10px] font-black uppercase tracking-wide backdrop-blur-sm"
+              style={{ backgroundColor: "rgba(0,0,0,0.55)", color: "var(--v-lime)", border: "1px solid rgba(255,255,255,0.1)" }}
+            >
+              ◆ {boutiqueLabel}
+            </div>
+          )}
+        </div>
 
         <div className="absolute bottom-0 left-0 right-0 p-2.5">
           <p className="line-clamp-2 text-[11px] font-bold uppercase leading-tight" style={{ color: "var(--v-text)" }}>
             {produit.nom}
           </p>
-          {boutiqueLabel && (
-            <p className="mt-0.5 line-clamp-1 text-[9px] font-semibold" style={{ color: "var(--v-gold)" }}>
-              <span style={{ color: "var(--v-lime)", marginRight: 2 }}>◆</span>{boutiqueLabel}
-            </p>
-          )}
           <p className="mt-1 font-[var(--font-mono)] text-[11px] font-black" style={{ color: "var(--v-gold)" }}>
             {(prixPromo ?? prix).toLocaleString("fr-FR")}
             <span className="ml-0.5 text-[9px] font-normal" style={{ color: "var(--v-muted)" }}>FCFA</span>
