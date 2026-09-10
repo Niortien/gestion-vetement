@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { useVitrineProduit } from "@/features/vitrine/query/vitrine-queries";
@@ -56,6 +56,17 @@ export function ProduitDetailView({ id }: ProduitDetailViewProps) {
   const variantes = produit.variantes ?? [];
 
   const totalStock = variantes.reduce((s, v) => s + v.quantiteStock, 0);
+
+  // Auto-sélection quand il n'y a qu'une seule taille (ex: "Toute tailles")
+  useEffect(() => {
+    const tailles = [...new Set(variantes.map((v) => v.taille))];
+    if (tailles.length === 1 && !selectedTaille) {
+      const seuleTaille = tailles[0] as Taille;
+      setSelectedTaille(seuleTaille);
+      const couleursForTaille = [...new Set(variantes.filter((v) => v.taille === seuleTaille).map((v) => v.couleur))];
+      if (couleursForTaille.length === 1) setSelectedCouleur(couleursForTaille[0]);
+    }
+  }, [variantes, selectedTaille]);
 
   const selectedVariante =
     selectedTaille && selectedCouleur
