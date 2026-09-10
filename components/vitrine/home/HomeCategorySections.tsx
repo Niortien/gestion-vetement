@@ -5,11 +5,24 @@ import { motion } from "framer-motion";
 import { useVitrineCategories, useVitrineProduits } from "@/features/vitrine/query/vitrine-queries";
 import type { Categorie, Produit } from "@/types";
 
+function getBoutiqueLabel(variantes: Produit["variantes"]): string {
+  const seen = new Set<string>();
+  const names: string[] = [];
+  for (const v of variantes ?? []) {
+    if (v.quantiteStock > 0 && v.boutique && !seen.has(v.boutique.id)) {
+      seen.add(v.boutique.id);
+      names.push(v.boutique.nom);
+    }
+  }
+  return names.join(" · ");
+}
+
 /* ── Carte produit mini ── */
 function MiniCard({ produit, fullWidth }: { produit: Produit; fullWidth?: boolean }) {
   const prix = parseFloat(produit.prixVente || "0");
   const prixPromo = produit.enPromo && produit.prixPromo ? parseFloat(produit.prixPromo) : null;
   const imageUrl = produit.imageUrl ?? produit.images?.[0]?.url;
+  const boutiqueLabel = getBoutiqueLabel(produit.variantes);
 
   return (
     <Link
@@ -45,6 +58,11 @@ function MiniCard({ produit, fullWidth }: { produit: Produit; fullWidth?: boolea
           <p className="line-clamp-2 text-[11px] font-bold uppercase leading-tight" style={{ color: "var(--v-text)" }}>
             {produit.nom}
           </p>
+          {boutiqueLabel && (
+            <p className="mt-0.5 line-clamp-1 text-[9px] font-semibold" style={{ color: "var(--v-gold)" }}>
+              <span style={{ color: "var(--v-lime)", marginRight: 2 }}>◆</span>{boutiqueLabel}
+            </p>
+          )}
           <p className="mt-1 font-[var(--font-mono)] text-[11px] font-black" style={{ color: "var(--v-gold)" }}>
             {(prixPromo ?? prix).toLocaleString("fr-FR")}
             <span className="ml-0.5 text-[9px] font-normal" style={{ color: "var(--v-muted)" }}>FCFA</span>
