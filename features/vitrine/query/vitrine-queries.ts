@@ -37,7 +37,7 @@ export function useVitrineProduits(params: VitrineProduitParams = {}) {
       const totalPages = lastPage.meta.pageCount ?? 1;
       return current < totalPages ? current + 1 : undefined;
     },
-    staleTime: 5 * 60_000,
+    staleTime: 2 * 60_000,
     refetchOnWindowFocus: false,
     retry: shouldRetry,
     retryDelay,
@@ -49,7 +49,7 @@ export function useVitrineProduit(id: string) {
     queryKey: vitrineKeys.produit(id),
     queryFn: () => getVitrineProduit(id),
     enabled: !!id,
-    staleTime: 5 * 60_000,
+    staleTime: 60_000,
     refetchOnWindowFocus: false,
     retry: shouldRetry,
     retryDelay,
