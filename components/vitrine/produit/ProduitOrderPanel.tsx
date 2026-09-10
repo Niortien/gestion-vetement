@@ -88,6 +88,8 @@ export function ProduitOrderPanel({ produit, variante }: ProduitOrderPanelProps)
       notes: values.notes,
     });
     const whatsappNum = effectiveVariante?.boutique?.whatsapp;
+    // eslint-disable-next-line no-alert
+    alert(`[DEBUG] boutique=${effectiveVariante?.boutique?.nom ?? "NULL"} | whatsapp=${whatsappNum ?? "NULL"}`);
     window.open(buildWhatsappUrl(message, whatsappNum), "_blank");
   };
 
