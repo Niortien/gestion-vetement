@@ -1,70 +1,45 @@
-import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 interface BrandMarkProps {
-  /** Force l'affichage pour fond sombre (barre latérale noire du back-office). */
+  /** Force le blanc (fond toujours sombre : barre latérale, panneau de connexion). */
   onDark?: boolean;
-  /** Couleurs de la vitrine publique (thème `data-theme`, indépendant du thème du back-office). */
+  /** Utilise la couleur de texte de la vitrine publique (`--v-text`, indépendante du thème du back-office). */
   vitrine?: boolean;
   /** Hauteur Tailwind du logo (le ratio est conservé). */
   className?: string;
-  priority?: boolean;
 }
 
 /*
  * Logo officiel : `public/images/logo/logo.jpeg` (étoiles, silhouette, « Dri Valé », signature), utilisé tel quel.
- * Le fichier est blanc sur noir. Sur fond sombre il est fondu par `mix-blend-mode: screen` (le noir disparaît) ;
- * sur fond clair on l'inverse puis `multiply` (texte noir sur le fond de la page).
- * Le cadrage retire les marges noires du JPEG : zone utile 568×283 px dans le fichier 640×469.
+ * Le fichier est blanc sur noir : on s'en sert comme masque de luminance (`mask-mode: luminance`) devant un aplat de la
+ * couleur de texte courante. Le noir du JPEG devient transparent, le blanc prend la couleur du thème — sans recolorer
+ * ni redessiner le logo, et sans dépendre d'un fond particulier.
+ * Cadrage : zone utile 568×283 px dans le fichier 640×469 (marges noires retirées).
  */
 const SRC = "/images/logo/logo.jpeg";
 const FILE = { w: 640, h: 469 };
 const CROP = { x: 33, y: 82, w: 568, h: 283 };
 
-const DARK_BLEND = "mix-blend-screen";
-const LIGHT_BLEND = "invert mix-blend-multiply";
+export function BrandMark({ onDark = false, vitrine = false, className }: BrandMarkProps) {
+  const color = onDark ? "#FFFFFF" : vitrine ? "var(--v-text)" : "var(--color-text)";
+  const mask = {
+    maskImage: `url(${SRC})`,
+    WebkitMaskImage: `url(${SRC})`,
+    maskMode: "luminance",
+    maskRepeat: "no-repeat",
+    WebkitMaskRepeat: "no-repeat",
+    maskSize: `${(FILE.w / CROP.w) * 100}% ${(FILE.h / CROP.h) * 100}%`,
+    WebkitMaskSize: `${(FILE.w / CROP.w) * 100}% ${(FILE.h / CROP.h) * 100}%`,
+    maskPosition: `${(CROP.x / (FILE.w - CROP.w)) * 100}% ${(CROP.y / (FILE.h - CROP.h)) * 100}%`,
+    WebkitMaskPosition: `${(CROP.x / (FILE.w - CROP.w)) * 100}% ${(CROP.y / (FILE.h - CROP.h)) * 100}%`,
+  } as const;
 
-function Logo({ blend, visibility, priority }: { blend: string; visibility?: string; priority?: boolean }) {
-  return (
-    <Image
-      src={SRC}
-      alt=""
-      width={FILE.w}
-      height={FILE.h}
-      priority={priority}
-      draggable={false}
-      className={cn("absolute max-w-none select-none", blend, visibility)}
-      style={{
-        width: `${(FILE.w / CROP.w) * 100}%`,
-        height: `${(FILE.h / CROP.h) * 100}%`,
-        left: `${(-CROP.x / CROP.w) * 100}%`,
-        top: `${(-CROP.y / CROP.h) * 100}%`,
-      }}
-    />
-  );
-}
-
-export function BrandMark({ onDark = false, vitrine = false, className, priority = false }: BrandMarkProps) {
   return (
     <span
       role="img"
       aria-label="Dri Valé — Sortez toujours bien habillé"
-      className={cn("relative block shrink-0 overflow-hidden", className ?? "h-14")}
-      style={{ aspectRatio: `${CROP.w} / ${CROP.h}` }}
-    >
-      {onDark ? (
-        <Logo blend={DARK_BLEND} priority={priority} />
-      ) : vitrine ? (
-        <>
-          <Logo blend={DARK_BLEND} visibility="brand-logo-v-dark" priority={priority} />
-          <Logo blend={LIGHT_BLEND} visibility="brand-logo-v-light" />
-        </>
-      ) : (
-        <>
-          <Logo blend={LIGHT_BLEND} visibility="brand-logo-on-light" priority={priority} />
-          <Logo blend={DARK_BLEND} visibility="brand-logo-on-dark" />
-        </>
-      )}
-    </span>
+      className={cn("block shrink-0", className ?? "h-14")}
+      style={{ aspectRatio: `${CROP.w} / ${CROP.h}`, backgroundColor: color, ...mask }}
+    />
   );
 }

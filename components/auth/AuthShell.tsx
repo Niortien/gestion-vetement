@@ -34,7 +34,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
         <div aria-hidden className="absolute inset-0 bg-[linear-gradient(180deg,var(--sidebar-bg)_0%,transparent_45%,var(--sidebar-bg)_100%)]" />
 
         <div className="relative">
-          <BrandMark onDark className="h-16" priority />
+          <BrandMark onDark className="h-16" />
         </div>
 
         <motion.div

@@ -1,7 +1,7 @@
 # Dri Valé — Design System (Master)
 
 > Source de vérité visuelle : le **logo** (`public/images/logo/logo.jpeg`) — blanc sur noir, sans couleur d'accent.
-> Le logo est utilisé tel quel (`<BrandMark />`), jamais redessiné ni recoloré.
+> Le logo est utilisé tel quel (`<BrandMark />` : le JPEG sert de masque de luminance, aucun fichier dérivé), jamais redessiné.
 
 ## 1. Identité tirée du logo
 

@@ -407,16 +407,6 @@ input[type="number"] {
   color: var(--v-text);
 }
 
-/* Logo : version blanche sur fond sombre, version noire sur fond clair (les deux dérivent du fichier d'origine). */
-.brand-logo-on-light { display: block; }
-.brand-logo-on-dark  { display: none; }
-:root.dark .brand-logo-on-light { display: none; }
-:root.dark .brand-logo-on-dark  { display: block; }
-.brand-logo-v-dark  { display: block; }
-.brand-logo-v-light { display: none; }
-[data-vitrine][data-theme="light"] .brand-logo-v-dark  { display: none; }
-[data-vitrine][data-theme="light"] .brand-logo-v-light { display: block; }
-
 @keyframes marquee {
   0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
