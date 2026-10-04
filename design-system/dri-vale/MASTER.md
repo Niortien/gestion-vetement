@@ -1,6 +1,6 @@
 # Dri Valé — Design System (Master)
 
-> Source de vérité visuelle : le **logo** (`public/images/logo/logo.jpeg`) — blanc sur noir, sans couleur d'accent.
+> Source de vérité visuelle : le **logo** (`public/images/logo/logo.jpeg`) — blanc sur noir, sans couleur d'accent ; l'**or** est l'accent de la marque.
 > Le logo est utilisé tel quel (`<BrandMark />` : le JPEG sert de masque de luminance, aucun fichier dérivé), jamais redessiné.
 
 ## 1. Identité tirée du logo
@@ -8,11 +8,12 @@
 | Élément du logo | Traduction dans l'interface |
 |---|---|
 | Noir profond du fond | `--color-accent` en clair (boutons, barre latérale), `--v-bg` sur la vitrine sombre |
-| Blanc des lettres | `--color-accent` en sombre, `--v-gold` (accent) sur la vitrine sombre, texte principal |
+| Blanc des lettres | Texte principal et logo (l'accent blanc est remplacé par l'**or**) |
+| Or `#F0B429` | `--color-accent` (boutons, éléments actifs), `--v-gold` sur la vitrine ; texte or foncé `#8A6100` sur fond clair |
 | Étoiles qui montent | Motif de progression : jauges, rangs, « Nouveau » |
 | Signature « Sortez toujours bien habillé » | Slogan des écrans d'accueil et de connexion |
 
-Aucune couleur de marque n'est inventée : l'interface est **noir / blanc / gris chauds**. Les seules couleurs présentes
+L'interface est **noir / blanc / or**. Les seules couleurs présentes
 portent un **sens fonctionnel** (jamais décoratif) : vert = entrée / succès, rouge = sortie / erreur / promo / rupture,
 ambre = retour / avertissement, violet = caisse / argent.
 
@@ -25,9 +26,9 @@ les surfaces de travail sont blanches (clair) ou graphite `#111113` (sombre).
 |---|---|---|
 | Fond app | `#F6F6F5` | `#111113` |
 | Surface | `#FFFFFF` | `#19191C` |
-| Accent / CTA | `#0C0C0E` (texte `#FFFFFF`) | `#F5F5F4` (texte `#0C0C0E`) |
+| Accent / CTA | `#F0B429` (texte `#0C0C0E`) | `#F0B429` (texte `#0C0C0E`) |
 | Barre latérale | `#0C0C0E` | `#08080A` |
-| Vitrine | fond `#F6F6F5`, accent `#0C0C0E` | fond `#0C0C0E`, accent `#FFFFFF` |
+| Vitrine | fond `#F6F6F5`, accent `#F0B429` | fond `#0C0C0E`, accent `#F0B429` |
 | Rouge d'urgence (vitrine) | `#D61F36` | `#FF4D5E` |
 
 Texte sur un aplat d'accent : toujours `text-on-accent` (back-office) ou `var(--v-on-gold)` (vitrine) — jamais `white`/`black`
