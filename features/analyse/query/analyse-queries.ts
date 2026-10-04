@@ -12,7 +12,7 @@ export type PeriodeAnalyse = 7 | 30 | 90;
 const PAGE_SIZE = 100;
 /** Plafond de sécurité : 30 pages de 100 ventes, les plus récentes d'abord. */
 const MAX_PAGES = 30;
-const LOT = 5;
+const LOT = 4;
 
 export interface VentesAnalyse {
   sorties: Sortie[];
@@ -55,8 +55,9 @@ export function useVentesAnalyse(jours: PeriodeAnalyse) {
       };
 
       const premiere = await getSorties({ ...params, page: 1 });
-      const totalPages = premiere.meta.totalPages ?? 1;
       const total = premiere.meta.total ?? premiere.data.length;
+      // Laravel renvoie `pageCount`, Nest `totalPages` : on accepte les deux, puis on retombe sur total / limite.
+      const totalPages = premiere.meta.pageCount ?? premiere.meta.totalPages ?? Math.max(1, Math.ceil(total / PAGE_SIZE));
       const sorties = [...premiere.data];
 
       const dernierePage = Math.min(totalPages, MAX_PAGES);
