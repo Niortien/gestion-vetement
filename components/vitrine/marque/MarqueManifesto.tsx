@@ -14,7 +14,7 @@ export function MarqueManifesto() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="mb-6 text-[10px] font-black uppercase tracking-[0.5em]"
-          style={{ color: "var(--v-gold)" }}
+          style={{ color: "var(--v-gold-text)" }}
         >
           Notre manifeste
         </motion.p>
@@ -60,7 +60,7 @@ export function MarqueManifesto() {
             <br />
             Dri Val&eacute; te donne les mots.&rdquo;
           </p>
-          <footer className="mt-4 text-sm font-bold" style={{ color: "var(--v-gold)" }}>
+          <footer className="mt-4 text-sm font-bold" style={{ color: "var(--v-gold-text)" }}>
             &mdash; Dri Val&eacute; Boutique, Yopougon Abidjan
           </footer>
         </motion.blockquote>

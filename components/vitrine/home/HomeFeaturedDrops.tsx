@@ -65,7 +65,7 @@ function FeaturedCard({ produit, index }: { produit: Produit | null; index: numb
         {/* Gradient bas */}
         <div
           className="absolute inset-0"
-          style={{ background: "linear-gradient(to top, rgba(6,6,7,0.85) 0%, transparent 55%)" }}
+          style={{ background: "linear-gradient(to top, rgba(14,26,20,0.85) 0%, transparent 55%)" }}
         />
         {/* Badge */}
         {(isNewDrop || isPromo) && produit && (
@@ -88,7 +88,7 @@ function FeaturedCard({ produit, index }: { produit: Produit | null; index: numb
       {/* Contenu bas */}
       <div className="flex flex-col gap-3 p-5">
         <div>
-          <span className="text-[10px] font-black uppercase tracking-[0.28em]" style={{ color: "var(--v-gold)" }}>
+          <span className="text-[10px] font-black uppercase tracking-[0.28em]" style={{ color: "var(--v-gold-text)" }}>
             Drop #{String(index + 1).padStart(2, "0")}
           </span>
           {produit ? (
@@ -107,7 +107,7 @@ function FeaturedCard({ produit, index }: { produit: Produit | null; index: numb
               {boutiqueLabel && (
                 <span
                   className="mt-2 inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider"
-                  style={{ backgroundColor: "rgba(240,180,41,0.12)", color: "var(--v-gold)", border: "1px solid rgba(240,180,41,0.25)" }}
+                  style={{ backgroundColor: "rgba(198,240,58,0.12)", color: "var(--v-gold-text)", border: "1px solid rgba(198,240,58,0.25)" }}
                 >
                   <span style={{ fontSize: 7 }}>◆</span>
                   {boutiqueLabel}
@@ -145,7 +145,7 @@ function FeaturedCard({ produit, index }: { produit: Produit | null; index: numb
               <Link
                 href={`/boutique/${produit.id}`}
                 className="rounded-xl px-4 py-2 text-xs font-black uppercase tracking-wider transition-all hover:opacity-90 active:scale-95"
-                style={{ backgroundColor: "var(--v-gold)", color: "#060607" }}
+                style={{ backgroundColor: "var(--v-gold)", color: "#0E1A14" }}
               >
                 Voir
               </Link>
@@ -213,7 +213,7 @@ function CompactCard({ produit, index }: { produit: Produit | null; index: numbe
       {/* Contenu */}
       <div className="flex flex-1 flex-col justify-between p-4">
         <div>
-          <span className="text-[9px] font-black uppercase tracking-[0.24em]" style={{ color: "var(--v-gold)" }}>
+          <span className="text-[9px] font-black uppercase tracking-[0.24em]" style={{ color: "var(--v-gold-text)" }}>
             Drop #{String(index + 1).padStart(2, "0")}
           </span>
           {produit ? (
@@ -225,7 +225,7 @@ function CompactCard({ produit, index }: { produit: Produit | null; index: numbe
                 {produit.nom}
               </h3>
               {boutiqueLabel && (
-                <p className="mt-1 flex items-center gap-1 text-[9px] font-semibold" style={{ color: "var(--v-gold)" }}>
+                <p className="mt-1 flex items-center gap-1 text-[9px] font-semibold" style={{ color: "var(--v-gold-text)" }}>
                   <span style={{ fontSize: 7 }}>◆</span>
                   {boutiqueLabel}
                 </p>
@@ -249,7 +249,7 @@ function CompactCard({ produit, index }: { produit: Produit | null; index: numbe
               <Link
                 href={`/boutique/${produit.id}`}
                 className="rounded-lg px-3 py-1.5 text-[11px] font-black uppercase tracking-wider transition-all hover:opacity-90 active:scale-95"
-                style={{ backgroundColor: "var(--v-gold)", color: "#060607" }}
+                style={{ backgroundColor: "var(--v-gold)", color: "#0E1A14" }}
               >
                 Voir
               </Link>
@@ -293,12 +293,12 @@ export function HomeFeaturedDrops() {
           >
             Derniers
             <br />
-            <span style={{ color: "var(--v-gold)" }}>Arrivages</span>
+            <span style={{ color: "var(--v-gold-text)" }}>Arrivages</span>
           </h2>
         </div>
         <Link
           href="/catalogue"
-          className="hidden shrink-0 rounded-full border px-5 py-2 text-xs font-black uppercase tracking-widest transition-all hover:border-[var(--v-gold)] hover:text-[var(--v-gold)] md:flex items-center gap-2"
+          className="hidden shrink-0 rounded-full border px-5 py-2 text-xs font-black uppercase tracking-widest transition-all hover:border-[var(--v-gold)] hover:text-[var(--v-gold-text)] md:flex items-center gap-2"
           style={{ borderColor: "var(--v-border)", color: "var(--v-muted)" }}
         >
           Tout voir &rarr;
@@ -331,7 +331,7 @@ export function HomeFeaturedDrops() {
         <Link
           href="/catalogue"
           className="inline-block rounded-full border px-6 py-3 text-xs font-black uppercase tracking-widest transition-all"
-          style={{ borderColor: "var(--v-gold)", color: "var(--v-gold)" }}
+          style={{ borderColor: "var(--v-gold)", color: "var(--v-gold-text)" }}
         >
           Explorer tout le catalogue &rarr;
         </Link>

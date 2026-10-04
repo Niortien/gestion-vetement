@@ -55,16 +55,16 @@ export function SortiePaiementStep({
   return (
     <div className="space-y-4">
       {/* Total — avec ou sans remise */}
-      <div className="rounded-xl border border-[var(--color-cash)]/40 bg-[color:rgba(143,126,245,0.10)] p-4 text-center">
+      <div className="rounded-xl border border-cash/40 bg-cash/10 p-4 text-center">
         {showRemise ? (
           <>
             <p className="text-xs text-text-dim line-through">
               {Number(totalAvantRemise).toLocaleString("fr-FR")} FCFA
             </p>
-            <p className="text-xs text-[var(--color-in)]">
+            <p className="text-xs text-in-text">
               − {Number(remiseMontant).toLocaleString("fr-FR")} FCFA de réduction
             </p>
-            <p className="mt-1 font-[var(--font-display)] text-3xl text-[var(--color-cash)]">
+            <p className="mt-1 font-[var(--font-display)] text-3xl text-cash-text">
               {Number(totalMontant).toLocaleString("fr-FR")} FCFA
             </p>
             <p className="mt-0.5 text-[10px] uppercase tracking-wide text-text-muted">À encaisser</p>
@@ -72,7 +72,7 @@ export function SortiePaiementStep({
         ) : (
           <>
             <p className="text-xs uppercase tracking-wide text-text-muted">Montant à encaisser</p>
-            <p className="mt-1 font-[var(--font-display)] text-3xl text-[var(--color-cash)]">
+            <p className="mt-1 font-[var(--font-display)] text-3xl text-cash-text">
               {Number(totalMontant).toLocaleString("fr-FR")} FCFA
             </p>
           </>
@@ -91,8 +91,8 @@ export function SortiePaiementStep({
               className={[
                 "flex flex-col items-center gap-1.5 rounded-xl border-2 px-1 py-2.5 transition-all",
                 selected === card.mode
-                  ? "border-accent bg-[color:rgba(74,122,255,0.15)] ring-2 ring-accent ring-offset-1 ring-offset-[var(--color-surface)]"
-                  : "border-border/60 bg-[var(--color-surface-high)] hover:border-accent/40",
+                  ? "border-accent bg-accent/15 ring-2 ring-accent ring-offset-1 ring-offset-[var(--color-surface)]"
+                  : "border-border/60 bg-surface-high hover:border-accent/40",
               ].join(" ")}
               aria-pressed={selected === card.mode}
             >
@@ -117,7 +117,7 @@ export function SortiePaiementStep({
 
       {/* Champs espèces — montant reçu + monnaie rendue */}
       {selected === ModePaiement.CASH && (
-        <div className="space-y-2 rounded-xl border border-border/60 bg-[var(--color-surface-high)] p-3">
+        <div className="space-y-2 rounded-xl border border-border/60 bg-surface-high p-3">
           <Input
             variant="bordered"
             label="Montant reçu du client"
@@ -131,9 +131,9 @@ export function SortiePaiementStep({
             errorMessage={montantInsuffisant ? "Montant insuffisant" : undefined}
           />
           {montantRecu !== "" && !montantInsuffisant && (
-            <div className="flex items-center justify-between rounded-lg bg-[var(--color-surface)] px-3 py-2">
+            <div className="flex items-center justify-between rounded-lg bg-surface px-3 py-2">
               <span className="text-xs text-text-muted">Monnaie à rendre</span>
-              <span className="[font-family:var(--font-mono)] text-sm font-bold text-[var(--color-in)]">
+              <span className="[font-family:var(--font-mono)] text-sm font-bold text-in-text">
                 {monnaieRendue.toLocaleString("fr-FR")} FCFA
               </span>
             </div>

@@ -40,7 +40,7 @@ export function LookbookBehindScenes() {
         >
           <p
             className="mb-2 text-[10px] font-black uppercase tracking-[0.4em]"
-            style={{ color: "var(--v-gold)" }}
+            style={{ color: "var(--v-gold-text)" }}
           >
             Notre communauté
           </p>
@@ -88,7 +88,7 @@ export function LookbookBehindScenes() {
                 className="absolute inset-0"
                 style={{
                   background:
-                    "linear-gradient(to top, rgba(6,6,7,0.75) 0%, transparent 50%)",
+                    "linear-gradient(to top, rgba(14,26,20,0.75) 0%, transparent 50%)",
                 }}
               />
               {/* Tag */}
@@ -142,7 +142,7 @@ export function LookbookBehindScenes() {
                 className="absolute inset-0"
                 style={{
                   background:
-                    "linear-gradient(to top, rgba(6,6,7,0.75) 0%, transparent 50%)",
+                    "linear-gradient(to top, rgba(14,26,20,0.75) 0%, transparent 50%)",
                 }}
               />
               {/* Tag */}
@@ -186,7 +186,7 @@ export function LookbookBehindScenes() {
         >
           <p
             className="text-4xl font-black"
-            style={{ color: "var(--v-gold)" }}
+            style={{ color: "var(--v-gold-text)" }}
           >
             +
           </p>
@@ -204,7 +204,7 @@ export function LookbookBehindScenes() {
           </p>
           <p
             className="mt-4 text-[10px] font-black uppercase tracking-widest"
-            style={{ color: "var(--v-gold)" }}
+            style={{ color: "var(--v-gold-text)" }}
           >
             Envoyer →
           </p>

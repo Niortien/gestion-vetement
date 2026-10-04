@@ -67,7 +67,7 @@ export function VariantePicker({ isOpen, onClose, onSelect, onDone, excludedVari
       classNames={{
         wrapper: "z-[1000]",
         backdrop: "z-[950]",
-        base: "bg-[var(--color-surface)] border border-border",
+        base: "bg-surface border border-border",
         header: "border-b border-border/60",
       }}
     >
@@ -99,7 +99,7 @@ export function VariantePicker({ isOpen, onClose, onSelect, onDone, excludedVari
               const variantes = produit.variantes ?? [];
 
               return (
-                <div key={produit.id} className="rounded-lg border border-border/60 bg-[var(--color-surface-high)]">
+                <div key={produit.id} className="rounded-lg border border-border/60 bg-surface-high">
                   <button
                     type="button"
                     className="flex w-full items-center justify-between px-3 py-2 text-left"
@@ -134,7 +134,7 @@ export function VariantePicker({ isOpen, onClose, onSelect, onDone, excludedVari
                                   "flex h-auto flex-col items-start gap-0.5 px-3 py-2",
                                   disabled
                                     ? "opacity-40 cursor-not-allowed"
-                                    : "bg-[color:rgba(45,69,103,0.6)] hover:bg-accent/20",
+                                    : "bg-surface-high hover:bg-accent/20",
                                 ].join(" ")}
                                 onPress={() =>
                                   handleSelect({

@@ -21,7 +21,7 @@ export function LookbookEditorial() {
         >
           <p
             className="mb-6 text-[10px] font-black uppercase tracking-[0.4em]"
-            style={{ color: "var(--v-gold)" }}
+            style={{ color: "var(--v-gold-text)" }}
           >
             L&rsquo;histoire derri&egrave;re la collection
           </p>
@@ -49,7 +49,7 @@ export function LookbookEditorial() {
               <div key={stat.label}>
                 <p
                   className="font-[var(--font-mono)] text-2xl font-black"
-                  style={{ color: "var(--v-gold)" }}
+                  style={{ color: "var(--v-gold-text)" }}
                 >
                   {stat.value}
                 </p>

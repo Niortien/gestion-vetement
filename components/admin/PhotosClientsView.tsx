@@ -2,6 +2,11 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
+import { IconPhoto, IconPlus } from "@tabler/icons-react";
+import { EmptyRiver } from "@/components/common/EmptyRiver";
+import { PageHero } from "@/components/common/PageHero";
+import { PageWrapper } from "@/components/common/PageWrapper";
+import { SegmentedControl } from "@/components/common/SegmentedControl";
 import {
   Button,
   Chip,
@@ -10,8 +15,6 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
-  Tab,
-  Tabs,
   useDisclosure,
 } from "@heroui/react";
 import { useForm } from "react-hook-form";
@@ -124,40 +127,55 @@ export function PhotosClientsView() {
   });
 
   return (
-    <div className="p-6">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold text-text">Photos clients — Lookbook</h1>
-        <div className="flex flex-wrap items-center gap-3">
-          <Tabs
-            selectedKey={filtre}
-            onSelectionChange={(key) => setFiltre(key as LookbookPhotoStatut | "all")}
-            size="sm"
+    <PageWrapper>
+      <PageHero
+        tone="cash"
+        icon={IconPhoto}
+        eyebrow="Lookbook"
+        title="Photos clients"
+        description="Les photos envoyées par vos clients : triez-les, puis publiez les meilleures sur le lookbook de la vitrine."
+        actions={
+          <Button
+            className="min-h-11 bg-cash font-semibold text-white"
+            startContent={<IconPlus size={18} aria-hidden />}
+            onPress={onAddOpen}
           >
-            <Tab key="all" title="Toutes" />
-            <Tab key="nouveau" title="Nouvelles" />
-            <Tab key="vu" title="Vues" />
-            <Tab key="traite" title="Traitées" />
-          </Tabs>
-          <Button className="bg-accent text-black" size="sm" onPress={onAddOpen}>
-            + Ajouter une photo
+            Ajouter une photo
           </Button>
-        </div>
-      </div>
+        }
+      >
+        <SegmentedControl
+          ariaLabel="Filtrer les photos par statut"
+          tone="cash"
+          value={filtre}
+          onChange={setFiltre}
+          options={[
+            { key: "all", label: "Toutes" },
+            { key: "nouveau", label: "Nouvelles" },
+            { key: "vu", label: "Vues" },
+            { key: "traite", label: "Traitées" },
+          ]}
+        />
+      </PageHero>
 
       {isLoading && (
-        <p className="text-sm text-text-muted">Chargement...</p>
+        <div role="status" aria-label="Chargement des photos" className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="aspect-square animate-pulse rounded-lg border border-border bg-surface" />
+          ))}
+        </div>
       )}
 
       {!isLoading && photos.length === 0 && (
-        <p className="text-sm text-text-muted">Aucune photo pour le moment.</p>
+        <EmptyRiver message="Aucune photo pour le moment" hint="Les photos envoyées depuis le lookbook de la vitrine arrivent ici." />
       )}
 
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {photos.map((photo) => (
           <button
             key={photo.id}
             onClick={() => openPhoto(photo)}
-            className="group relative overflow-hidden rounded-xl border border-border bg-surface text-left"
+            className="group relative cursor-pointer overflow-hidden rounded-lg border border-border bg-surface text-left shadow-card transition-[border-color,transform] duration-200 hover:-translate-y-0.5 hover:border-cash focus-visible:outline focus-visible:outline-2 focus-visible:outline-cash"
           >
             <div className="relative aspect-square w-full">
               <Image
@@ -167,7 +185,7 @@ export function PhotosClientsView() {
                 className="object-cover transition-transform group-hover:scale-105"
               />
               {photo.publiee && (
-                <span className="absolute right-2 top-2 rounded-full bg-accent px-2 py-0.5 text-[10px] font-bold text-black">
+                <span className="absolute right-2 top-2 rounded-full bg-accent px-2 py-0.5 text-[10px] font-bold text-on-accent">
                   Publiée
                 </span>
               )}
@@ -184,7 +202,7 @@ export function PhotosClientsView() {
         ))}
       </div>
 
-      <Modal isOpen={isOpen} onClose={onClose} size="2xl">
+      <Modal isOpen={isOpen} onClose={onClose} size="2xl" backdrop="blur">
         <ModalContent>
           <ModalHeader>{selected?.nom ?? "Photo client"}</ModalHeader>
           <ModalBody className="pb-6">
@@ -338,7 +356,7 @@ export function PhotosClientsView() {
                 Annuler
               </Button>
               <Button
-                className="bg-accent text-black"
+                className="bg-accent text-on-accent"
                 type="submit"
                 isLoading={uploadMutation.isPending}
               >
@@ -348,6 +366,6 @@ export function PhotosClientsView() {
           </form>
         </ModalContent>
       </Modal>
-    </div>
+    </PageWrapper>
   );
 }

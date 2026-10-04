@@ -11,7 +11,7 @@ export function StockBadge({ value, isAlert = false }: StockBadgeProps) {
       radius="full"
       variant="flat"
       classNames={{
-        base: isAlert ? "bg-[var(--color-out-dim)] text-out" : "bg-[var(--color-surface-high)] text-text",
+        base: isAlert ? "bg-out-dim text-out" : "bg-surface-high text-text",
       }}
     >
       {value}

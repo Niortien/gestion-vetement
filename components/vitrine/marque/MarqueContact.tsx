@@ -18,7 +18,7 @@ export function MarqueContact() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         className="mb-2 text-[10px] font-black uppercase tracking-[0.4em]"
-        style={{ color: "var(--v-gold)" }}
+        style={{ color: "var(--v-gold-text)" }}
       >
         Venir nous voir
       </motion.p>
@@ -42,7 +42,7 @@ export function MarqueContact() {
           className="rounded-2xl p-6"
           style={{ backgroundColor: "var(--v-s2)" }}
         >
-          <p className="mb-3 text-[10px] font-black uppercase tracking-widest" style={{ color: "var(--v-gold)" }}>
+          <p className="mb-3 text-[10px] font-black uppercase tracking-widest" style={{ color: "var(--v-gold-text)" }}>
             Adresse
           </p>
           <p className="text-sm font-semibold leading-relaxed" style={{ color: "var(--v-text)" }}>
@@ -56,7 +56,7 @@ export function MarqueContact() {
             href="https://maps.google.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-4 inline-block text-[11px] font-bold uppercase tracking-widest transition-colors hover:text-[var(--v-gold)]"
+            className="mt-4 inline-block text-[11px] font-bold uppercase tracking-widest transition-colors hover:text-[var(--v-gold-text)]"
             style={{ color: "var(--v-muted)" }}
           >
             Voir sur Google Maps &rarr;
@@ -72,7 +72,7 @@ export function MarqueContact() {
           className="rounded-2xl p-6"
           style={{ backgroundColor: "var(--v-s2)" }}
         >
-          <p className="mb-3 text-[10px] font-black uppercase tracking-widest" style={{ color: "var(--v-gold)" }}>
+          <p className="mb-3 text-[10px] font-black uppercase tracking-widest" style={{ color: "var(--v-gold-text)" }}>
             Horaires
           </p>
           <div className="space-y-2">
@@ -96,7 +96,7 @@ export function MarqueContact() {
           className="rounded-2xl p-6"
           style={{ backgroundColor: "var(--v-s2)" }}
         >
-          <p className="mb-3 text-[10px] font-black uppercase tracking-widest" style={{ color: "var(--v-gold)" }}>
+          <p className="mb-3 text-[10px] font-black uppercase tracking-widest" style={{ color: "var(--v-gold-text)" }}>
             Contact direct
           </p>
           <div className="space-y-3">

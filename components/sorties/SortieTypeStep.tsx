@@ -17,7 +17,7 @@ const TYPE_CARDS: TypeCard[] = [
     label: "Vente",
     icon: "🛍",
     description: "Vente à un client. Enregistre un paiement en caisse.",
-    color: "border-[var(--color-cash)] bg-[color:rgba(143,126,245,0.10)]",
+    color: "border-cash bg-cash/10",
     requiresSession: true,
   },
   {
@@ -25,7 +25,7 @@ const TYPE_CARDS: TypeCard[] = [
     label: "Perte",
     icon: "⚠️",
     description: "Produit perdu, volé ou endommagé.",
-    color: "border-[var(--color-out)] bg-[color:rgba(255,77,109,0.10)]",
+    color: "border-out bg-out/10",
     requiresSession: false,
   },
   {
@@ -33,7 +33,7 @@ const TYPE_CARDS: TypeCard[] = [
     label: "Don",
     icon: "🎁",
     description: "Produit offert sans contrepartie.",
-    color: "border-[var(--color-return)] bg-[color:rgba(255,154,60,0.10)]",
+    color: "border-return bg-return/10",
     requiresSession: false,
   },
   {
@@ -41,7 +41,7 @@ const TYPE_CARDS: TypeCard[] = [
     label: "Retour fournisseur",
     icon: "↩",
     description: "Retour d'articles au fournisseur.",
-    color: "border-[var(--color-in)] bg-[color:rgba(57,211,83,0.10)]",
+    color: "border-in bg-in/10",
     requiresSession: false,
   },
   {
@@ -49,7 +49,7 @@ const TYPE_CARDS: TypeCard[] = [
     label: "Dépense",
     icon: "💸",
     description: "Argent sorti de la boutique (nourriture, don, frais divers...), sans produit.",
-    color: "border-[var(--color-out)] bg-[color:rgba(255,154,60,0.10)]",
+    color: "border-out bg-return/10",
     requiresSession: false,
   },
 ];
@@ -82,7 +82,7 @@ export function SortieTypeStep({ selected, onSelect }: SortieTypeStepProps) {
             <p className="font-semibold text-text">{card.label}</p>
             <p className="mt-1 text-xs text-text-muted">{card.description}</p>
             {card.requiresSession && (
-              <p className="mt-2 text-[10px] text-[var(--color-cash)]">Session caisse requise</p>
+              <p className="mt-2 text-[10px] text-cash-text">Session caisse requise</p>
             )}
           </button>
         ))}

@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { IconCircleCheck } from "@tabler/icons-react";
 import { CurrencyDisplay } from "@/components/common/CurrencyDisplay";
 import { getMotionVariant, newTransaction } from "@/lib/motionVariants";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
@@ -18,13 +19,18 @@ export function TransactionPulse({ transaction }: TransactionPulseProps) {
       initial="hidden"
       animate="visible"
       variants={getMotionVariant(newTransaction, reduced)}
-      className="rounded-lg border border-border/80 bg-[linear-gradient(145deg,rgba(143,126,245,0.16),rgba(34,54,81,0.72))] p-3"
+      className="tone-cash flex items-center gap-3 rounded-lg border border-border border-l-[3px] border-l-cash bg-surface p-3"
     >
-      <div className="flex items-center justify-between">
-        <CurrencyDisplay montant={transaction.montant} size="lg" tone="cash" />
-        <span className="text-xs text-text-muted">{transaction.modePaiement}</span>
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-in-dim text-in-text">
+        <IconCircleCheck size={18} aria-hidden />
+      </span>
+      <div className="min-w-0 flex-1">
+        <CurrencyDisplay montant={transaction.montant} size="lg" tone="cash" className="font-display font-extrabold leading-tight" />
+        <p className="truncate font-mono text-xs text-text-muted">{transaction.reference ?? "Sans référence"}</p>
       </div>
-      <p className="mt-1 text-xs font-[var(--font-mono)] text-text-muted">{transaction.reference ?? "Sans reference"}</p>
+      <span className="shrink-0 rounded-full bg-surface-high px-2.5 py-1 text-xs font-medium text-text-muted">
+        {transaction.modePaiement}
+      </span>
     </motion.article>
   );
 }

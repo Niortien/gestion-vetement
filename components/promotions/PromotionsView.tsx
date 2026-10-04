@@ -3,7 +3,12 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Chip, Input, Spinner, Switch } from "@heroui/react";
+import { IconHanger, IconRosetteDiscount, IconSearch } from "@tabler/icons-react";
+import { CountUp } from "@/components/common/CountUp";
+import { PageHero } from "@/components/common/PageHero";
 import { PageWrapper } from "@/components/common/PageWrapper";
+import { SegmentedControl } from "@/components/common/SegmentedControl";
+import { StatTile } from "@/components/common/StatTile";
 import { useProduitsList } from "@/features/produits/query/produits-queries";
 import { useUpdateProduit } from "@/features/produits/mutation/produits-mutations";
 import type { Produit } from "@/types";
@@ -47,17 +52,17 @@ function ProduitPromoRow({ produit }: { produit: Produit }) {
   }
 
   return (
-    <div className="rounded-xl border border-border/60 bg-[var(--color-surface-high)] p-3">
+    <div className="rounded-lg border border-border bg-surface p-3.5 shadow-card">
       <div className="flex items-center gap-3">
         {/* Thumbnail */}
-        <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-[var(--color-surface)]">
+        <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-surface">
           {imageUrl ? (
             <img src={imageUrl} alt={produit.nom} className="h-full w-full object-cover" />
           ) : (
             <div className="flex h-full w-full items-center justify-center text-text-dim text-lg">?</div>
           )}
           {isPromo && (
-            <div className="absolute -top-1 -right-1 rounded-full bg-orange-500 px-1 py-0.5 text-[8px] font-bold text-white leading-none">
+            <div className="absolute -top-1 -right-1 rounded-full bg-return px-1 py-0.5 text-[9px] font-bold text-white leading-none">
               -{tauxReduction}%
             </div>
           )}
@@ -69,10 +74,10 @@ function ProduitPromoRow({ produit }: { produit: Produit }) {
           <div className="mt-0.5 flex items-center gap-2 flex-wrap">
             {isPromo ? (
               <>
-                <span className="text-xs text-text-dim line-through">
+                <span className="text-xs text-text-muted line-through">
                   {prixVente.toLocaleString("fr-FR")} FCFA
                 </span>
-                <span className="[font-family:var(--font-mono)] text-xs font-bold text-orange-400">
+                <span className="[font-family:var(--font-mono)] text-xs font-bold text-return-text">
                   {Number(produit.prixPromo).toLocaleString("fr-FR")} FCFA
                 </span>
               </>
@@ -82,7 +87,7 @@ function ProduitPromoRow({ produit }: { produit: Produit }) {
               </span>
             )}
             {produit.enPromo && !produit.prixPromo && (
-              <Chip size="sm" variant="flat" className="bg-orange-500/20 text-orange-400 text-[9px]">
+              <Chip size="sm" variant="flat" className="bg-return/20 text-return-text text-[9px]">
                 Prix à définir
               </Chip>
             )}
@@ -95,7 +100,7 @@ function ProduitPromoRow({ produit }: { produit: Produit }) {
           isSelected={produit.enPromo || expanded}
           onValueChange={handleToggle}
           isDisabled={update.isPending}
-          classNames={{ thumb: "bg-white", wrapper: "group-data-[selected=true]:bg-orange-500" }}
+          classNames={{ thumb: "bg-white", wrapper: "group-data-[selected=true]:bg-return" }}
           aria-label={`Promotion ${produit.nom}`}
         />
       </div>
@@ -131,45 +136,54 @@ export function PromotionsView() {
 
   return (
     <PageWrapper>
-      {/* En-tête */}
-      <div className="rounded-xl border border-border/80 bg-[linear-gradient(120deg,rgba(255,165,0,0.18),rgba(34,54,81,0.42))] p-4 md:p-5">
-        <h1 className="font-[var(--font-display)] text-2xl text-orange-400 md:text-4xl">
-          Promotions
-        </h1>
-        <p className="mt-1 text-sm text-text-muted">
-          {promoCount} produit{promoCount !== 1 ? "s" : ""} en promotion
-        </p>
-      </div>
+      <PageHero
+        tone="return"
+        icon={IconRosetteDiscount}
+        eyebrow="Catalogue"
+        title="Promotions"
+        description="Activez une promotion sur un produit, fixez le prix promo : la vitrine l'affiche aussitôt."
+      >
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <StatTile
+            tone="return"
+            icon={IconRosetteDiscount}
+            label="Produits en promotion"
+            value={isLoading ? "—" : <CountUp value={promoCount} />}
+          />
+          <StatTile
+            tone="accent"
+            icon={IconHanger}
+            label="Produits actifs"
+            value={isLoading ? "—" : <CountUp value={allProduits.length} />}
+            delay={0.05}
+          />
+        </div>
+      </PageHero>
 
-      {/* Filtres */}
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <Input
           placeholder="Rechercher un produit…"
           value={search}
           onValueChange={setSearch}
           size="sm"
           variant="bordered"
+          startContent={<IconSearch size={16} aria-hidden className="text-text-muted" />}
           classNames={{
-            inputWrapper: "border-border/60 bg-[var(--color-surface-high)] h-9",
+            base: "sm:max-w-xs",
+            inputWrapper: "h-10 border-border bg-surface",
           }}
           aria-label="Rechercher un produit"
         />
-        <div className="flex gap-1.5">
-          {(["tous", "enPromo"] as FilterMode[]).map((mode) => (
-            <Chip
-              key={mode}
-              variant="flat"
-              className={
-                filterMode === mode
-                  ? "cursor-pointer bg-orange-500 font-semibold text-white"
-                  : "cursor-pointer bg-[var(--color-surface-high)] text-text-muted hover:text-text"
-              }
-              onClick={() => setFilterMode(mode)}
-            >
-              {mode === "tous" ? "Tous les produits" : "En promotion"}
-            </Chip>
-          ))}
-        </div>
+        <SegmentedControl
+          ariaLabel="Filtrer les produits"
+          tone="return"
+          value={filterMode}
+          onChange={setFilterMode}
+          options={[
+            { key: "tous", label: "Tous les produits" },
+            { key: "enPromo", label: "En promotion", count: promoCount },
+          ]}
+        />
       </div>
 
       {/* Liste */}

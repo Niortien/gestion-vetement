@@ -79,7 +79,7 @@ export function LookbookPhotoUpload() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="mb-4 text-[10px] font-black uppercase tracking-[0.5em]"
-          style={{ color: "var(--v-gold)" }}
+          style={{ color: "var(--v-gold-text)" }}
         >
           Ou envoie-la directement
         </motion.p>
@@ -101,7 +101,7 @@ export function LookbookPhotoUpload() {
         {status === "done" ? (
           <div
             className="rounded-2xl border p-8 text-sm font-semibold"
-            style={{ borderColor: "var(--v-gold)", color: "var(--v-gold)" }}
+            style={{ borderColor: "var(--v-gold)", color: "var(--v-gold-text)" }}
           >
             Photo bien re&ccedil;ue ! On te recontacte tr&egrave;s vite.
           </div>
@@ -178,7 +178,7 @@ export function LookbookPhotoUpload() {
               type="submit"
               disabled={status === "submitting"}
               className="flex w-full items-center justify-center gap-2 rounded-2xl px-8 py-4 text-sm font-black uppercase tracking-widest transition-all hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
-              style={{ backgroundColor: "var(--v-gold)", color: "#000" }}
+              style={{ backgroundColor: "var(--v-gold)", color: "#0E1A14" }}
             >
               {status === "submitting" ? "Envoi en cours..." : "Envoyer ma photo"}
             </button>

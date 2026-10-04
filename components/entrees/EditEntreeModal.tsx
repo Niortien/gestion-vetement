@@ -47,7 +47,7 @@ export function EditEntreeModal({ entree, onClose }: EditEntreeModalProps) {
       classNames={{
         wrapper: "z-[1100]",
         backdrop: "z-[1050]",
-        base: "bg-[var(--color-surface)] border border-border",
+        base: "bg-surface border border-border",
         header: "border-b border-border/60",
         footer: "border-t border-border/60",
       }}
@@ -76,7 +76,7 @@ export function EditEntreeModal({ entree, onClose }: EditEntreeModalProps) {
             Annuler
           </Button>
           <Button
-            className="flex-1 bg-[var(--color-in)] font-semibold text-black"
+            className="flex-1 bg-in font-semibold text-black"
             isLoading={mutation.isPending}
             onPress={handleSave}
           >

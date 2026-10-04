@@ -48,7 +48,7 @@ export function ProduitCare() {
                 animate={{ rotate: openIdx === i ? 45 : 0 }}
                 transition={{ duration: 0.2 }}
                 className="text-xl font-light"
-                style={{ color: "var(--v-lime)" }}
+                style={{ color: "var(--v-gold-text)" }}
               >
                 +
               </motion.span>

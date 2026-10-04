@@ -112,7 +112,7 @@ function ImageGallery({
             onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
           />
         ) : (
-          <div className="h-64 w-full bg-gradient-to-br from-[var(--color-surface-high)] via-[color:rgba(143,126,245,0.22)] to-border md:h-80" />
+          <div className="h-64 w-full bg-gradient-to-br from-[var(--color-surface-high)] via-cash/22 to-border md:h-80" />
         )}
 
         {/* Bouton supprimer l'image active */}
@@ -182,13 +182,13 @@ function AdjustCell({ varianteId }: { varianteId: string }) {
     <div className="flex items-center gap-1">
       <Button
         isIconOnly size="sm" variant="flat"
-        className="h-6 w-6 min-w-0 rounded bg-[var(--color-surface-high)] text-out"
+        className="h-6 w-6 min-w-0 rounded bg-surface-high text-out"
         isDisabled={adjust.isPending}
         onPress={() => run(-1)}
       >−</Button>
       <Button
         isIconOnly size="sm" variant="flat"
-        className="h-6 w-6 min-w-0 rounded bg-[var(--color-surface-high)] text-in"
+        className="h-6 w-6 min-w-0 rounded bg-surface-high text-in"
         isDisabled={adjust.isPending}
         onPress={() => run(1)}
       >+</Button>
@@ -209,7 +209,7 @@ function DeleteVarianteCell({ variante, produitId }: { variante: Variante; produ
     <>
       <Button
         isIconOnly size="sm" variant="flat"
-        className="h-6 w-6 min-w-0 rounded bg-[var(--color-surface-high)] text-out"
+        className="h-6 w-6 min-w-0 rounded bg-surface-high text-out"
         aria-label={`Supprimer variante ${variante.taille} ${variante.couleur}`}
         onPress={onOpen}
       >
@@ -291,7 +291,7 @@ export function ProduitDetailView({ id }: ProduitDetailViewProps) {
           </Button>
           <h1 className="flex-1 font-[var(--font-display)] text-3xl md:text-4xl">{produit.nom}</h1>
           {!produit.isActif && (
-            <Chip size="sm" variant="flat" className="bg-[var(--color-out-dim)] text-out">Inactif</Chip>
+            <Chip size="sm" variant="flat" className="bg-out-dim text-out">Inactif</Chip>
           )}
           <Button size="sm" variant="bordered" className="border-accent/60 text-accent" onPress={() => setShowPanel(true)}>
             Éditer
@@ -344,7 +344,7 @@ export function ProduitDetailView({ id }: ProduitDetailViewProps) {
               <div className="flex items-center justify-between">
                 <p className="text-xs uppercase tracking-[0.08em] text-text-muted">Promotion</p>
                 {produit.enPromo && produit.prixPromo && (
-                  <span className="rounded-full bg-orange-500/20 px-2 py-0.5 text-[10px] font-bold text-orange-400">
+                  <span className="rounded-full bg-return/20 px-2 py-0.5 text-[10px] font-bold text-return-text">
                     -{Math.round(((parseFloat(produit.prixVente) - parseFloat(produit.prixPromo)) / parseFloat(produit.prixVente)) * 100)}%
                   </span>
                 )}
@@ -364,7 +364,7 @@ export function ProduitDetailView({ id }: ProduitDetailViewProps) {
                   }}
                   className={[
                     "relative h-5 w-9 shrink-0 rounded-full transition-colors",
-                    produit.enPromo || promoExpanded ? "bg-orange-500" : "bg-border",
+                    produit.enPromo || promoExpanded ? "bg-return" : "bg-border",
                   ].join(" ")}
                 >
                   <span
@@ -378,7 +378,7 @@ export function ProduitDetailView({ id }: ProduitDetailViewProps) {
                   {produit.enPromo ? (
                     <>
                       En promotion à{" "}
-                      <span className="font-semibold text-orange-400">
+                      <span className="font-semibold text-return-text">
                         {Number(produit.prixPromo).toLocaleString("fr-FR")} FCFA
                       </span>
                     </>

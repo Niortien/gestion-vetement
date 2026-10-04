@@ -73,7 +73,7 @@ export function PromoInlineForm({ produit, onSave, onCancel, isSaving }: PromoIn
   }
 
   return (
-    <div className="mt-2 rounded-xl border border-accent/30 bg-[color:rgba(74,122,255,0.06)] p-3 space-y-3">
+    <div className="mt-2 rounded-xl border border-accent/30 bg-accent/6 p-3 space-y-3">
       <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
         <Input
           variant="bordered"
@@ -100,9 +100,9 @@ export function PromoInlineForm({ produit, onSave, onCancel, isSaving }: PromoIn
       </div>
 
       {economie !== null && (
-        <div className="flex items-center justify-between rounded-lg bg-[var(--color-surface)] px-3 py-2">
+        <div className="flex items-center justify-between rounded-lg bg-surface px-3 py-2">
           <span className="text-xs text-text-muted">Économie client</span>
-          <span className="[font-family:var(--font-mono)] text-sm font-bold text-[var(--color-in)]">
+          <span className="[font-family:var(--font-mono)] text-sm font-bold text-in-text">
             {economie.toLocaleString("fr-FR")} FCFA
           </span>
         </div>
@@ -139,7 +139,7 @@ export function PromoInlineForm({ produit, onSave, onCancel, isSaving }: PromoIn
         </Button>
         <Button
           size="sm"
-          className="flex-1 bg-[var(--color-cash)] font-semibold text-black"
+          className="flex-1 bg-cash font-semibold text-black"
           onPress={handleSave}
           isDisabled={isInvalid || !prixPromoInput}
           isLoading={isSaving}

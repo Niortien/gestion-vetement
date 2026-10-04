@@ -335,7 +335,7 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
         initial="hidden"
         animate="visible"
         variants={getMotionVariant(panelSlide, reduced)}
-        className="fixed inset-y-0 right-0 z-[800] flex w-full max-w-[520px] flex-col border-l border-border bg-[linear-gradient(180deg,rgba(81,34,68,0.95),rgba(23,28,58,0.98))]"
+        className="fixed inset-y-0 right-0 z-[800] flex w-full max-w-[520px] flex-col border-l border-border bg-surface shadow-lg"
         role="dialog"
         aria-modal="true"
         aria-label="Nouvelle sortie"
@@ -343,8 +343,8 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
         {/* Header */}
         <div className="flex shrink-0 items-center justify-between border-b border-border/60 px-4 py-3">
           <div className="flex items-center gap-3">
-            <h3 className="font-[var(--font-display)] text-xl text-[var(--color-out)]">Nouvelle sortie</h3>
-            <span className="rounded-full bg-[var(--color-surface-high)] px-2 py-0.5 text-[10px] uppercase text-text-muted">
+            <h3 className="font-[var(--font-display)] text-xl text-out-text">Nouvelle sortie</h3>
+            <span className="rounded-full bg-surface-high px-2 py-0.5 text-[10px] uppercase text-text-muted">
               {STEP_LABELS[step]} {step}/3
             </span>
           </div>
@@ -358,10 +358,10 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
             <>
               <SortieTypeStep selected={selectedType} onSelect={setSelectedType} />
               {selectedType === TypeSortie.VENTE && !hasActiveSession && (
-                <div className="flex items-start gap-3 rounded-lg border border-[var(--color-out)]/50 bg-[color:rgba(255,77,109,0.12)] p-3">
+                <div className="flex items-start gap-3 rounded-lg border border-out/50 bg-out/12 p-3">
                   <span className="mt-0.5 text-base">⚠</span>
                   <div className="text-sm">
-                    <p className="font-semibold text-[var(--color-out)]">Aucune session caisse ouverte</p>
+                    <p className="font-semibold text-out-text">Aucune session caisse ouverte</p>
                     <p className="mt-0.5 text-text-muted">
                       Une vente nécessite une session active.{" "}
                       <Link href="/caisse" className="text-accent underline" onClick={onClose}>Ouvrir la caisse →</Link>
@@ -377,7 +377,7 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
             <>
               {selectedType && (
                 <p className="text-xs uppercase tracking-wide text-text-muted">
-                  Type : <span className="font-semibold text-[var(--color-out)]">{selectedType}</span>
+                  Type : <span className="font-semibold text-out-text">{selectedType}</span>
                 </p>
               )}
               {!isDepense && (
@@ -404,7 +404,7 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
               )}
 
               {isDepense ? (
-                <section className="space-y-3 rounded-lg border border-border/80 bg-[color:rgba(81,34,68,0.25)] p-4">
+                <section className="space-y-3 rounded-lg border border-border/80 bg-cash/25 p-4">
                   <p className="text-xs uppercase tracking-wide text-text-muted">Détails de la dépense</p>
                   <Input
                     variant="bordered"
@@ -428,11 +428,11 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
                   />
                 </section>
               ) : (
-                <section className="rounded-lg border border-border/80 bg-[color:rgba(81,34,68,0.25)] p-4">
+                <section className="rounded-lg border border-border/80 bg-cash/25 p-4">
                   <div className="mb-3 flex items-center justify-between">
                     <p className="text-xs uppercase tracking-wide text-text-muted">Produits</p>
                     {lines.length > 0 && (
-                      <span className="[font-family:var(--font-mono)] text-xs text-[var(--color-out)]">
+                      <span className="[font-family:var(--font-mono)] text-xs text-out-text">
                         Sous-total : {totalAvantRemise.toLocaleString("fr-FR")} FCFA
                       </span>
                     )}
@@ -459,7 +459,7 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
                   </div>
                   <Button
                     variant="flat"
-                    className="mt-3 w-full border border-dashed border-[var(--color-out)]/40 bg-[color:rgba(255,77,109,0.08)] text-[var(--color-out)]"
+                    className="mt-3 w-full border border-dashed border-out/40 bg-out/8 text-out-text"
                     onPress={() => { setReplacingIndex(null); setPickerOpen(true); }}
                   >
                     + Ajouter une variante
@@ -469,7 +469,7 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
 
               {/* Section remise — uniquement pour VENTE */}
               {selectedType === TypeSortie.VENTE && lines.length > 0 && (
-                <section className="rounded-lg border border-border/60 bg-[var(--color-surface-high)] p-3">
+                <section className="rounded-lg border border-border/60 bg-surface-high p-3">
                   <p className="mb-2.5 text-xs font-semibold uppercase tracking-wide text-text-muted">
                     Réduction (optionnel)
                   </p>
@@ -498,11 +498,11 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
                     />
                   </div>
                   {hasRemise && (
-                    <div className="mt-2.5 flex items-center justify-between rounded-lg bg-[var(--color-surface)] px-3 py-2 text-xs">
+                    <div className="mt-2.5 flex items-center justify-between rounded-lg bg-surface px-3 py-2 text-xs">
                       <span className="text-text-muted">
                         {totalAvantRemise.toLocaleString("fr-FR")} − {remiseNum.toLocaleString("fr-FR")}
                       </span>
-                      <span className="[font-family:var(--font-mono)] font-bold text-[var(--color-cash)]">
+                      <span className="[font-family:var(--font-mono)] font-bold text-cash-text">
                         = {Number(totalMontant).toLocaleString("fr-FR")} FCFA
                       </span>
                     </div>
@@ -534,7 +534,7 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
         <div className="shrink-0 border-t border-border/60 p-4 pb-6">
           {step === 1 && (
             <Button
-              className="w-full bg-[var(--color-out)] font-semibold text-white"
+              className="w-full bg-out font-semibold text-white"
               size="lg"
               isDisabled={!selectedType || (selectedType === TypeSortie.VENTE && !hasActiveSession)}
               onPress={handleTypeConfirm}
@@ -548,7 +548,7 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
               {hasRemise && (
                 <div className="flex justify-between px-1 text-xs text-text-muted">
                   <span>Sous-total {totalAvantRemise.toLocaleString("fr-FR")} · Remise −{remiseNum.toLocaleString("fr-FR")}</span>
-                  <span className="[font-family:var(--font-mono)] font-semibold text-[var(--color-cash)]">
+                  <span className="[font-family:var(--font-mono)] font-semibold text-cash-text">
                     {Number(totalMontant).toLocaleString("fr-FR")} FCFA
                   </span>
                 </div>
@@ -558,7 +558,7 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
                   ← Retour
                 </Button>
                 <Button
-                  className="flex-1 bg-[var(--color-out)] font-semibold text-white"
+                  className="flex-1 bg-out font-semibold text-white"
                   size="lg"
                   isDisabled={
                     isDepense
@@ -597,7 +597,7 @@ export function SortieCreatePanel({ isOpen, onClose }: SortieCreatePanelProps) {
                 ← Retour
               </Button>
               <Button
-                className="flex-1 bg-accent font-semibold text-black"
+                className="flex-1 bg-accent font-semibold text-on-accent"
                 size="lg"
                 isDisabled={!paiementMode || montantInsuffisant || isPending}
                 isLoading={isPending}

@@ -27,7 +27,7 @@ export function HomeCategoryGrid() {
       <div className="mb-12">
         <p
           className="mb-2 text-[10px] font-bold uppercase tracking-[0.3em]"
-          style={{ color: "var(--v-lime)" }}
+          style={{ color: "var(--v-gold-text)" }}
         >
           Parcourir
         </p>
@@ -75,7 +75,7 @@ export function HomeCategoryGrid() {
                   </p>
                 )}
                 <span
-                  className="mt-4 inline-block text-xs font-bold uppercase tracking-widest group-hover:text-[var(--v-lime)] transition-colors"
+                  className="mt-4 inline-block text-xs font-bold uppercase tracking-widest group-hover:text-[var(--v-gold-text)] transition-colors"
                   style={{ color: "var(--v-dim)" }}
                 >
                   Explorer →
@@ -110,7 +110,7 @@ export function HomeCategoryGrid() {
                   {cat.nom}
                 </p>
                 <span
-                  className="mt-1 inline-block text-xs font-bold uppercase tracking-widest transition-colors group-hover:text-[var(--v-lime)]"
+                  className="mt-1 inline-block text-xs font-bold uppercase tracking-widest transition-colors group-hover:text-[var(--v-gold-text)]"
                   style={{ color: "var(--v-dim)" }}
                 >
                   Explorer →

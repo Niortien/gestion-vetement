@@ -25,7 +25,7 @@ export function LookbookHero() {
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(to bottom, rgba(6,6,7,0.15) 0%, rgba(6,6,7,0.92) 100%)",
+              "linear-gradient(to bottom, rgba(14,26,20,0.15) 0%, rgba(14,26,20,0.92) 100%)",
           }}
         />
       </motion.div>
@@ -33,7 +33,7 @@ export function LookbookHero() {
       {/* Gold glow décoratif */}
       <div
         className="pointer-events-none absolute right-0 top-1/4 h-80 w-80 rounded-full blur-3xl"
-        style={{ backgroundColor: "rgba(240,180,41,0.07)" }}
+        style={{ backgroundColor: "rgba(198,240,58,0.07)" }}
         aria-hidden
       />
 
@@ -47,7 +47,7 @@ export function LookbookHero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
           className="mb-4 text-[10px] font-black uppercase tracking-[0.5em]"
-          style={{ color: "var(--v-gold)" }}
+          style={{ color: "var(--v-gold-text)" }}
         >
           Saison 2025 &mdash; Collection Yop City
         </motion.p>
@@ -60,7 +60,7 @@ export function LookbookHero() {
         >
           ABIDJAN
           <br />
-          <span style={{ color: "var(--v-gold)" }}>NIGHTS</span>
+          <span style={{ color: "var(--v-gold-text)" }}>NIGHTS</span>
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
@@ -81,7 +81,7 @@ export function LookbookHero() {
         className="absolute bottom-8 right-8 z-10 flex flex-col items-center gap-2"
       >
         <div className="h-10 w-px" style={{ backgroundColor: "var(--v-gold)" }} />
-        <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: "var(--v-gold)" }}>
+        <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: "var(--v-gold-text)" }}>
           Scroll
         </span>
       </motion.div>

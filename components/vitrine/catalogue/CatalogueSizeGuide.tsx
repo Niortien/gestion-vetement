@@ -36,7 +36,7 @@ export function CatalogueSizeGuide() {
             animate={{ rotate: open ? 180 : 0 }}
             transition={{ duration: 0.2 }}
             className="text-lg"
-            style={{ color: "var(--v-lime)" }}
+            style={{ color: "var(--v-gold-text)" }}
           >
             ↓
           </motion.span>
@@ -63,7 +63,7 @@ export function CatalogueSizeGuide() {
                           <th
                             key={h}
                             className="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest"
-                            style={{ color: "var(--v-lime)" }}
+                            style={{ color: "var(--v-gold-text)" }}
                           >
                             {h}
                           </th>

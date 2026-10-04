@@ -13,11 +13,11 @@ interface SessionDetailDrawerProps {
 }
 
 const MODE_COLORS: Record<string, string> = {
-  CASH: "border-[#4A7AFF]/30 bg-[#4A7AFF]/10 text-[#4A7AFF]",
-  WAVE: "border-[#39d353]/30 bg-[#39d353]/10 text-[#39d353]",
-  ORANGE_MONEY: "border-[#ff9a3c]/30 bg-[#ff9a3c]/10 text-[#ff9a3c]",
-  CARTE: "border-[#8f7ef5]/30 bg-[#8f7ef5]/10 text-[#8f7ef5]",
-  MTN_MONEY: "border-[#64a0ff]/30 bg-[#64a0ff]/10 text-[#64a0ff]",
+  CASH: "border-accent/30 bg-accent/10 text-accent-text",
+  WAVE: "border-in/30 bg-in/10 text-in-text",
+  ORANGE_MONEY: "border-return/30 bg-return/10 text-return-text",
+  CARTE: "border-cash/30 bg-cash/10 text-cash-text",
+  MTN_MONEY: "border-accent/30 bg-accent/10 text-accent-text",
 };
 
 function fmt(iso: string) {
@@ -116,7 +116,7 @@ export function SessionDetailDrawer({ session, onClose }: SessionDetailDrawerPro
             <div className="flex-1 overflow-y-auto">
               {isLoading ? (
                 <div className="flex h-32 items-center justify-center">
-                  <Spinner color="warning" size="sm" />
+                  <Spinner color="primary" size="sm" />
                 </div>
               ) : transactions.length === 0 ? (
                 <p className="p-5 text-center text-sm text-text-dim">Aucune transaction</p>

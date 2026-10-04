@@ -129,7 +129,7 @@ export function ProduitCard({ produit, rank, large = false }: ProduitCardProps) 
                 className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide backdrop-blur-sm"
                 style={{ backgroundColor: "rgba(0,0,0,0.45)", color: "rgba(255,255,255,0.75)", border: "1px solid rgba(255,255,255,0.12)" }}
               >
-                <span style={{ color: "var(--v-lime)", fontSize: 7 }}>◆</span>
+                <span style={{ color: "var(--v-gold-text)", fontSize: 7 }}>◆</span>
                 {b.nom}
               </span>
             ))}
@@ -170,7 +170,7 @@ export function ProduitCard({ produit, rank, large = false }: ProduitCardProps) 
                 </span>
                 <span
                   className="[font-family:var(--font-mono)] text-base font-black"
-                  style={{ color: "var(--v-lime)" }}
+                  style={{ color: "var(--v-gold-text)" }}
                 >
                   {prixPromo.toLocaleString("fr-FR")} <span className="text-xs font-normal">FCFA</span>
                 </span>
@@ -178,14 +178,14 @@ export function ProduitCard({ produit, rank, large = false }: ProduitCardProps) 
             ) : (
               <span
                 className="[font-family:var(--font-mono)] text-base font-black"
-                style={{ color: "var(--v-lime)" }}
+                style={{ color: "var(--v-gold-text)" }}
               >
                 {prix.toLocaleString("fr-FR")} <span className="text-xs font-normal">FCFA</span>
               </span>
             )}
             <span
               className="text-xs font-semibold uppercase tracking-wider"
-              style={{ color: "var(--v-lime)" }}
+              style={{ color: "var(--v-gold-text)" }}
             >
               VOIR →
             </span>

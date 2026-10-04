@@ -1,7 +1,7 @@
 ﻿"use client";
 
-import Image from "next/image";
 import Link from "next/link";
+import { BrandMark } from "@/components/common/BrandMark";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
@@ -38,14 +38,7 @@ export function VitrineNav() {
         />
         <div className="relative mx-auto flex h-16 max-w-7xl items-center justify-between px-5">
           <Link href="/" aria-label="Dri Valé" className="shrink-0">
-            <Image
-              src="/images/logo/logo.jpeg"
-              alt="Dri Valé"
-              height={40}
-              width={130}
-              className="h-10 w-auto object-contain"
-              priority
-            />
+            <BrandMark vitrine />
           </Link>
 
           <nav className="hidden items-center gap-8 md:flex">
@@ -56,7 +49,7 @@ export function VitrineNav() {
                   key={l.href}
                   href={l.href}
                   className="relative text-[11px] font-bold uppercase tracking-[0.18em] transition-colors"
-                  style={{ color: active ? "var(--v-gold)" : "var(--v-muted)" }}
+                  style={{ color: active ? "var(--v-gold-text)" : "var(--v-muted)" }}
                 >
                   {l.label}
                   {active && (
@@ -140,7 +133,7 @@ export function VitrineNav() {
             transition={{ duration: 0.15 }}
           >
             <div className="flex h-16 items-center justify-between px-5">
-              <Image src="/images/logo/logo.jpeg" alt="Dri Valé" height={36} width={120} className="h-9 w-auto object-contain" />
+              <BrandMark vitrine />
               <button onClick={() => setOpen(false)} style={{ color: "var(--v-muted)" }}>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
@@ -159,7 +152,7 @@ export function VitrineNav() {
                   <Link
                     href={l.href}
                     onClick={() => setOpen(false)}
-                    className="block border-b py-5 font-[var(--font-display)] text-[42px] font-black leading-tight tracking-tight transition-colors hover:text-[var(--v-gold)]"
+                    className="block border-b py-5 font-[var(--font-display)] text-[42px] font-black leading-tight tracking-tight transition-colors hover:text-[var(--v-gold-text)]"
                     style={{
                       borderColor: "var(--v-border)",
                       color: pathname === l.href ? "var(--v-gold)" : "var(--v-text)",
@@ -173,11 +166,11 @@ export function VitrineNav() {
 
             <div className="border-t px-6 py-6" style={{ borderColor: "var(--v-border)" }}>
               <div className="flex items-center gap-2">
-                <span style={{ color: "var(--v-gold)" }}>★</span>
-                <span className="font-[var(--font-display)] text-sm font-black uppercase tracking-wider" style={{ color: "var(--v-gold)" }}>
+                <span style={{ color: "var(--v-gold-text)" }}>★</span>
+                <span className="font-[var(--font-display)] text-sm font-black uppercase tracking-wider" style={{ color: "var(--v-gold-text)" }}>
                   Sortez toujours bien habillé
                 </span>
-                <span style={{ color: "var(--v-gold)" }}>★</span>
+                <span style={{ color: "var(--v-gold-text)" }}>★</span>
               </div>
               <p className="mt-1 text-xs" style={{ color: "var(--v-dim)" }}>Dri Valé · Yopougon · Abidjan · CI</p>
             </div>
