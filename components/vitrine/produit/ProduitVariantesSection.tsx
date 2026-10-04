@@ -57,7 +57,7 @@ export function ProduitVariantesSection({
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-black uppercase tracking-widest"
-          style={{ backgroundColor: "#25D366", color: "#0E1A14" }}
+          style={{ backgroundColor: "#25D366", color: "var(--v-on-gold)" }}
         >
           Demander les tailles
         </a>

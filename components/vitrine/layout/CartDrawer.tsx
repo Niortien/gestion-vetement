@@ -220,7 +220,7 @@ export function CartDrawer() {
                     key={key}
                     onClick={() => handleCommanderBoutique(group)}
                     className="flex w-full flex-col items-center justify-center gap-0.5 rounded-xl py-3.5 text-sm font-black uppercase tracking-wider transition-opacity hover:opacity-90"
-                    style={{ backgroundColor: "#25D366", color: "#0E1A14" }}
+                    style={{ backgroundColor: "#25D366", color: "var(--v-on-gold)" }}
                   >
                     <span className="flex items-center gap-2">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">

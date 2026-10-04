@@ -1,64 +1,70 @@
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 interface BrandMarkProps {
-  /** `full` = pastille + « Dri Valé » ; `icon` = pastille seule. */
-  variant?: "full" | "icon";
-  /** Force le texte clair (fond toujours sombre : barre latérale forêt). Omis : suit le thème. */
+  /** Force l'affichage pour fond sombre (barre latérale noire du back-office). */
   onDark?: boolean;
-  /** Couleurs de la vitrine publique (tokens `--v-*`, indépendants du thème du back-office). */
+  /** Couleurs de la vitrine publique (thème `data-theme`, indépendant du thème du back-office). */
   vitrine?: boolean;
-  /** Affiche la signature sous le nom. */
-  tagline?: boolean;
+  /** Hauteur Tailwind du logo (le ratio est conservé). */
   className?: string;
+  priority?: boolean;
 }
 
-/** Pastille citron vert : l'étoile reprend celles du logo d'origine (la silhouette qui monte vers les étoiles). */
-function Mark({ className }: { className?: string }) {
+/*
+ * Logo officiel : `public/images/logo/logo.jpeg` (étoiles, silhouette, « Dri Valé », signature), utilisé tel quel.
+ * Le fichier est blanc sur noir. Sur fond sombre il est fondu par `mix-blend-mode: screen` (le noir disparaît) ;
+ * sur fond clair on l'inverse puis `multiply` (texte noir sur le fond de la page).
+ * Le cadrage retire les marges noires du JPEG : zone utile 568×283 px dans le fichier 640×469.
+ */
+const SRC = "/images/logo/logo.jpeg";
+const FILE = { w: 640, h: 469 };
+const CROP = { x: 33, y: 82, w: 568, h: 283 };
+
+const DARK_BLEND = "mix-blend-screen";
+const LIGHT_BLEND = "invert mix-blend-multiply";
+
+function Logo({ blend, visibility, priority }: { blend: string; visibility?: string; priority?: boolean }) {
   return (
-    <span
-      aria-hidden
-      className={cn("flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#C6F03A] text-[#0E1A14]", className)}
-    >
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-        <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
-      </svg>
-    </span>
+    <Image
+      src={SRC}
+      alt=""
+      width={FILE.w}
+      height={FILE.h}
+      priority={priority}
+      draggable={false}
+      className={cn("absolute max-w-none select-none", blend, visibility)}
+      style={{
+        width: `${(FILE.w / CROP.w) * 100}%`,
+        height: `${(FILE.h / CROP.h) * 100}%`,
+        left: `${(-CROP.x / CROP.w) * 100}%`,
+        top: `${(-CROP.y / CROP.h) * 100}%`,
+      }}
+    />
   );
 }
 
-/** Logo Dri Valé en code (le fichier d'origine est un JPEG noir avec filigrane, inutilisable sur fond coloré). */
-export function BrandMark({ variant = "full", onDark, vitrine = false, tagline = false, className }: BrandMarkProps) {
-  if (variant === "icon") return <Mark className={className} />;
-
+export function BrandMark({ onDark = false, vitrine = false, className, priority = false }: BrandMarkProps) {
   return (
-    <span className={cn("inline-flex items-center gap-2.5", className)} role="img" aria-label="Dri Valé — Sortez toujours bien habillé">
-      <Mark />
-      <span className="flex flex-col leading-none">
-        <span
-          className={cn(
-            "font-display text-xl font-extrabold tracking-tight",
-            !vitrine && (onDark ? "text-sidebar-text" : "text-text")
-          )}
-          style={vitrine ? { color: "var(--v-text)" } : undefined}
-        >
-          Dri
-          <span
-            className={vitrine ? undefined : onDark ? "text-sidebar-accent" : "text-accent-text"}
-            style={vitrine ? { color: "var(--v-gold-text)" } : undefined}
-          >
-            {" "}
-            Valé
-          </span>
-        </span>
-        {tagline && (
-          <span
-            className={cn("mt-1 text-[10px] font-medium tracking-wide", !vitrine && (onDark ? "text-sidebar-muted" : "text-text-muted"))}
-            style={vitrine ? { color: "var(--v-muted)" } : undefined}
-          >
-            Sortez toujours bien habillé
-          </span>
-        )}
-      </span>
+    <span
+      role="img"
+      aria-label="Dri Valé — Sortez toujours bien habillé"
+      className={cn("relative block shrink-0 overflow-hidden", className ?? "h-14")}
+      style={{ aspectRatio: `${CROP.w} / ${CROP.h}` }}
+    >
+      {onDark ? (
+        <Logo blend={DARK_BLEND} priority={priority} />
+      ) : vitrine ? (
+        <>
+          <Logo blend={DARK_BLEND} visibility="brand-logo-v-dark" priority={priority} />
+          <Logo blend={LIGHT_BLEND} visibility="brand-logo-v-light" />
+        </>
+      ) : (
+        <>
+          <Logo blend={LIGHT_BLEND} visibility="brand-logo-on-light" priority={priority} />
+          <Logo blend={DARK_BLEND} visibility="brand-logo-on-dark" />
+        </>
+      )}
     </span>
   );
 }

@@ -140,7 +140,7 @@ export function HomeHero() {
             <Link
               href="/catalogue"
               className="inline-flex items-center gap-2 rounded-xl px-7 py-4 font-[var(--font-display)] text-sm font-black uppercase tracking-widest transition-all hover:scale-[1.03] hover:shadow-[0_0_32px_rgba(198,240,58,0.35)] active:scale-[0.97]"
-              style={{ backgroundColor: "var(--v-gold)", color: "#0E1A14" }}
+              style={{ backgroundColor: "var(--v-gold)", color: "var(--v-on-gold)" }}
             >
               Explorer le catalogue
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -169,9 +169,9 @@ export function HomeHero() {
             transition={{ delay: 0.75 }}
           >
             {[
-              { val: "200+", label: "clients à Yop" },
-              { val: "4.9★", label: "satisfaction" },
-              { val: "24h",  label: "livraison locale" },
+              { val: "Yopougon", label: "boutique physique" },
+              { val: "WhatsApp", label: "commande en 1 message" },
+              { val: "100%", label: "pièces authentiques" },
             ].map((s) => (
               <div key={s.label} className="flex flex-col">
                 <span className="font-[var(--font-display)] text-xl font-black" style={{ color: "var(--v-gold-text)" }}>

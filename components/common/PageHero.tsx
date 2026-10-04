@@ -43,7 +43,7 @@ export function PageHero({ tone = "accent", eyebrow, icon: Icon, title, descript
         <div className="absolute inset-0 bg-[color-mix(in_srgb,var(--tone)_7%,transparent)]" />
         <div className="dot-grid absolute inset-0 opacity-50 [mask-image:linear-gradient(to_bottom_left,black,transparent_70%)]" />
         <span className="aurora-blob aurora-a -right-10 -top-16 h-56 w-56 bg-[color-mix(in_srgb,var(--tone)_30%,transparent)]" />
-        <span className="aurora-blob aurora-b -bottom-24 left-1/3 h-52 w-52 bg-[color-mix(in_srgb,var(--color-cash)_16%,transparent)]" />
+        <span className="aurora-blob aurora-b -bottom-24 left-1/3 h-52 w-52 bg-[color-mix(in_srgb,var(--color-text)_7%,transparent)]" />
       </div>
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">

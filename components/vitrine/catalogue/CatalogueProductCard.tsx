@@ -4,6 +4,8 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import type { Produit, VarianteBoutique } from "@/types";
 import { useVitrineStore } from "@/stores/vitrineStore";
+import { StockUrgency } from "@/components/vitrine/common/StockUrgency";
+import { isNouveau } from "@/lib/merchandising";
 
 function getBoutiques(variantes: Produit["variantes"]): VarianteBoutique[] {
   const seen = new Set<string>();
@@ -22,7 +24,7 @@ interface CatalogueProductCardProps {
   priority?: boolean;
 }
 
-export function CatalogueProductCard({ produit, priority }: CatalogueProductCardProps) {
+export function CatalogueProductCard({ produit }: CatalogueProductCardProps) {
   const addToCart = useVitrineStore((s) => s.addToCart);
   const setCartOpen = useVitrineStore((s) => s.setCartOpen);
 
@@ -96,7 +98,7 @@ export function CatalogueProductCard({ produit, priority }: CatalogueProductCard
           {firstVariante && totalStock > 0 && (
             <motion.button
               className="absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center rounded-full font-black text-sm"
-              style={{ backgroundColor: "var(--v-lime)", color: "#fff" }}
+              style={{ backgroundColor: "var(--v-lime)", color: "var(--v-on-gold)" }}
               variants={{ rest: { opacity: 0, scale: 0.7 }, hovered: { opacity: 1, scale: 1 } }}
               transition={{ duration: 0.2 }}
               onClick={(e) => {
@@ -153,6 +155,7 @@ export function CatalogueProductCard({ produit, priority }: CatalogueProductCard
           </div>
         )}
 
+        <StockUrgency totalStock={totalStock} className="mt-2" />
         <div className="mt-2 flex items-end justify-between gap-2">
           {isPromo && prixPromo !== null ? (
             <div className="flex flex-col gap-0.5">
@@ -177,12 +180,12 @@ export function CatalogueProductCard({ produit, priority }: CatalogueProductCard
               {prix.toLocaleString("fr-FR")} <span className="text-[10px] font-normal" style={{ color: "var(--v-dim)" }}>FCFA</span>
             </span>
           )}
-          {priority && !isPromo && (
+          {isNouveau(produit.createdAt) && !isPromo && (
             <span
               className="rounded-full px-2 py-0.5 text-[9px] font-black uppercase tracking-wider"
-              style={{ backgroundColor: "var(--v-lime)", color: "#fff" }}
+              style={{ backgroundColor: "var(--v-lime)", color: "var(--v-on-gold)" }}
             >
-              NEW
+              Nouveau
             </span>
           )}
         </div>

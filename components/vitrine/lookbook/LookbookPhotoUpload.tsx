@@ -178,7 +178,7 @@ export function LookbookPhotoUpload() {
               type="submit"
               disabled={status === "submitting"}
               className="flex w-full items-center justify-center gap-2 rounded-2xl px-8 py-4 text-sm font-black uppercase tracking-widest transition-all hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
-              style={{ backgroundColor: "var(--v-gold)", color: "#0E1A14" }}
+              style={{ backgroundColor: "var(--v-gold)", color: "var(--v-on-gold)" }}
             >
               {status === "submitting" ? "Envoi en cours..." : "Envoyer ma photo"}
             </button>

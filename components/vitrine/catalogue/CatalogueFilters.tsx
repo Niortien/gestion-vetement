@@ -33,7 +33,7 @@ export function CatalogueFilters({
           className="shrink-0 rounded-full border px-4 py-2 text-[11px] font-black uppercase tracking-wider transition-all active:scale-95"
           style={
             !selectedCategorieId
-              ? { backgroundColor: "var(--v-gold)", borderColor: "var(--v-gold)", color: "#0E1A14" }
+              ? { backgroundColor: "var(--v-gold)", borderColor: "var(--v-gold)", color: "var(--v-on-gold)" }
               : { borderColor: "var(--v-border)", color: "var(--v-muted)", backgroundColor: "transparent" }
           }
         >
@@ -48,7 +48,7 @@ export function CatalogueFilters({
             className="shrink-0 rounded-full border px-4 py-2 text-[11px] font-black uppercase tracking-wider transition-all active:scale-95"
             style={
               selectedCategorieId === cat.id
-                ? { backgroundColor: "var(--v-gold)", borderColor: "var(--v-gold)", color: "#0E1A14" }
+                ? { backgroundColor: "var(--v-gold)", borderColor: "var(--v-gold)", color: "var(--v-on-gold)" }
                 : { borderColor: "var(--v-border)", color: "var(--v-muted)", backgroundColor: "transparent" }
             }
           >
