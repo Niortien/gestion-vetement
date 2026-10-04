@@ -38,7 +38,7 @@ export function VitrineNav() {
         />
         <div className="relative mx-auto flex h-16 max-w-7xl items-center justify-between px-5">
           <Link href="/" aria-label="Dri Valé" className="shrink-0">
-            <BrandMark vitrine />
+            <BrandMark vitrine className="h-11" />
           </Link>
 
           <nav className="hidden items-center gap-8 md:flex">
@@ -133,7 +133,7 @@ export function VitrineNav() {
             transition={{ duration: 0.15 }}
           >
             <div className="flex h-16 items-center justify-between px-5">
-              <BrandMark vitrine />
+              <BrandMark vitrine className="h-11" />
               <button onClick={() => setOpen(false)} style={{ color: "var(--v-muted)" }}>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>

@@ -1,5 +1,6 @@
 ﻿"use client";
 
+import { StockUrgency } from "@/components/vitrine/common/StockUrgency";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -95,7 +96,7 @@ export function ProduitCard({ produit, rank, large = false }: ProduitCardProps) 
           {hasNew && !isPromo && (
             <span
               className="rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider"
-              style={{ backgroundColor: "var(--v-lime)", color: "#fff" }}
+              style={{ backgroundColor: "var(--v-lime)", color: "var(--v-on-gold)" }}
             >
               NEW
             </span>
@@ -155,6 +156,7 @@ export function ProduitCard({ produit, rank, large = false }: ProduitCardProps) 
             )}
           </motion.div>
 
+          <StockUrgency totalStock={totalStock} className="mt-2" />
           <motion.div
             className="mt-2 flex items-end justify-between"
             variants={{ rest: { y: 8, opacity: 0 }, hovered: { y: 0, opacity: 1 } }}
@@ -198,7 +200,7 @@ export function ProduitCard({ produit, rank, large = false }: ProduitCardProps) 
         <motion.button
           onClick={handleQuickAdd}
           className="absolute right-3 bottom-3 flex h-8 w-8 items-center justify-center rounded-full text-xs font-black transition-colors"
-          style={{ backgroundColor: "var(--v-lime)", color: "#fff" }}
+          style={{ backgroundColor: "var(--v-lime)", color: "var(--v-on-gold)" }}
           variants={{ rest: { scale: 0, opacity: 0 }, hovered: { scale: 1, opacity: 1 } }}
           transition={{ duration: 0.2, delay: 0.1 }}
           aria-label="Ajouter au panier"

@@ -145,7 +145,7 @@ function FeaturedCard({ produit, index }: { produit: Produit | null; index: numb
               <Link
                 href={`/boutique/${produit.id}`}
                 className="rounded-xl px-4 py-2 text-xs font-black uppercase tracking-wider transition-all hover:opacity-90 active:scale-95"
-                style={{ backgroundColor: "var(--v-gold)", color: "#0E1A14" }}
+                style={{ backgroundColor: "var(--v-gold)", color: "var(--v-on-gold)" }}
               >
                 Voir
               </Link>
@@ -249,7 +249,7 @@ function CompactCard({ produit, index }: { produit: Produit | null; index: numbe
               <Link
                 href={`/boutique/${produit.id}`}
                 className="rounded-lg px-3 py-1.5 text-[11px] font-black uppercase tracking-wider transition-all hover:opacity-90 active:scale-95"
-                style={{ backgroundColor: "var(--v-gold)", color: "#0E1A14" }}
+                style={{ backgroundColor: "var(--v-gold)", color: "var(--v-on-gold)" }}
               >
                 Voir
               </Link>

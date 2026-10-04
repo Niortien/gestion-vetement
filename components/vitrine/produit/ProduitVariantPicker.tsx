@@ -79,7 +79,7 @@ export function ProduitVariantPicker({
                         textDecoration: "line-through",
                       }
                     : isActive
-                    ? { borderColor: "var(--v-lime)", backgroundColor: "var(--v-lime)", color: "#fff" }
+                    ? { borderColor: "var(--v-lime)", backgroundColor: "var(--v-lime)", color: "var(--v-on-gold)" }
                     : { borderColor: "var(--v-border)", color: "var(--v-text)" }
                 }
               >

@@ -33,7 +33,7 @@ export function MobileNav() {
     <>
       <header className="flex shrink-0 items-center justify-between gap-3 border-b border-sidebar-border bg-sidebar px-4 py-2.5 lg:hidden">
         <div className="flex min-w-0 items-center gap-3">
-          <BrandMark onDark />
+          <BrandMark onDark className="h-10" />
           {boutiqueName && (
             <span className="max-w-[40vw] truncate rounded-full bg-sidebar-hover px-2.5 py-1 text-xs font-semibold text-sidebar-text">
               {boutiqueName}

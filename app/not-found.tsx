@@ -5,7 +5,7 @@ import { BrandMark } from "@/components/common/BrandMark";
 export default function NotFound() {
   return (
     <main className="mx-auto flex min-h-[70vh] max-w-xl flex-col items-center justify-center gap-4 px-4 text-center">
-      <BrandMark />
+      <BrandMark className="h-20" />
       <p className="mt-4 font-mono text-sm text-text-muted">Erreur 404</p>
       <h1 className="font-display text-4xl font-extrabold tracking-tight text-text">Page introuvable</h1>
       <p className="text-sm text-text-muted">Cette page n&apos;existe pas ou a été déplacée.</p>

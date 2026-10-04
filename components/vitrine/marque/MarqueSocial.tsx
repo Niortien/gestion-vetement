@@ -154,7 +154,7 @@ export function MarqueSocial() {
               <button
                 type="submit"
                 className="whitespace-nowrap rounded-xl px-6 py-3 text-sm font-black uppercase tracking-wider transition-all hover:opacity-90 sm:rounded-l-none"
-                style={{ backgroundColor: "var(--v-lime)", color: "#fff" }}
+                style={{ backgroundColor: "var(--v-lime)", color: "var(--v-on-gold)" }}
               >
                 S&apos;inscrire
               </button>
