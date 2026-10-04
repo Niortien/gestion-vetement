@@ -5,7 +5,7 @@ import type { Produit } from "@/types";
 import { useVitrineStore } from "@/stores/vitrineStore";
 import { isNouveau } from "@/lib/merchandising";
 import { StockUrgency } from "@/components/vitrine/common/StockUrgency";
-import { IconPlus } from "@/components/vitrine/common/VitrineIcons";
+import { IconPin, IconPlus } from "@/components/vitrine/common/VitrineIcons";
 
 interface ProductTileProps {
   produit: Produit;
@@ -16,6 +16,15 @@ interface ProductTileProps {
 }
 
 const MAX_TAILLES = 5;
+
+/** Boutiques qui ont réellement la pièce en stock (une seule fois chacune). */
+function boutiquesEnStock(variantes: Produit["variantes"]): string[] {
+  const noms = new Map<string, string>();
+  for (const v of variantes ?? []) {
+    if (v.quantiteStock > 0 && v.boutique && !noms.has(v.boutique.id)) noms.set(v.boutique.id, v.boutique.nom);
+  }
+  return [...noms.values()];
+}
 
 /**
  * Carte produit « étiquette » : photo 4:5, puis l'étiquette accrochée au vêtement (nom, prix, tailles).
@@ -32,6 +41,7 @@ export function ProductTile({ produit }: ProductTileProps) {
   const firstDispo = variantes.find((v) => v.quantiteStock > 0);
   const tailles = [...new Set(variantes.filter((v) => v.quantiteStock > 0).map((v) => String(v.taille)))];
 
+  const boutiques = boutiquesEnStock(variantes);
   const isPromo = produit.enPromo && !!produit.prixPromo;
   const prixPromo = isPromo ? parseFloat(produit.prixPromo!) : null;
   const taux = isPromo && prixPromo !== null && prix > 0 ? Math.round(((prix - prixPromo) / prix) * 100) : null;
@@ -120,6 +130,12 @@ export function ProductTile({ produit }: ProductTileProps) {
           <p className="mt-1.5 text-[11px] tracking-wide" style={{ color: "var(--v-muted)" }}>
             {tailles.slice(0, MAX_TAILLES).join(" · ")}
             {tailles.length > MAX_TAILLES ? ` +${tailles.length - MAX_TAILLES}` : ""}
+          </p>
+        )}
+        {boutiques.length > 0 && (
+          <p className="mt-1.5 flex items-center gap-1.5 text-[11px] font-medium" style={{ color: "var(--v-muted)" }}>
+            <IconPin size={12} style={{ color: "var(--v-gold-text)" }} />
+            <span className="truncate">{boutiques.join(" · ")}</span>
           </p>
         )}
         <StockUrgency totalStock={totalStock} className="mt-1.5" />
