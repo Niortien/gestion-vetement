@@ -8,7 +8,7 @@ export default function VitrineLayout({ children }: { children: React.ReactNode 
   return (
     <VitrineRoot>
       <VitrineNav />
-      <main className="pb-20 pt-16 md:pb-0">{children}</main>
+      <main className="pb-20 pt-20 md:pb-0">{children}</main>
       <VitrineFooter />
       <CartDrawer />
       <VitrineDock />

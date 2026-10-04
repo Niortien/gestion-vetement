@@ -46,7 +46,7 @@ export function CatalogueGrid({ categorieId, taille, search, inStockOnly }: Cata
 
   const skeleton = (
     <div className="mx-auto max-w-7xl px-5 py-12">
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
         {Array(8).fill(null).map((_, i) => (
           <div key={i} className="animate-pulse">
             <div className="aspect-[3/4] rounded-xl" style={{ backgroundColor: "var(--v-s2)" }} />
@@ -92,7 +92,7 @@ export function CatalogueGrid({ categorieId, taille, search, inStockOnly }: Cata
 
   return (
     <div className="mx-auto max-w-7xl px-5 py-10">
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
         {filtered.map((produit, i) => (
           <motion.div
             key={produit.id}
@@ -100,7 +100,7 @@ export function CatalogueGrid({ categorieId, taille, search, inStockOnly }: Cata
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: Math.min(i * 0.04, 0.4), duration: 0.4 }}
           >
-            <CatalogueProductCard produit={produit} priority={i === 0} />
+            <CatalogueProductCard produit={produit} priority={i === 0} dense />
           </motion.div>
         ))}
       </div>

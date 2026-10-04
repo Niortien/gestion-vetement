@@ -13,11 +13,11 @@ export function VitrineHomeView() {
     <>
       <HomeHero />
       <HomeTicker />
-      <HomeCollection />
-      <HomeCategories />
       <HomePromoSection />
+      <HomeCategories />
       <HomeBrandStatement />
       <HomeWhatsappCta />
+      <HomeCollection />
     </>
   );
 }

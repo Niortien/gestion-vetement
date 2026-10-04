@@ -13,6 +13,8 @@ interface ProductTileProps {
   rank?: number;
   large?: boolean;
   priority?: boolean;
+  /** Version compacte (grilles denses) : coins nets, légende réduite, sans liste de tailles. */
+  dense?: boolean;
 }
 
 const MAX_TAILLES = 5;
@@ -30,7 +32,7 @@ function boutiquesEnStock(variantes: Produit["variantes"]): string[] {
  * Carte produit « étiquette » : photo 4:5, puis l'étiquette accrochée au vêtement (nom, prix, tailles).
  * Action rapide « ajouter au panier » toujours visible au tactile, révélée au survol sur ordinateur.
  */
-export function ProductTile({ produit }: ProductTileProps) {
+export function ProductTile({ produit, dense = false }: ProductTileProps) {
   const addToCart = useVitrineStore((s) => s.addToCart);
   const setCartOpen = useVitrineStore((s) => s.setCartOpen);
 
@@ -50,7 +52,7 @@ export function ProductTile({ produit }: ProductTileProps) {
 
   return (
     <article className="group relative">
-      <div className="relative aspect-[4/5] overflow-hidden rounded-xl" style={{ backgroundColor: "var(--v-s2)" }}>
+      <div className={`relative aspect-[4/5] overflow-hidden ${dense ? "rounded-md" : "rounded-xl"}`} style={{ backgroundColor: "var(--v-s2)" }}>
         <Link href={`/boutique/${produit.id}`} className="absolute inset-0 block" aria-label={`${produit.nom} — voir la fiche`}>
           {imageUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -104,7 +106,7 @@ export function ProductTile({ produit }: ProductTileProps) {
 
       <div className="mt-3 px-0.5">
         <Link href={`/boutique/${produit.id}`}>
-          <h3 className="tag-title text-[15px] transition-colors group-hover:text-[var(--v-gold-text)]" style={{ color: "var(--v-text)" }}>
+          <h3 className={`tag-title transition-colors group-hover:text-[var(--v-gold-text)] ${dense ? "text-[13px]" : "text-[15px]"}`} style={{ color: "var(--v-text)" }}>
             {produit.nom}
           </h3>
         </Link>
@@ -120,20 +122,20 @@ export function ProductTile({ produit }: ProductTileProps) {
               </span>
             </>
           ) : (
-            <span className="font-[var(--font-mono)] text-sm font-bold" style={{ color: "var(--v-text)" }}>
+            <span className={`font-[var(--font-mono)] font-bold ${dense ? "text-xs" : "text-sm"}`} style={{ color: "var(--v-text)" }}>
               {prix.toLocaleString("fr-FR")} FCFA
             </span>
           )}
         </div>
 
-        {tailles.length > 0 && (
+        {!dense && tailles.length > 0 && (
           <p className="mt-1.5 text-[11px] tracking-wide" style={{ color: "var(--v-muted)" }}>
             {tailles.slice(0, MAX_TAILLES).join(" · ")}
             {tailles.length > MAX_TAILLES ? ` +${tailles.length - MAX_TAILLES}` : ""}
           </p>
         )}
         {boutiques.length > 0 && (
-          <p className="mt-1.5 flex items-center gap-1.5 text-[11px] font-medium" style={{ color: "var(--v-muted)" }}>
+          <p className={`mt-1.5 flex items-center gap-1.5 font-medium ${dense ? "text-[10px]" : "text-[11px]"}`} style={{ color: "var(--v-muted)" }}>
             <IconPin size={12} style={{ color: "var(--v-gold-text)" }} />
             <span className="truncate">{boutiques.join(" · ")}</span>
           </p>
