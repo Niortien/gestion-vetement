@@ -56,7 +56,7 @@ export function SegmentedControl<K extends string>({
             onClick={() => onChange(o.key)}
             className={cn(
               "relative flex min-h-9 shrink-0 cursor-pointer items-center gap-1.5 rounded-md px-3 text-sm font-medium transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--tone)]",
-              active ? "text-white" : "text-text-muted hover:text-text"
+              active ? "text-[var(--tone-on)]" : "text-text-muted hover:text-text"
             )}
           >
             {active && (
@@ -72,7 +72,7 @@ export function SegmentedControl<K extends string>({
               <span
                 className={cn(
                   "relative rounded-full px-1.5 font-mono text-[11px] tabular-nums",
-                  active ? "bg-white/25 text-white" : "bg-border text-text-muted"
+                  active ? "bg-black/15 text-[var(--tone-on)]" : "bg-border text-text-muted"
                 )}
               >
                 {o.count}

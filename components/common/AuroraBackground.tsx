@@ -6,11 +6,11 @@ import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 /*
  * Fond « aurore » — adapté du composant « Aurora Hero bg » (21st.dev, @dhileepkumargm).
- * Adaptations : fumée noir et blanc du logo Dri Valé, vignette sur le token `--color-base` au lieu du
+ * Adaptations : fumée dorée sur noir, aux couleurs de Dri Valé, vignette sur le token `--color-base` au lieu du
  * noir, couche `difference` retirée (illisible en thème clair), animation figée sous `prefers-reduced-motion`.
  */
 const AURORA =
-  "repeating-linear-gradient(100deg, #FFFFFF 10%, #7C7C83 15%, #2A2A2F 20%, #FFFFFF 25%, #7C7C83 30%)";
+  "repeating-linear-gradient(100deg, #F0B429 10%, #8A6100 15%, #2A2A2F 20%, #F0B429 25%, #8A6100 30%)";
 
 interface AuroraBackgroundProps {
   className?: string;

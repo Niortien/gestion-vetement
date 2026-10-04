@@ -13,12 +13,12 @@
   --color-surface:      #FFFFFF;
   --color-surface-high: #EEEEEC;
   --color-border:       #E1E1DF;
-  --color-border-active:#0C0C0E;
+  --color-border-active:#8A6100;
 
   /* Accent bleu azur */
-  --color-accent:     #0C0C0E;
-  --color-on-accent:  #FFFFFF;
-  --color-accent-dim: rgba(12, 12, 14, 0.07);
+  --color-accent:     #F0B429;
+  --color-on-accent:  #0C0C0E;
+  --color-accent-dim: rgba(240, 180, 41, 0.20);
 
   /* Fonctionnels — saturés pour rester lisibles sur fond clair */
   --color-in:         #09865B;
@@ -40,7 +40,7 @@
   --color-out-text:    #BE123C;
   --color-return-text: #B45309;
   --color-cash-text:   #6D28D9;
-  --color-accent-text: #0C0C0E;
+  --color-accent-text: #8A6100;
   --color-out-line:    rgba(225, 29, 72, 0.35);
   --color-return-line: rgba(217, 119, 6, 0.40);
 
@@ -48,10 +48,10 @@
   --sidebar-bg:           #0C0C0E;
   --sidebar-border:       rgba(255, 255, 255, 0.08);
   --sidebar-hover:        rgba(255, 255, 255, 0.06);
-  --sidebar-active:       rgba(255, 255, 255, 0.10);
+  --sidebar-active:       rgba(240, 180, 41, 0.14);
   --sidebar-text:         #E2E8F0;
   --sidebar-text-muted:   #A8A8AE;
-  --sidebar-accent:       #FFFFFF;
+  --sidebar-accent:       #F0B429;
 
   --space-1:  4px;
   --space-2:  8px;
@@ -235,10 +235,10 @@
   --color-surface:      #19191C;
   --color-surface-high: #232327;
   --color-border:       rgba(255, 255, 255, 0.08);
-  --color-border-active:#F5F5F4;
+  --color-border-active:#F0B429;
 
-  --color-accent:     #F5F5F4;
-  --color-accent-dim: rgba(245, 245, 244, 0.12);
+  --color-accent:     #F0B429;
+  --color-accent-dim: rgba(240, 180, 41, 0.16);
 
   --color-in:         #2DD4A0;
   --color-in-dim:     rgba(45, 212, 160, 0.16);
@@ -257,17 +257,17 @@
   --color-out-text:    #FB7185;
   --color-return-text: #FBBF24;
   --color-cash-text:   #A78BFA;
-  --color-accent-text: #F5F5F4;
+  --color-accent-text: #F0B429;
   --color-out-line:    rgba(251, 113, 133, 0.40);
   --color-return-line: rgba(251, 191, 36, 0.40);
 
   --sidebar-bg:           #08080A;
   --sidebar-border:       rgba(255, 255, 255, 0.07);
   --sidebar-hover:        rgba(255, 255, 255, 0.05);
-  --sidebar-active:       rgba(96, 165, 250, 0.16);
+  --sidebar-active:       rgba(240, 180, 41, 0.14);
   --sidebar-text:         #F5F5F4;
   --sidebar-text-muted:   #9FB0C8;
-  --sidebar-accent:       #F5F5F4;
+  --sidebar-accent:       #F0B429;
 
   --shadow-sm:   0 1px 3px rgba(0, 0, 0, 0.4);
   --shadow-md:   0 4px 18px rgba(0, 0, 0, 0.5);
@@ -302,16 +302,16 @@ html {
   }
 }
 
-/* Mot-clé de titre : dégradé encre → gris (jamais d'aplat). Le blanc vient du logo, pas d'une couleur d'accent. */
+/* Mot-clé de titre : dégradé or (jamais d'aplat). */
 .text-brand-gradient {
-  background-image: linear-gradient(90deg, #0C0C0E 0%, #6B6B72 100%);
+  background-image: linear-gradient(90deg, #8A6100 0%, #E0A216 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 :root.dark .text-brand-gradient {
-  background-image: linear-gradient(90deg, #FFFFFF 0%, #A8A8AE 100%);
+  background-image: linear-gradient(90deg, #F0B429 0%, #FFE08A 100%);
 }
 
 .tabular {
@@ -335,24 +335,24 @@ input[type="number"] {
 }
 
 [data-vitrine] {
-  /* Dri Valé — noir et blanc du logo. Le seul accent coloré est le rouge « drop / promo / dernières pièces ». */
+  /* Dri Valé — noir et blanc du logo. Accent : l'or. Le rouge ne sert qu'à « drop / promo / dernières pièces ». */
   --v-bg:       #0C0C0E;
   --v-s1:       #131316;
   --v-s2:       #1A1A1E;
   --v-s3:       #222227;
 
-  --v-gold:      #FFFFFF;          /* « Accent » = blanc du logo : aplats, CTA */
+  --v-gold:      #F0B429;          /* Or : aplats, CTA (texte encre dessus) */
   --v-on-gold:   #0C0C0E;          /* Texte sur un aplat d'accent */
-  --v-gold-text: #FFFFFF;
-  --v-gold-dim:  rgba(255, 255, 255, 0.08);
-  --v-gold-glow: rgba(255, 255, 255, 0.14);
+  --v-gold-text: #F0B429;
+  --v-gold-dim:  rgba(240, 180, 41, 0.12);
+  --v-gold-glow: rgba(240, 180, 41, 0.22);
 
   --v-hot:      #FF4D5E;           /* Rouge : promos, rupture, urgence réelle */
   --v-hot-dim:  rgba(255, 77, 94, 0.14);
 
   /* Alias historiques */
-  --v-lime:     #FFFFFF;
-  --v-lime-dim: rgba(255, 255, 255, 0.08);
+  --v-lime:     #F0B429;
+  --v-lime-dim: rgba(240, 180, 41, 0.12);
   --v-red:      #FF4D5E;
   --v-purple:   #A78BFA;
 
@@ -361,11 +361,11 @@ input[type="number"] {
   --v-dim:      #7C7C83;
 
   --v-border:      rgba(255, 255, 255, 0.10);
-  --v-border-gold: rgba(255, 255, 255, 0.28);
+  --v-border-gold: rgba(240, 180, 41, 0.32);
   --v-nav-bg:      rgba(12, 12, 14, 0.88);
   --v-nav-border:  rgba(255, 255, 255, 0.08);
 
-  --v-shadow-gold: 0 0 24px rgba(255, 255, 255, 0.10);
+  --v-shadow-gold: 0 0 24px rgba(240, 180, 41, 0.20);
   --v-shadow-hot:  0 0 20px rgba(255, 77, 94, 0.20);
   --v-shadow-card: 0 2px 16px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.06);
 }
@@ -382,25 +382,25 @@ input[type="number"] {
   --v-s1:          #EEEEEC;
   --v-s2:          #E4E4E1;
   --v-s3:          #D8D8D4;
-  --v-gold:        #0C0C0E;
-  --v-on-gold:     #FFFFFF;
-  --v-gold-text:   #0C0C0E;
-  --v-gold-dim:    rgba(12, 12, 14, 0.06);
-  --v-gold-glow:   rgba(12, 12, 14, 0.10);
+  --v-gold:        #F0B429;
+  --v-on-gold:     #0C0C0E;
+  --v-gold-text:   #8A6100;
+  --v-gold-dim:    rgba(240, 180, 41, 0.16);
+  --v-gold-glow:   rgba(240, 180, 41, 0.22);
   --v-hot:         #D61F36;
   --v-hot-dim:     rgba(214, 31, 54, 0.10);
-  --v-lime:        #0C0C0E;
-  --v-lime-dim:    rgba(12, 12, 14, 0.06);
+  --v-lime:        #F0B429;
+  --v-lime-dim:    rgba(240, 180, 41, 0.16);
   --v-red:         #D61F36;
   --v-purple:      #6D4BD8;
   --v-text:        #0C0C0E;
   --v-muted:       #4A4A50;
   --v-dim:         #6B6B72;
   --v-border:      rgba(12, 12, 14, 0.12);
-  --v-border-gold: rgba(12, 12, 14, 0.30);
+  --v-border-gold: rgba(138, 97, 0, 0.35);
   --v-nav-bg:      rgba(246, 246, 245, 0.9);
   --v-nav-border:  rgba(12, 12, 14, 0.08);
-  --v-shadow-gold: 0 0 20px rgba(12, 12, 14, 0.10);
+  --v-shadow-gold: 0 0 20px rgba(240, 180, 41, 0.25);
   --v-shadow-hot:  0 0 16px rgba(214, 31, 54, 0.15);
   --v-shadow-card: 0 2px 14px rgba(12, 12, 14, 0.10), 0 0 0 1px rgba(12, 12, 14, 0.06);
   background: var(--v-bg);
@@ -483,7 +483,7 @@ input[type="number"] {
 .aurora-c { animation: aurora-drift-c 24s ease-in-out infinite; }
 
 .text-shimmer-gradient {
-  background-image: linear-gradient(90deg, #0C0C0E, #6B6B72, #0C0C0E);
+  background-image: linear-gradient(90deg, #8A6100, #F0B429, #8A6100);
   background-size: 200% 100%;
   -webkit-background-clip: text;
   background-clip: text;
