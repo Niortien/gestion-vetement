@@ -28,7 +28,7 @@ export class ApiErrorBoundary extends Component<ApiErrorBoundaryProps, ApiErrorB
     if (!this.state.hasError) return this.props.children;
 
     return (
-      <div className="rounded-lg border border-out bg-[var(--color-out-dim)] p-5">
+      <div className="rounded-lg border border-out bg-out-dim p-5">
         <p className="text-sm text-text">Une erreur est survenue.</p>
         {this.state.errorMessage && (
           <p className="mt-1 font-mono text-xs text-text-muted break-all">{this.state.errorMessage}</p>

@@ -418,7 +418,7 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
       initial="hidden"
       animate="visible"
       variants={getMotionVariant(panelSlide, reduced)}
-      className="fixed inset-y-0 right-0 z-[800] flex w-full max-w-[480px] flex-col border-l border-border bg-[linear-gradient(180deg,rgba(34,54,81,0.98),rgba(23,38,58,0.98))]"
+      className="fixed inset-y-0 right-0 z-[800] flex w-full max-w-[480px] flex-col border-l border-border bg-surface shadow-lg"
     >
       {/* header fixe */}
       <div className="flex items-center justify-between border-b border-border/60 px-4 py-3">
@@ -433,7 +433,7 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
 
         {/* SÉLECTEUR BOUTIQUE (admin uniquement, création uniquement) */}
         {isNew && user?.role === "ADMIN" && (
-          <section className="rounded-lg border border-border/80 bg-[color:rgba(45,69,103,0.4)] p-4">
+          <section className="rounded-lg border border-border/80 bg-surface-high p-4">
             <p className="mb-3 text-xs uppercase tracking-[0.08em] text-text-muted">Boutiques</p>
             <div className="flex flex-col gap-2">
               {boutiques.map((b) => (
@@ -466,7 +466,7 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
 
         {/* RÉATTRIBUTION BOUTIQUE (admin, édition d'un produit existant) */}
         {!isNew && isAdmin && produit && (
-          <section className="rounded-lg border border-border/80 bg-[color:rgba(45,69,103,0.4)] p-4">
+          <section className="rounded-lg border border-border/80 bg-surface-high p-4">
             <p className="mb-1 text-xs uppercase tracking-[0.08em] text-text-muted">Boutique</p>
             <p className="mb-3 text-[11px] text-text-muted/70">
               {produitBoutiqueIds.length === 0
@@ -495,7 +495,7 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
               <Button
                 size="sm"
                 variant="flat"
-                className="bg-accent text-black"
+                className="bg-accent text-on-accent"
                 isLoading={reassignMutation.isPending}
                 onPress={handleReassignBoutique}
               >
@@ -531,7 +531,7 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
         )}
 
         {/* IMAGE */}
-        <section className="rounded-lg border border-border/80 bg-[color:rgba(45,69,103,0.4)] p-4">
+        <section className="rounded-lg border border-border/80 bg-surface-high p-4">
           <p className="mb-2 text-xs uppercase tracking-[0.08em] text-text-muted">Photo</p>
           <div
             role="button"
@@ -541,7 +541,7 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
               "relative flex h-40 w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg border-2 border-dashed transition",
               isDragging
                 ? "border-accent bg-accent/10"
-                : "border-border/60 bg-[var(--color-surface-high)] hover:border-accent/60",
+                : "border-border/60 bg-surface-high hover:border-accent/60",
             ].join(" ")}
             onClick={() => fileInputRef.current?.click()}
             onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") fileInputRef.current?.click(); }}
@@ -569,7 +569,7 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
         </section>
 
         {/* IDENTITÉ */}
-        <section className="rounded-lg border border-border/80 bg-[color:rgba(45,69,103,0.4)] p-4">
+        <section className="rounded-lg border border-border/80 bg-surface-high p-4">
           <p className="mb-3 text-xs uppercase tracking-[0.08em] text-text-muted">Identité</p>
           <div className="space-y-3">
             <Input
@@ -597,7 +597,7 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
         </section>
 
         {/* CATÉGORIE — groupée */}
-        <section className="rounded-lg border border-border/80 bg-[color:rgba(45,69,103,0.4)] p-4">
+        <section className="rounded-lg border border-border/80 bg-surface-high p-4">
           <p className="mb-3 text-xs uppercase tracking-[0.08em] text-text-muted">Catégorie</p>
           {catsLoading ? (
             <div className="space-y-3">
@@ -626,8 +626,8 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
                         variant="flat"
                         className={
                           selectedCategorieId === cat.id
-                            ? "cursor-pointer bg-accent text-black"
-                            : "cursor-pointer bg-[var(--color-surface-high)] text-text"
+                            ? "cursor-pointer bg-accent text-on-accent"
+                            : "cursor-pointer bg-surface-high text-text"
                         }
                         onClick={() => setValue("categorieId", cat.id, { shouldValidate: true })}
                       >
@@ -645,7 +645,7 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
         </section>
 
         {/* PRIX */}
-        <section className="rounded-lg border border-border/80 bg-[color:rgba(45,69,103,0.4)] p-4">
+        <section className="rounded-lg border border-border/80 bg-surface-high p-4">
           <p className="mb-3 text-xs uppercase tracking-[0.08em] text-text-muted">Prix</p>
           <div className="grid grid-cols-2 gap-3">
             <Input
@@ -668,7 +668,7 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
         </section>
 
         {/* VARIANTES */}
-        <section className="rounded-lg border border-border/80 bg-[color:rgba(45,69,103,0.4)] p-4">
+        <section className="rounded-lg border border-border/80 bg-surface-high p-4">
 
           {/* ── Tailles ── */}
           <p className="mb-3 text-xs uppercase tracking-[0.08em] text-text-muted">Tailles</p>
@@ -682,7 +682,7 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
                     <Chip
                       key={t}
                       variant="flat"
-                      className="bg-accent text-black"
+                      className="bg-accent text-on-accent"
                       onClose={() => {
                         setVarianteError(null);
                         setSelectedTailles((cur) => cur.filter((x) => x !== t));
@@ -703,7 +703,7 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
                   onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addTaille(); } }}
                   size="sm"
                 />
-                <Button variant="flat" className="shrink-0 bg-accent text-black" onPress={addTaille} size="sm">+</Button>
+                <Button variant="flat" className="shrink-0 bg-accent text-on-accent" onPress={addTaille} size="sm">+</Button>
               </div>
             </div>
           ) : (
@@ -716,8 +716,8 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
                     variant="flat"
                     className={
                       selectedTailles.includes(t)
-                        ? "cursor-pointer bg-accent text-black"
-                        : "cursor-pointer bg-[var(--color-surface-high)] text-text"
+                        ? "cursor-pointer bg-accent text-on-accent"
+                        : "cursor-pointer bg-surface-high text-text"
                     }
                     onClick={() => toggleTaille(t)}
                   >
@@ -745,7 +745,7 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
                       <Chip
                         key={t}
                         variant="flat"
-                        className="bg-accent text-black"
+                        className="bg-accent text-on-accent"
                         onClose={() => {
                           setVarianteError(null);
                           setSelectedTailles((cur) => cur.filter((x) => x !== t));
@@ -771,8 +771,8 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
                   variant="flat"
                   className={
                     selectedCouleurs.includes(c)
-                      ? "cursor-pointer bg-accent text-black"
-                      : "cursor-pointer bg-[var(--color-surface-high)] text-text"
+                      ? "cursor-pointer bg-accent text-on-accent"
+                      : "cursor-pointer bg-surface-high text-text"
                   }
                   onClick={() => toggleCouleur(c)}
                 >
@@ -789,7 +789,7 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
                 <Chip
                   key={c}
                   variant="flat"
-                  className="bg-[var(--color-surface-high)] text-text"
+                  className="bg-surface-high text-text"
                   onClose={() => {
                     setVarianteError(null);
                     setSelectedCouleurs((cur) => cur.filter((x) => x !== c));
@@ -815,7 +815,7 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
               onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addColor(); } }}
               size="sm"
             />
-            <Button variant="flat" className="shrink-0 bg-accent text-black" onPress={addColor} size="sm">+</Button>
+            <Button variant="flat" className="shrink-0 bg-accent text-on-accent" onPress={addColor} size="sm">+</Button>
           </div>
 
           {varianteError && (
@@ -861,7 +861,7 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
         </section>
 
         {/* SEUIL ALERTE */}
-        <section className="rounded-lg border border-border/80 bg-[color:rgba(45,69,103,0.4)] p-4">
+        <section className="rounded-lg border border-border/80 bg-surface-high p-4">
           <p className="mb-3 text-xs uppercase tracking-[0.08em] text-text-muted">Seuil alerte</p>
           <Slider
             aria-label="Seuil d'alerte stock"
@@ -883,7 +883,7 @@ export function ProduitDetailPanel({ produit, onClose }: ProduitDetailPanelProps
       {/* footer fixe */}
       <div className="border-t border-border/60 p-4 pb-6">
         <Button
-          className="w-full bg-accent font-semibold text-black"
+          className="w-full bg-accent font-semibold text-on-accent"
           size="lg"
           onPress={() => void onSubmit()}
           isDisabled={isPending}

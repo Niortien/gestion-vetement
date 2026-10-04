@@ -1,6 +1,19 @@
 "use client";
 
+import Link from "next/link";
+import type { ComponentType } from "react";
+import {
+  IconAlertTriangle,
+  IconArrowRight,
+  IconBoxSeam,
+  IconCoin,
+  IconTrendingDown,
+  IconTrendingUp,
+} from "@tabler/icons-react";
+import type { IconProps } from "@tabler/icons-react";
+import { CountUp } from "@/components/common/CountUp";
 import { CurrencyDisplay } from "@/components/common/CurrencyDisplay";
+import { SpotlightCard } from "@/components/common/SpotlightCard";
 import type { ResumeJour } from "@/types";
 
 interface DashboardKpiGridProps {
@@ -12,52 +25,69 @@ interface DashboardKpiGridProps {
   isError?: boolean;
 }
 
+type Tone = "accent" | "in" | "out" | "cash";
+
 interface KpiCardProps {
   label: string;
   value: string | number;
   sub?: string;
-  tone: "accent" | "in" | "out" | "cash";
+  tone: Tone;
+  icon: ComponentType<IconProps>;
   isMontant?: boolean;
+  /** Prochaine action suggérée — rendue cliquable si `href` est fourni. */
   hint?: string;
+  href?: string;
 }
 
-const TONE_CLASSES: Record<KpiCardProps["tone"], { border: string; bg: string; text: string }> = {
-  accent: {
-    border: "border-accent/35",
-    bg: "bg-[color:rgba(74,122,255,0.07)]",
-    text: "text-accent",
-  },
-  in: {
-    border: "border-[var(--color-in)]/40",
-    bg: "bg-[color:rgba(57,211,83,0.08)]",
-    text: "text-[var(--color-in)]",
-  },
-  out: {
-    border: "border-[var(--color-out)]/40",
-    bg: "bg-[color:rgba(255,77,109,0.08)]",
-    text: "text-[var(--color-out)]",
-  },
-  cash: {
-    border: "border-[var(--color-cash)]/40",
-    bg: "bg-[color:rgba(143,126,245,0.08)]",
-    text: "text-[var(--color-cash)]",
-  },
+// Pastille d'icône = aplat teinté ; texte de la valeur = variante « text » (contraste ≥ 4.5:1).
+const TONE_CLASSES: Record<Tone, { chip: string; text: string }> = {
+  accent: { chip: "bg-accent-dim text-accent-text", text: "text-accent-text" },
+  in: { chip: "bg-in-dim text-in-text", text: "text-in-text" },
+  out: { chip: "bg-out-dim text-out-text", text: "text-out-text" },
+  cash: { chip: "bg-cash-dim text-cash-text", text: "text-cash-text" },
 };
 
-function KpiCard({ label, value, sub, tone, isMontant = false, hint }: KpiCardProps) {
+function KpiCard({ label, value, sub, tone, icon: Icon, isMontant = false, hint, href }: KpiCardProps) {
   const t = TONE_CLASSES[tone];
-  return (
-    <div className={`rounded-xl border ${t.border} ${t.bg} p-4`}>
-      <p className="text-xs uppercase tracking-wide text-text-muted">{label}</p>
+  const content = (
+    <div className="p-4">
+      <div className="flex items-center justify-between gap-2">
+        <p className="text-xs font-semibold uppercase tracking-wider text-text-muted">{label}</p>
+        <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${t.chip}`}>
+          <Icon size={18} aria-hidden />
+        </span>
+      </div>
       {isMontant ? (
-        <CurrencyDisplay montant={String(value)} size="lg" tone={tone} className="mt-2" />
+        <CurrencyDisplay montant={String(value)} size="lg" className="tabular mt-3 block font-display font-extrabold text-text" />
       ) : (
-        <p className={`mt-2 font-[var(--font-display)] text-xl md:text-3xl ${t.text}`}>{value}</p>
+        <p className="tabular mt-3 font-display text-2xl font-extrabold text-text">
+          {typeof value === "number" ? <CountUp value={value} /> : value}
+        </p>
       )}
       {sub && <p className="mt-1 text-xs text-text-muted">{sub}</p>}
-      {hint && <p className="mt-1.5 text-[10px] text-text-muted/50 italic">{hint}</p>}
+      {hint && (
+        <p className={`mt-2 flex items-center gap-1 text-xs font-semibold ${href ? t.text : "text-text-muted"}`}>
+          {hint}
+          {href && <IconArrowRight size={12} aria-hidden className="transition-transform duration-150 group-hover:translate-x-0.5" />}
+        </p>
+      )}
     </div>
   );
+
+  if (href) {
+    return (
+      <SpotlightCard tone={tone} className="group hover:-translate-y-0.5">
+        <Link
+          href={href}
+          className="block cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[var(--tone)]"
+        >
+          {content}
+        </Link>
+      </SpotlightCard>
+    );
+  }
+
+  return <SpotlightCard tone={tone}>{content}</SpotlightCard>;
 }
 
 export function DashboardKpiGrid({
@@ -70,9 +100,9 @@ export function DashboardKpiGrid({
 }: DashboardKpiGridProps) {
   if (isLoading) {
     return (
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4" aria-busy="true">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="h-28 animate-pulse rounded-xl border border-border/40 bg-[var(--color-surface-high)]" />
+          <div key={i} className="h-32 animate-pulse rounded-lg border border-border bg-surface-high" />
         ))}
       </div>
     );
@@ -80,9 +110,9 @@ export function DashboardKpiGrid({
 
   if (isError) {
     return (
-      <div className="rounded-xl border border-out/30 bg-out/5 px-4 py-3">
-        <p className="text-sm font-semibold text-out">Impossible de charger les KPIs</p>
-        <p className="mt-0.5 text-xs text-text-muted">Vérifie que le serveur backend est démarré et que tu es connecté.</p>
+      <div role="alert" className="rounded-lg border border-out-line bg-out-dim px-4 py-3">
+        <p className="text-sm font-semibold text-out-text">Impossible de charger les indicateurs</p>
+        <p className="mt-0.5 text-xs text-text-muted">Vérifiez que le serveur backend est démarré et que vous êtes connecté.</p>
       </div>
     );
   }
@@ -96,24 +126,27 @@ export function DashboardKpiGrid({
 
   return (
     <div className="space-y-3">
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <KpiCard
           label="Ventes du jour"
           value={totalVentes}
+          icon={IconCoin}
           sub={
             totalTransactions > 0
               ? `${totalTransactions} transaction${totalTransactions !== 1 ? "s" : ""}`
               : hasSession
               ? "Aucune transaction encore"
-              : "Ouvre une session caisse"
+              : "Aucune session ouverte"
           }
           tone="cash"
           isMontant
-          hint={!hasSession ? "Menu → Caisse → Ouvrir session" : undefined}
+          hint={!hasSession ? "Ouvrir une session" : undefined}
+          href={!hasSession ? "/caisse" : undefined}
         />
         <KpiCard
-          label="Valeur stock"
+          label="Valeur du stock"
           value={stockValeur}
+          icon={IconBoxSeam}
           sub={
             hasStock
               ? "au prix d'achat"
@@ -123,11 +156,13 @@ export function DashboardKpiGrid({
           }
           tone="accent"
           isMontant
-          hint={!hasStock && nombreProduits > 0 ? "Ajoute une entrée de stock → Entrées" : undefined}
+          hint={!hasStock && nombreProduits > 0 ? "Ajouter une entrée de stock" : undefined}
+          href={!hasStock && nombreProduits > 0 ? "/entrees" : undefined}
         />
         <KpiCard
           label={isBenefice ? "Bénéfice net" : "Perte nette"}
           value={Math.abs(parseFloat(beneficeNet)).toFixed(0)}
+          icon={isBenefice ? IconTrendingUp : IconTrendingDown}
           sub={isBenefice ? "ventes − achats du jour" : "achats > ventes du jour"}
           tone={isBenefice ? "in" : "out"}
           isMontant
@@ -135,17 +170,22 @@ export function DashboardKpiGrid({
         <KpiCard
           label="Alertes stock"
           value={alertesCount}
-          sub={alertesCount === 0 ? "Tout est OK" : "à réapprovisionner"}
+          icon={IconAlertTriangle}
+          sub={alertesCount === 0 ? "Tout est en ordre" : "à réapprovisionner"}
           tone={alertesCount === 0 ? "in" : "out"}
+          hint={alertesCount > 0 ? "Voir le stock" : undefined}
+          href={alertesCount > 0 ? "/stock" : undefined}
         />
       </div>
 
       {/* Bannière perte si bénéfice négatif */}
       {!isBenefice && parseFloat(beneficeNet) !== 0 && (
-        <div className="flex items-center gap-2 rounded-lg border border-[var(--color-out)]/50 bg-[color:rgba(255,77,109,0.10)] px-4 py-2">
-          <span className="text-sm font-semibold text-[var(--color-out)]">⚠ Perte nette aujourd&apos;hui</span>
+        <div role="status" className="flex flex-wrap items-center gap-x-2 gap-y-1 rounded-lg border border-out-line bg-out-dim px-4 py-2.5">
+          <span className="flex items-center gap-1.5 text-sm font-semibold text-out-text">
+            <IconAlertTriangle size={16} aria-hidden /> Perte nette aujourd&apos;hui
+          </span>
           <span className="text-sm text-text-muted">
-            Tes achats ({Number(resume?.totalAchats ?? 0).toLocaleString("fr-FR")} FCFA) dépassent tes ventes ({Number(totalVentes).toLocaleString("fr-FR")} FCFA).
+            Vos achats ({Number(resume?.totalAchats ?? 0).toLocaleString("fr-FR")} FCFA) dépassent vos ventes ({Number(totalVentes).toLocaleString("fr-FR")} FCFA).
           </span>
         </div>
       )}

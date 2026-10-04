@@ -3,7 +3,6 @@
 import { useState } from "react";
 import {
   Button,
-  Chip,
   Input,
   Modal,
   ModalBody,
@@ -12,17 +11,30 @@ import {
   ModalHeader,
   Select,
   SelectItem,
-  Table,
-  TableBody,
-  TableCell,
-  TableColumn,
-  TableHeader,
-  TableRow,
   useDisclosure,
 } from "@heroui/react";
+import { motion } from "framer-motion";
+import {
+  IconBuildingStore,
+  IconCashRegister,
+  IconPencil,
+  IconShieldCheck,
+  IconTrash,
+  IconUserPlus,
+  IconUsersGroup,
+} from "@tabler/icons-react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { ConfirmModal } from "@/components/common/ConfirmModal";
+import { CountUp } from "@/components/common/CountUp";
+import { EmptyRiver } from "@/components/common/EmptyRiver";
+import { PageHero } from "@/components/common/PageHero";
+import { PageWrapper } from "@/components/common/PageWrapper";
+import { SpotlightCard } from "@/components/common/SpotlightCard";
+import { StatTile } from "@/components/common/StatTile";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { motionEasing } from "@/lib/motionVariants";
 import { useUsers } from "@/features/users/query/users-queries";
 import {
   useCreateUser,
@@ -61,6 +73,8 @@ export function UtilisateursView() {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [editing, setEditing] = useState<AppUser | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<AppUser | null>(null);
+  const reduced = useReducedMotion();
 
   const createForm = useForm<CreateFormData>({ resolver: zodResolver(createSchema) });
   const updateForm = useForm<UpdateFormData>({ resolver: zodResolver(updateSchema) });
@@ -97,54 +111,119 @@ export function UtilisateursView() {
     onClose();
   });
 
-  return (
-    <div className="p-6">
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-text">Utilisateurs</h1>
-        <Button className="bg-accent text-black" onPress={openCreate}>
-          + Nouvel utilisateur
-        </Button>
-      </div>
+  const admins = users.filter((u) => u.role === "ADMIN").length;
 
-      <Table aria-label="Liste des utilisateurs">
-        <TableHeader>
-          <TableColumn>Email</TableColumn>
-          <TableColumn>Rôle</TableColumn>
-          <TableColumn>Boutique</TableColumn>
-          <TableColumn>Actions</TableColumn>
-        </TableHeader>
-        <TableBody isLoading={isLoading} emptyContent="Aucun utilisateur">
-          {users.map((u) => (
-            <TableRow key={u.id}>
-              <TableCell>{u.email}</TableCell>
-              <TableCell>
-                <Chip size="sm" color={u.role === "ADMIN" ? "warning" : "default"} variant="flat">
-                  {u.role}
-                </Chip>
-              </TableCell>
-              <TableCell>{u.boutique?.nom ?? "—"}</TableCell>
-              <TableCell>
-                <div className="flex gap-2">
-                  <Button size="sm" variant="flat" onPress={() => openEdit(u)}>
+  return (
+    <PageWrapper>
+      <PageHero
+        tone="accent"
+        icon={IconUsersGroup}
+        eyebrow="Administration"
+        title="Utilisateurs"
+        description="Comptes administrateurs et vendeurs, rattachés chacun à une boutique."
+        actions={
+          <Button
+            className="min-h-11 bg-accent font-semibold text-on-accent"
+            startContent={<IconUserPlus size={18} aria-hidden />}
+            onPress={openCreate}
+          >
+            Nouvel utilisateur
+          </Button>
+        }
+      >
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <StatTile tone="accent" icon={IconUsersGroup} label="Utilisateurs" value={isLoading ? "—" : <CountUp value={users.length} />} />
+          <StatTile tone="cash" icon={IconShieldCheck} label="Administrateurs" value={isLoading ? "—" : <CountUp value={admins} />} delay={0.05} />
+          <StatTile tone="in" icon={IconCashRegister} label="Vendeurs" value={isLoading ? "—" : <CountUp value={users.length - admins} />} delay={0.1} />
+        </div>
+      </PageHero>
+
+      {isLoading && (
+        <div role="status" aria-label="Chargement des utilisateurs" className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="h-32 animate-pulse rounded-lg border border-border bg-surface" />
+          ))}
+        </div>
+      )}
+
+      {!isLoading && users.length === 0 && (
+        <EmptyRiver
+          message="Aucun utilisateur"
+          hint="Créez un compte pour donner accès à la caisse ou à l'administration."
+          action={
+            <Button size="sm" className="bg-accent font-semibold text-on-accent" onPress={openCreate}>
+              Ajouter un utilisateur
+            </Button>
+          }
+        />
+      )}
+
+      {users.length > 0 && (
+        <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          {users.map((u, i) => (
+            <motion.li
+              key={u.id}
+              initial={reduced ? false : { opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.38, ease: motionEasing.outExpo, delay: Math.min(i * 0.04, 0.24) }}
+            >
+              <SpotlightCard tone={u.role === "ADMIN" ? "cash" : "accent"} className="p-4">
+                <div className="flex items-start gap-3">
+                  <span
+                    aria-hidden
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--tone)_16%,transparent)] font-display text-lg font-extrabold uppercase text-[var(--tone-text)]"
+                  >
+                    {u.email.charAt(0)}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold text-text">{u.email}</p>
+                    <p className="mt-0.5 flex items-center gap-1 truncate text-xs text-text-muted">
+                      <IconBuildingStore size={12} aria-hidden className="shrink-0" />
+                      {u.boutique?.nom ?? "Aucune boutique"}
+                    </p>
+                    <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-[color-mix(in_srgb,var(--tone)_14%,transparent)] px-2 py-0.5 text-xs font-semibold text-[var(--tone-text)]">
+                      {u.role === "ADMIN" ? <IconShieldCheck size={12} aria-hidden /> : <IconCashRegister size={12} aria-hidden />}
+                      {u.role === "ADMIN" ? "Administrateur" : "Vendeur"}
+                    </span>
+                  </div>
+                </div>
+                <div className="mt-4 flex items-center gap-2 border-t border-border pt-3">
+                  <Button size="sm" variant="flat" className="min-h-9 flex-1 font-medium" startContent={<IconPencil size={15} aria-hidden />} onPress={() => openEdit(u)}>
                     Modifier
                   </Button>
                   <Button
                     size="sm"
                     variant="flat"
                     color="danger"
-                    isLoading={deleteMutation.isPending}
-                    onPress={() => deleteMutation.mutate(u.id)}
+                    className="min-h-9 flex-1 font-medium"
+                    startContent={<IconTrash size={15} aria-hidden />}
+                    onPress={() => setDeleteTarget(u)}
                   >
                     Supprimer
                   </Button>
                 </div>
-              </TableCell>
-            </TableRow>
+              </SpotlightCard>
+            </motion.li>
           ))}
-        </TableBody>
-      </Table>
+        </ul>
+      )}
 
-      <Modal isOpen={isOpen} onClose={onClose} size="md">
+      <ConfirmModal
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={() => {
+          if (deleteTarget && !deleteMutation.isPending) {
+            deleteMutation.mutate(deleteTarget.id, { onSuccess: () => setDeleteTarget(null) });
+          }
+        }}
+        title="Supprimer l'utilisateur"
+        message={`${deleteTarget?.email ?? "Ce compte"} ne pourra plus se connecter. Cette action est définitive.`}
+        confirmLabel="Supprimer"
+        isLoading={deleteMutation.isPending}
+        danger
+      />
+
+      <Modal isOpen={isOpen} onClose={onClose} size="md" backdrop="blur">
         <ModalContent>
           {editing ? (
             <>
@@ -181,7 +260,7 @@ export function UtilisateursView() {
               </ModalBody>
               <ModalFooter>
                 <Button variant="light" onPress={onClose}>Annuler</Button>
-                <Button className="bg-accent text-black" isLoading={updateMutation.isPending} onPress={() => void onSubmitUpdate()}>
+                <Button className="bg-accent font-semibold text-on-accent" isLoading={updateMutation.isPending} onPress={() => void onSubmitUpdate()}>
                   Enregistrer
                 </Button>
               </ModalFooter>
@@ -221,7 +300,7 @@ export function UtilisateursView() {
               </ModalBody>
               <ModalFooter>
                 <Button variant="light" onPress={onClose}>Annuler</Button>
-                <Button className="bg-accent text-black" isLoading={createMutation.isPending} onPress={() => void onSubmitCreate()}>
+                <Button className="bg-accent font-semibold text-on-accent" isLoading={createMutation.isPending} onPress={() => void onSubmitCreate()}>
                   Créer
                 </Button>
               </ModalFooter>
@@ -229,6 +308,6 @@ export function UtilisateursView() {
           )}
         </ModalContent>
       </Modal>
-    </div>
+    </PageWrapper>
   );
 }

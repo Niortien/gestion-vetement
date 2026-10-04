@@ -1,8 +1,12 @@
-﻿"use client";
+"use client";
 
-import { Chip } from "@heroui/react";
+import { IconAlertTriangle, IconBoxSeam, IconCircleCheck } from "@tabler/icons-react";
+import { CountUp } from "@/components/common/CountUp";
 import { FeedDensityToggle } from "@/components/common/FeedDensityToggle";
+import { PageHero } from "@/components/common/PageHero";
 import { PageWrapper } from "@/components/common/PageWrapper";
+import { SegmentedControl } from "@/components/common/SegmentedControl";
+import { StatTile } from "@/components/common/StatTile";
 import { useStockAlertes, useStockList } from "@/features/stock/query/stock-queries";
 import { useUiStore } from "@/stores/uiStore";
 import { StockAlertPanel } from "./StockAlertPanel";
@@ -10,6 +14,7 @@ import { StockTimeline } from "./StockTimeline";
 
 export function StockView() {
   const filters = useUiStore((state) => state.stockFiltre);
+  const setStockFiltre = useUiStore((state) => state.setStockFiltre);
   const density = useUiStore((state) => state.feedDensity);
   const { data } = useStockList({
     alerte: filters.alerte,
@@ -20,23 +25,60 @@ export function StockView() {
 
   const items = data?.pages.flatMap((page) => page.data) ?? [];
   const total = items.length;
+  const alertesCount = alertes?.data?.length ?? 0;
+  const unites = items.reduce((sum, item) => sum + item.quantiteStock, 0);
 
   return (
     <PageWrapper>
-      <div className="rounded-xl border border-border/80 bg-[linear-gradient(120deg,rgba(74,122,255,0.14),rgba(143,126,245,0.08))] p-4 md:p-5">
-        <div className="flex items-end justify-between">
-          <h1 className="font-[var(--font-display)] text-2xl md:text-4xl">Stock</h1>
-          <span className="rounded-full border border-accent/40 bg-[color:rgba(74,122,255,0.16)] px-3 py-1 font-[var(--font-mono)] text-accent">
-            {total} variantes
-          </span>
+      <PageHero
+        tone="accent"
+        icon={IconBoxSeam}
+        eyebrow="Catalogue"
+        title="Stock"
+        description="Chaque variante, son niveau et son seuil d'alerte. Les articles bas remontent en premier."
+      >
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <StatTile
+            tone="accent"
+            icon={IconBoxSeam}
+            label="Variantes affichées"
+            value={<CountUp value={total} />}
+            hint={`${unites.toLocaleString("fr-FR")} unités au total`}
+          />
+          <StatTile
+            tone="out"
+            icon={IconAlertTriangle}
+            label="À réapprovisionner"
+            value={<CountUp value={alertesCount} />}
+            hint={alertesCount > 0 ? "Sous le seuil d'alerte" : "Rien d'urgent"}
+            delay={0.05}
+          />
+          <StatTile
+            tone="in"
+            icon={IconCircleCheck}
+            label="Niveau confortable"
+            value={<CountUp value={Math.max(total - alertesCount, 0)} />}
+            hint="Au-dessus du seuil"
+            delay={0.1}
+          />
         </div>
+      </PageHero>
+
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <SegmentedControl
+          ariaLabel="Filtrer le stock"
+          tone={filters.alerte ? "out" : "accent"}
+          value={filters.alerte ? "alerte" : "tous"}
+          onChange={(key) => setStockFiltre({ ...filters, alerte: key === "alerte" ? true : undefined })}
+          options={[
+            { key: "tous", label: "Tous" },
+            { key: "alerte", label: "En alerte", count: alertesCount },
+          ]}
+        />
+        <FeedDensityToggle />
       </div>
-      <div className="flex gap-2 overflow-auto pb-1">
-        <Chip variant="flat" className="bg-[var(--color-surface-high)] text-text">Tous</Chip>
-        <Chip variant="flat" className="bg-[var(--color-out-dim)] text-out">Alerte</Chip>
-      </div>
+
       <StockAlertPanel alertes={alertes?.data ?? []} />
-      <FeedDensityToggle />
       <StockTimeline items={items} density={density} />
     </PageWrapper>
   );

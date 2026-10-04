@@ -28,8 +28,11 @@ export function AdminBoutiqueSelect() {
         setCurrentBoutique(val ?? "all");
       }}
       classNames={{
-        trigger: "bg-surface/60 border border-border",
-        value: "text-text text-sm font-semibold",
+        trigger: "border border-sidebar-border bg-sidebar-hover shadow-none data-[hover=true]:bg-sidebar-active",
+        label: "text-sidebar-muted",
+        value: "text-sm font-semibold text-sidebar-text",
+        selectorIcon: "text-sidebar-muted",
+        popoverContent: "border border-border bg-surface",
       }}
       aria-label="Sélectionner une boutique"
     >

@@ -20,8 +20,8 @@ export function EntreeFeedItem({ entree, onCancel }: EntreeFeedItemProps) {
       className={[
         "rounded-lg border p-3 transition",
         isAnnulee
-          ? "border-border/40 bg-[var(--color-surface-high)] opacity-50"
-          : "border-border/80 bg-[linear-gradient(145deg,rgba(57,211,83,0.12),rgba(34,54,81,0.7))] hover:border-[var(--color-in)]/50 hover:shadow-md",
+          ? "border-border/40 bg-surface-high opacity-50"
+          : "border-border/80 bg-in-dim hover:border-in/50 hover:shadow-md",
       ].join(" ")}
     >
       {/* Type + date */}
@@ -29,7 +29,7 @@ export function EntreeFeedItem({ entree, onCancel }: EntreeFeedItemProps) {
         <div className="flex items-center gap-2">
           <FlowTag type="entree" />
           {isAnnulee && (
-            <span className="rounded bg-[color:rgba(255,77,109,0.15)] px-1.5 py-0.5 text-[10px] font-semibold uppercase text-[var(--color-out)]">
+            <span className="rounded bg-out/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-out-text">
               Annulée
             </span>
           )}
@@ -69,7 +69,7 @@ export function EntreeFeedItem({ entree, onCancel }: EntreeFeedItemProps) {
           <Button
             size="sm"
             variant="flat"
-            className="bg-[color:rgba(255,77,109,0.12)] text-[var(--color-out)]"
+            className="bg-out/12 text-out-text"
             onPress={() => onCancel(entree.id)}
           >
             Annuler

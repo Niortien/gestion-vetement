@@ -81,8 +81,8 @@ export function SortieFeedItem({ sortie, onCancel }: SortieFeedItemProps) {
         className={[
           "rounded-lg border p-3 transition",
           isAnnulee
-            ? "border-border/40 bg-[var(--color-surface-high)] opacity-50"
-            : "border-border/80 bg-[linear-gradient(145deg,rgba(255,77,109,0.10),rgba(34,54,81,0.72))] hover:border-[var(--color-out)]/50 hover:shadow-md",
+            ? "border-border/40 bg-surface-high opacity-50"
+            : "border-border/80 bg-out-dim hover:border-out/50 hover:shadow-md",
         ].join(" ")}
       >
         {/* Type + date */}
@@ -93,7 +93,7 @@ export function SortieFeedItem({ sortie, onCancel }: SortieFeedItemProps) {
               {TYPE_LABELS[sortie.type]}
             </span>
             {isAnnulee && (
-              <span className="rounded bg-[color:rgba(255,77,109,0.15)] px-1.5 py-0.5 text-[10px] font-semibold uppercase text-[var(--color-out)]">
+              <span className="rounded bg-out/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-out-text">
                 Annulée
               </span>
             )}
@@ -131,7 +131,7 @@ export function SortieFeedItem({ sortie, onCancel }: SortieFeedItemProps) {
             <Button
               size="sm"
               variant="flat"
-              className="bg-[color:rgba(255,77,109,0.12)] text-[var(--color-out)]"
+              className="bg-out/12 text-out-text"
               onPress={() => onCancel(sortie.id)}
             >
               Annuler
@@ -140,7 +140,7 @@ export function SortieFeedItem({ sortie, onCancel }: SortieFeedItemProps) {
               <Button
                 size="sm"
                 variant="flat"
-                className="bg-[color:rgba(74,122,255,0.12)] text-accent"
+                className="bg-accent/12 text-accent"
                 isLoading={detailLoading && fetchRecu}
                 onPress={handleReprint}
               >

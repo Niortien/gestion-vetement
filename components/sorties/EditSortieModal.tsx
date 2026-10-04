@@ -45,7 +45,7 @@ export function EditSortieModal({ sortie, onClose }: EditSortieModalProps) {
       classNames={{
         wrapper: "z-[1100]",
         backdrop: "z-[1050]",
-        base: "bg-[var(--color-surface)] border border-border",
+        base: "bg-surface border border-border",
         header: "border-b border-border/60",
         footer: "border-t border-border/60",
       }}
@@ -67,7 +67,7 @@ export function EditSortieModal({ sortie, onClose }: EditSortieModalProps) {
             Annuler
           </Button>
           <Button
-            className="flex-1 bg-[var(--color-out)] font-semibold text-white"
+            className="flex-1 bg-out font-semibold text-white"
             isLoading={mutation.isPending}
             onPress={handleSave}
           >

@@ -1,6 +1,23 @@
 import type { Config } from "tailwindcss";
 import { heroui } from "@heroui/react";
 
+/**
+ * Couleur sémantique adossée à une variable CSS, compatible avec les modificateurs d'opacité Tailwind
+ * (`border-border/60`, `bg-accent/10`…). Une chaîne `var(--x)` simple ne les supporte pas : la classe n'était alors
+ * jamais générée. `color-mix` accepte n'importe quel format de variable (hex ou rgba).
+ */
+const withAlpha = (variable: string): string => {
+  const fn = ({ opacityValue }: { opacityValue?: string }) => {
+    // Sans modificateur, Tailwind passe `var(--tw-*-opacity)` (non numérique) : on renvoie alors la variable telle quelle.
+    const alpha = Number(opacityValue);
+    return opacityValue === undefined || Number.isNaN(alpha)
+      ? `var(${variable})`
+      : `color-mix(in srgb, var(${variable}) ${Math.round(alpha * 1000) / 10}%, transparent)`;
+  };
+  // Tailwind accepte une fonction ici, mais son typage de `extend.colors` ne l'exprime pas.
+  return fn as unknown as string;
+};
+
 const config: Config = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
@@ -33,22 +50,46 @@ const config: Config = {
         "4xl": "var(--text-4xl)",
         "5xl": "var(--text-5xl)",
       },
+      // Bordure par défaut = token du thème (le gris Tailwind par défaut jurait en thème sombre).
+      borderColor: { DEFAULT: withAlpha("--color-border") },
       colors: {
         /* ── Tokens sémantiques existants ── */
-        base:            "var(--color-base)",
-        surface:         "var(--color-surface)",
-        "surface-high":  "var(--color-surface-high)",
-        border:          "var(--color-border)",
-        "border-active": "var(--color-border-active)",
-        accent:          "var(--color-accent)",
-        "accent-dim":    "var(--color-accent-dim)",
-        in:              "var(--color-in)",
-        out:             "var(--color-out)",
-        return:          "var(--color-return)",
-        cash:            "var(--color-cash)",
-        text:            "var(--color-text)",
-        "text-muted":    "var(--color-text-muted)",
-        "text-dim":      "var(--color-text-dim)",
+        base:            withAlpha("--color-base"),
+        surface:         withAlpha("--color-surface"),
+        "surface-high":  withAlpha("--color-surface-high"),
+        border:          withAlpha("--color-border"),
+        "border-active": withAlpha("--color-border-active"),
+        accent:          withAlpha("--color-accent"),
+        "accent-dim":    withAlpha("--color-accent-dim"),
+        in:              withAlpha("--color-in"),
+        out:             withAlpha("--color-out"),
+        return:          withAlpha("--color-return"),
+        cash:            withAlpha("--color-cash"),
+        "in-dim":        withAlpha("--color-in-dim"),
+        "out-dim":       withAlpha("--color-out-dim"),
+        "return-dim":    withAlpha("--color-return-dim"),
+        "cash-dim":      withAlpha("--color-cash-dim"),
+        "in-text":       withAlpha("--color-in-text"),
+        "out-text":      withAlpha("--color-out-text"),
+        "return-text":   withAlpha("--color-return-text"),
+        "cash-text":     withAlpha("--color-cash-text"),
+        "accent-text":   withAlpha("--color-accent-text"),
+        "on-accent":     withAlpha("--color-on-accent"),
+        "out-line":      withAlpha("--color-out-line"),
+        "return-line":   withAlpha("--color-return-line"),
+        text:            withAlpha("--color-text"),
+        "text-muted":    withAlpha("--color-text-muted"),
+        "text-dim":      withAlpha("--color-text-dim"),
+
+        sidebar: {
+          DEFAULT: withAlpha("--sidebar-bg"),
+          border:  withAlpha("--sidebar-border"),
+          hover:   withAlpha("--sidebar-hover"),
+          active:  withAlpha("--sidebar-active"),
+          text:    withAlpha("--sidebar-text"),
+          muted:   withAlpha("--sidebar-text-muted"),
+          accent:  withAlpha("--sidebar-accent"),
+        },
 
         /* ── Primary scale (Gold) ── */
         primary: {
@@ -194,12 +235,52 @@ const config: Config = {
   plugins: [
     heroui({
       themes: {
+        light: {
+          colors: {
+            background: { DEFAULT: "#F4F1EA" },
+            foreground: { DEFAULT: "#15201A" },
+            divider:    { DEFAULT: "rgba(21, 32, 26, 0.10)" },
+            focus:      { DEFAULT: "#5B8A0F" },
+            overlay:    { DEFAULT: "#15201A" },
+            content1:   { DEFAULT: "#FFFFFF", foreground: "#15201A" },
+            content2:   { DEFAULT: "#ECE8DE", foreground: "#15201A" },
+            content3:   { DEFAULT: "#E1DBCD", foreground: "#15201A" },
+            content4:   { DEFAULT: "#CFC8B6", foreground: "#15201A" },
+            default: {
+              50: "#F4F1EA", 100: "#ECE8DE", 200: "#E1DBCD", 300: "#CFC8B6",
+              400: "#9AA89E", 500: "#6C776F", 600: "#566159", 700: "#3F4A43",
+              800: "#26332B", 900: "#15201A",
+              foreground: "#26332B",
+              DEFAULT: "#E1DBCD",
+            },
+            primary:   { DEFAULT: "#BFE82A", foreground: "#15201A" },
+            danger:    { DEFAULT: "#E11D48", foreground: "#FFFFFF" },
+            success:   { DEFAULT: "#0D9F6E", foreground: "#FFFFFF" },
+            secondary: { DEFAULT: "#7C5CFA", foreground: "#FFFFFF" },
+          },
+        },
         dark: {
           colors: {
-            primary:   { DEFAULT: "#4A7AFF", foreground: "#FFFFFF" },
-            danger:    { DEFAULT: "#FF4D6D", foreground: "#FFFFFF" },
-            success:   { DEFAULT: "#3DD68C", foreground: "#0A0A0B" },
-            secondary: { DEFAULT: "#A78BFA", foreground: "#FFFFFF" },
+            background: { DEFAULT: "#0E1A14" },
+            foreground: { DEFAULT: "#E1DBCD" },
+            divider:    { DEFAULT: "rgba(255, 255, 255, 0.08)" },
+            focus:      { DEFAULT: "#C6F03A" },
+            overlay:    { DEFAULT: "#000000" },
+            content1:   { DEFAULT: "#14241C", foreground: "#E1DBCD" },
+            content2:   { DEFAULT: "#1B2F25", foreground: "#E1DBCD" },
+            content3:   { DEFAULT: "#24392D", foreground: "#E1DBCD" },
+            content4:   { DEFAULT: "#2D4636", foreground: "#E1DBCD" },
+            default: {
+              50: "#15201A", 100: "#1B2F25", 200: "#24392D", 300: "#2D4636",
+              400: "#566159", 500: "#6C776F", 600: "#9AA89E", 700: "#CFC8B6",
+              800: "#E1DBCD", 900: "#ECE8DE",
+              foreground: "#E1DBCD",
+              DEFAULT: "#24392D",
+            },
+            primary:   { DEFAULT: "#C6F03A", foreground: "#0E1A14" },
+            danger:    { DEFAULT: "#FB7185", foreground: "#0E1A14" },
+            success:   { DEFAULT: "#2DD4A0", foreground: "#0E1A14" },
+            secondary: { DEFAULT: "#A78BFA", foreground: "#0E1A14" },
           },
         },
       },

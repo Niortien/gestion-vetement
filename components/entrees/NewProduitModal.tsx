@@ -145,7 +145,7 @@ export function NewProduitModal({ isOpen, defaultValues, onClose, onAdd }: NewPr
         <ModalBody className="py-5">
           <div className="space-y-5">
             {/* Infos produit */}
-            <div className="rounded-xl border border-border/60 bg-[color:rgba(34,81,60,0.15)] p-4">
+            <div className="rounded-xl border border-border/60 bg-in/15 p-4">
               <p className="mb-3 text-[11px] uppercase tracking-wider text-text-muted">Informations produit</p>
               <div className="space-y-3">
                 <Input
@@ -218,7 +218,7 @@ export function NewProduitModal({ isOpen, defaultValues, onClose, onAdd }: NewPr
                       {...register("imageUrl")}
                     />
                   </div>
-                  <div className="mt-1 h-14 w-14 shrink-0 overflow-hidden rounded-lg border border-border/60 bg-[var(--color-surface-high)]">
+                  <div className="mt-1 h-14 w-14 shrink-0 overflow-hidden rounded-lg border border-border/60 bg-surface-high">
                     {watchedImageUrl ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
@@ -243,7 +243,7 @@ export function NewProduitModal({ isOpen, defaultValues, onClose, onAdd }: NewPr
             </div>
 
             {/* Variante */}
-            <div className="rounded-xl border border-border/60 bg-[color:rgba(34,81,60,0.15)] p-4">
+            <div className="rounded-xl border border-border/60 bg-in/15 p-4">
               <p className="mb-3 text-[11px] uppercase tracking-wider text-text-muted">Variante</p>
               <div className="space-y-3">
                 {/* Taille */}
@@ -289,8 +289,8 @@ export function NewProduitModal({ isOpen, defaultValues, onClose, onAdd }: NewPr
                           variant="flat"
                           className={
                             watchedCouleur === c
-                              ? "cursor-pointer bg-accent text-black"
-                              : "cursor-pointer bg-[var(--color-surface-high)] text-text"
+                              ? "cursor-pointer bg-accent text-on-accent"
+                              : "cursor-pointer bg-surface-high text-text"
                           }
                           onClick={() => setValue("couleur", c, { shouldValidate: true })}
                         >

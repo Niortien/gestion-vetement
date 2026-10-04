@@ -28,7 +28,7 @@ export function ProduitAlphaIndex({ produits }: ProduitAlphaIndexProps) {
 
   return (
     <div
-      className="fixed right-1 top-1/2 z-[200] -translate-y-1/2 flex flex-col items-center gap-px rounded-full border border-border/40 bg-[var(--color-surface)]/80 px-1 py-2 backdrop-blur-sm"
+      className="fixed right-1 top-1/2 z-[200] -translate-y-1/2 flex flex-col items-center gap-px rounded-full border border-border/40 bg-surface/80 px-1 py-2 backdrop-blur-sm"
       role="navigation"
       aria-label="Index alphabétique"
     >
