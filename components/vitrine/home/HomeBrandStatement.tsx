@@ -27,7 +27,7 @@ export function HomeBrandStatement() {
       >
         <span
           className="font-[var(--font-display)] font-black uppercase leading-none"
-          style={{ fontSize: "25vw", color: "rgba(240,180,41,0.04)" }}
+          style={{ fontSize: "25vw", color: "rgba(198,240,58,0.04)" }}
         >
           YOP
         </span>
@@ -36,7 +36,7 @@ export function HomeBrandStatement() {
       {/* Gold glow */}
       <div
         className="pointer-events-none absolute -top-32 left-1/4 h-64 w-64 rounded-full blur-3xl"
-        style={{ backgroundColor: "rgba(240,180,41,0.06)" }}
+        style={{ backgroundColor: "rgba(198,240,58,0.06)" }}
         aria-hidden
       />
 
@@ -44,7 +44,7 @@ export function HomeBrandStatement() {
 
         <motion.p
           className="mb-10 text-[10px] font-black uppercase tracking-[0.35em]"
-          style={{ color: "var(--v-gold)" }}
+          style={{ color: "var(--v-gold-text)" }}
           initial={{ opacity: 0, x: -20 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
@@ -97,14 +97,14 @@ export function HomeBrandStatement() {
               viewport={{ once: true }}
               transition={{ delay: 0.4 }}
             >
-              <span style={{ color: "var(--v-gold)", fontSize: 22 }}>★</span>
+              <span style={{ color: "var(--v-gold-text)", fontSize: 22 }}>★</span>
               <p
                 className="font-[var(--font-display)] text-lg font-black uppercase tracking-[0.15em]"
-                style={{ color: "var(--v-gold)" }}
+                style={{ color: "var(--v-gold-text)" }}
               >
                 Sortez toujours bien habillé
               </p>
-              <span style={{ color: "var(--v-gold)", fontSize: 22 }}>★</span>
+              <span style={{ color: "var(--v-gold-text)", fontSize: 22 }}>★</span>
             </motion.div>
 
             <motion.blockquote
@@ -139,7 +139,7 @@ export function HomeBrandStatement() {
             >
               <p
                 className="font-[var(--font-display)] font-black leading-none"
-                style={{ fontSize: "clamp(28px,4vw,52px)", color: "var(--v-gold)" }}
+                style={{ fontSize: "clamp(28px,4vw,52px)", color: "var(--v-gold-text)" }}
               >
                 {stat.value}
               </p>

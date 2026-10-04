@@ -44,7 +44,7 @@ export function ProduitDetailView({ id }: ProduitDetailViewProps) {
           onClick={() => refetch()}
           disabled={isFetching}
           className="mt-2 rounded-full px-6 py-2 text-xs font-bold uppercase tracking-widest transition-all hover:opacity-80 disabled:opacity-40"
-          style={{ backgroundColor: "var(--v-lime)", color: "#000" }}
+          style={{ backgroundColor: "var(--v-lime)", color: "#0E1A14" }}
         >
           {isFetching ? "Chargement…" : "Réessayer"}
         </button>

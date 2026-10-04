@@ -116,7 +116,7 @@ export function CatalogueProductCard({ produit, priority }: CatalogueProductCard
       <div className="mt-3 px-1">
         <Link href={`/boutique/${produit.id}`}>
           <h3
-            className="font-[var(--font-display)] text-sm font-black uppercase leading-tight tracking-wide transition-colors group-hover:text-[var(--v-lime)]"
+            className="font-[var(--font-display)] text-sm font-black uppercase leading-tight tracking-wide transition-colors group-hover:text-[var(--v-gold-text)]"
             style={{ color: "var(--v-text)" }}
           >
             {produit.nom}
@@ -143,7 +143,7 @@ export function CatalogueProductCard({ produit, priority }: CatalogueProductCard
           <div className="mt-2 flex flex-wrap items-center gap-1.5">
             <svg width="8" height="10" viewBox="0 0 8 10" fill="none" aria-hidden>
               <path d="M4 0C1.79 0 0 1.79 0 4c0 3 4 6 4 6s4-3 4-6c0-2.21-1.79-4-4-4zm0 5.5A1.5 1.5 0 1 1 4 2.5a1.5 1.5 0 0 1 0 3z"
-                fill="currentColor" style={{ color: "var(--v-lime)" }} />
+                fill="currentColor" style={{ color: "var(--v-gold-text)" }} />
             </svg>
             {boutiques.map((b, i) => (
               <span key={b.id} className="text-[10px] font-semibold" style={{ color: "var(--v-dim)" }}>
@@ -164,7 +164,7 @@ export function CatalogueProductCard({ produit, priority }: CatalogueProductCard
               </span>
               <span
                 className="[font-family:var(--font-mono)] text-sm font-black"
-                style={{ color: "var(--v-lime)" }}
+                style={{ color: "var(--v-gold-text)" }}
               >
                 {prixPromo.toLocaleString("fr-FR")} <span className="text-[10px] font-normal" style={{ color: "var(--v-dim)" }}>FCFA</span>
               </span>
@@ -172,7 +172,7 @@ export function CatalogueProductCard({ produit, priority }: CatalogueProductCard
           ) : (
             <span
               className="[font-family:var(--font-mono)] text-sm font-black"
-              style={{ color: "var(--v-lime)" }}
+              style={{ color: "var(--v-gold-text)" }}
             >
               {prix.toLocaleString("fr-FR")} <span className="text-[10px] font-normal" style={{ color: "var(--v-dim)" }}>FCFA</span>
             </span>

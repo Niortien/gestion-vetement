@@ -17,7 +17,7 @@ export function CatalogueHero({ total, search, onSearch }: CatalogueHeroProps) {
           <div>
             <p
               className="mb-2 text-[10px] font-black uppercase tracking-[0.3em]"
-              style={{ color: "var(--v-gold)" }}
+              style={{ color: "var(--v-gold-text)" }}
             >
               Dri Val&eacute; &mdash; Yop City
             </p>

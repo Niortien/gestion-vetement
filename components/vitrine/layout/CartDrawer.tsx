@@ -87,7 +87,7 @@ export function CartDrawer() {
                 style={{ color: "var(--v-text)" }}
               >
                 Panier{" "}
-                <span style={{ color: "var(--v-lime)" }}>
+                <span style={{ color: "var(--v-gold-text)" }}>
                   ({cart.reduce((s, i) => s + i.quantite, 0)})
                 </span>
               </h2>
@@ -110,7 +110,7 @@ export function CartDrawer() {
                     href="/catalogue"
                     onClick={() => setCartOpen(false)}
                     className="text-sm font-semibold underline"
-                    style={{ color: "var(--v-lime)" }}
+                    style={{ color: "var(--v-gold-text)" }}
                   >
                     Voir le catalogue →
                   </Link>
@@ -153,7 +153,7 @@ export function CartDrawer() {
                             {item.variante.taille} · {item.variante.couleur}
                           </p>
                           {item.variante.boutique?.nom && (
-                            <p className="text-[10px] font-semibold" style={{ color: "var(--v-lime)" }}>
+                            <p className="text-[10px] font-semibold" style={{ color: "var(--v-gold-text)" }}>
                               ◆ {item.variante.boutique.nom}
                             </p>
                           )}
@@ -177,7 +177,7 @@ export function CartDrawer() {
                             </button>
                             <span
                               className="ml-auto font-[var(--font-mono)] text-sm font-bold"
-                              style={{ color: "var(--v-lime)" }}
+                              style={{ color: "var(--v-gold-text)" }}
                             >
                               {(prix * item.quantite).toLocaleString("fr-FR")}
                             </span>
@@ -220,7 +220,7 @@ export function CartDrawer() {
                     key={key}
                     onClick={() => handleCommanderBoutique(group)}
                     className="flex w-full flex-col items-center justify-center gap-0.5 rounded-xl py-3.5 text-sm font-black uppercase tracking-wider transition-opacity hover:opacity-90"
-                    style={{ backgroundColor: "#25D366", color: "#000" }}
+                    style={{ backgroundColor: "#25D366", color: "#0E1A14" }}
                   >
                     <span className="flex items-center gap-2">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">

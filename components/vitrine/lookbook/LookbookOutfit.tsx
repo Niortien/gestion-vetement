@@ -30,7 +30,7 @@ function PieceRow({ piece, index }: { piece: OutfitPiece; index: number }) {
       <div className="flex items-center gap-4">
         <span
           className="[font-family:var(--font-mono)] text-xs font-black w-6"
-          style={{ color: "var(--v-lime)" }}
+          style={{ color: "var(--v-gold-text)" }}
         >
           {String(index + 1).padStart(2, "0")}
         </span>
@@ -44,7 +44,7 @@ function PieceRow({ piece, index }: { piece: OutfitPiece; index: number }) {
         </div>
       </div>
       <div className="flex items-center gap-3">
-        <span className="[font-family:var(--font-mono)] text-sm font-black" style={{ color: "var(--v-lime)" }}>
+        <span className="[font-family:var(--font-mono)] text-sm font-black" style={{ color: "var(--v-gold-text)" }}>
           {piece.prix.toLocaleString("fr-FR")} <span className="text-[10px] font-normal" style={{ color: "var(--v-dim)" }}>FCFA</span>
         </span>
         {piece.produitId && (
@@ -107,7 +107,7 @@ export function LookbookOutfit() {
         <div className="flex flex-col justify-center">
           <p
             className="mb-2 text-[10px] font-bold uppercase tracking-[0.4em]"
-            style={{ color: "var(--v-lime)" }}
+            style={{ color: "var(--v-gold-text)" }}
           >
             Déconstruire le look
           </p>
@@ -129,7 +129,7 @@ export function LookbookOutfit() {
           {/* Total */}
           <div className="mt-6 flex items-center justify-between rounded-xl px-4 py-3" style={{ backgroundColor: "var(--v-s2)" }}>
             <span className="text-sm font-bold" style={{ color: "var(--v-muted)" }}>Total look</span>
-            <span className="[font-family:var(--font-mono)] text-xl font-black" style={{ color: "var(--v-lime)" }}>
+            <span className="[font-family:var(--font-mono)] text-xl font-black" style={{ color: "var(--v-gold-text)" }}>
               {total.toLocaleString("fr-FR")} <span className="text-xs font-normal" style={{ color: "var(--v-dim)" }}>FCFA</span>
             </span>
           </div>

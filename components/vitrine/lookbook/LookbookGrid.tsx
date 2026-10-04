@@ -59,7 +59,7 @@ export function LookbookGrid() {
           >
             Le
             <br />
-            <span style={{ color: "var(--v-lime)" }}>Shooting</span>
+            <span style={{ color: "var(--v-gold-text)" }}>Shooting</span>
           </h2>
           <p className="max-w-xs text-right text-sm" style={{ color: "var(--v-muted)" }}>
             Shot à Abidjan — Yopougon, Cocody, Plateau

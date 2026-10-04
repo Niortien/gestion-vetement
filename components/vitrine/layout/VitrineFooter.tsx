@@ -41,9 +41,9 @@ export function VitrineFooter() {
           style={{ fontSize: "clamp(28px, 6vw, 64px)", color: "var(--v-text)" }}
         >
           Yop City.{" "}
-          <span style={{ color: "var(--v-gold)" }}>On est là.</span>
+          <span style={{ color: "var(--v-gold-text)" }}>On est là.</span>
         </p>
-        <p className="mt-3 flex items-center justify-center gap-2 text-sm font-bold" style={{ color: "var(--v-gold)" }}>
+        <p className="mt-3 flex items-center justify-center gap-2 text-sm font-bold" style={{ color: "var(--v-gold-text)" }}>
           <span>★</span>
           <span>Sortez toujours bien habillé</span>
           <span>★</span>
@@ -88,7 +88,7 @@ export function VitrineFooter() {
           {/* Liens */}
           {FOOTER_LINKS.map((group) => (
             <div key={group.group}>
-              <p className="mb-5 text-[10px] font-black uppercase tracking-[0.28em]" style={{ color: "var(--v-gold)" }}>
+              <p className="mb-5 text-[10px] font-black uppercase tracking-[0.28em]" style={{ color: "var(--v-gold-text)" }}>
                 {group.group}
               </p>
               <ul className="space-y-3">
@@ -109,7 +109,7 @@ export function VitrineFooter() {
 
           {/* Nous trouver */}
           <div>
-            <p className="mb-5 text-[10px] font-black uppercase tracking-[0.28em]" style={{ color: "var(--v-gold)" }}>
+            <p className="mb-5 text-[10px] font-black uppercase tracking-[0.28em]" style={{ color: "var(--v-gold-text)" }}>
               Nous trouver
             </p>
             <ul className="space-y-3 text-sm" style={{ color: "var(--v-muted)" }}>
@@ -175,7 +175,7 @@ export function VitrineFooter() {
           style={{ borderColor: "var(--v-border)", color: "var(--v-dim)" }}
         >
           <span>&copy; 2026 Dri Valé Boutique. Tous droits réservés.</span>
-          <span className="font-bold tracking-wider" style={{ color: "var(--v-gold)" }}>
+          <span className="font-bold tracking-wider" style={{ color: "var(--v-gold-text)" }}>
             YOP CITY &hearts;
           </span>
         </div>

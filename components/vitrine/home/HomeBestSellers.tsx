@@ -17,7 +17,7 @@ export function HomeBestSellers() {
         <div className="mb-12">
           <p
             className="mb-2 text-[10px] font-bold uppercase tracking-[0.3em]"
-            style={{ color: "var(--v-lime)" }}
+            style={{ color: "var(--v-gold-text)" }}
           >
             Incontournables
           </p>

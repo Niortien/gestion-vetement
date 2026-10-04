@@ -6,19 +6,21 @@ import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 /*
  * Fond « aurore » — adapté du composant « Aurora Hero bg » (21st.dev, @dhileepkumargm).
- * Adaptations : couleurs de marque Mon Djossi (violet → bleu → cyan), vignette sur le token `--color-base` au lieu du
+ * Adaptations : couleurs de marque Dri Valé (vert forêt → citron vert → menthe), vignette sur le token `--color-base` au lieu du
  * noir, couche `difference` retirée (illisible en thème clair), animation figée sous `prefers-reduced-motion`.
  */
 const AURORA =
-  "repeating-linear-gradient(100deg, #7c3aed 10%, #2563eb 15%, #06b6d4 20%, #7c3aed 25%, #2563eb 30%)";
+  "repeating-linear-gradient(100deg, #2F7D4F 10%, #7FB10F 15%, #2DD4A0 20%, #2F7D4F 25%, #7FB10F 30%)";
 
 interface AuroraBackgroundProps {
   className?: string;
   /** Opacité des bandes (0–1). Plus bas en thème clair pour garder le texte lisible. */
   intensity?: number;
+  /** Couleur de fond vers laquelle les bords se fondent (défaut : fond du back-office ; vitrine : `var(--v-bg)`). */
+  fadeTo?: string;
 }
 
-export function AuroraBackground({ className, intensity = 0.28 }: AuroraBackgroundProps) {
+export function AuroraBackground({ className, intensity = 0.28, fadeTo = "var(--color-base)" }: AuroraBackgroundProps) {
   const reduced = useReducedMotion();
 
   return (
@@ -42,7 +44,7 @@ export function AuroraBackground({ className, intensity = 0.28 }: AuroraBackgrou
         transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
       />
       {/* Fondu vers le fond de page pour que le texte reste lisible au centre. */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,var(--color-base)_100%)]" />
+      <div className="absolute inset-0" style={{ background: `radial-gradient(ellipse at center, transparent 20%, ${fadeTo} 85%)` }} />
     </div>
   );
 }

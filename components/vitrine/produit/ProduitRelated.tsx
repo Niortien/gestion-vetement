@@ -20,7 +20,7 @@ export function ProduitRelated({ categorieId, excludeId }: ProduitRelatedProps) 
       <div className="mx-auto max-w-7xl px-5">
         <p
           className="mb-2 text-[10px] font-bold uppercase tracking-[0.3em]"
-          style={{ color: "var(--v-lime)" }}
+          style={{ color: "var(--v-gold-text)" }}
         >
           Tu aimeras aussi
         </p>

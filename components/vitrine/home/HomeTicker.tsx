@@ -26,7 +26,7 @@ export function HomeTicker() {
             key={i}
             aria-hidden={i > 0}
             className="font-[var(--font-display)] text-[11px] font-black uppercase tracking-[0.22em]"
-            style={{ color: "var(--v-gold)" }}
+            style={{ color: "var(--v-gold-text)" }}
           >
             {t}
           </span>

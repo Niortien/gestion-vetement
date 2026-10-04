@@ -42,7 +42,7 @@ function MiniCard({ produit, fullWidth }: { produit: Produit; fullWidth?: boolea
 
         <div
           className="absolute inset-0"
-          style={{ background: "linear-gradient(to top, rgba(6,6,7,0.95) 0%, rgba(6,6,7,0.3) 45%, transparent 70%)" }}
+          style={{ background: "linear-gradient(to top, rgba(14,26,20,0.95) 0%, rgba(14,26,20,0.3) 45%, transparent 70%)" }}
         />
 
         <div className="absolute left-0 top-0 flex flex-col gap-1 p-2">
@@ -57,7 +57,7 @@ function MiniCard({ produit, fullWidth }: { produit: Produit; fullWidth?: boolea
           {boutiqueLabel && (
             <div
               className="rounded-md px-2 py-1 text-[10px] font-black uppercase tracking-wide backdrop-blur-sm"
-              style={{ backgroundColor: "rgba(0,0,0,0.55)", color: "var(--v-lime)", border: "1px solid rgba(255,255,255,0.1)" }}
+              style={{ backgroundColor: "rgba(0,0,0,0.55)", color: "var(--v-gold-text)", border: "1px solid rgba(255,255,255,0.1)" }}
             >
               ◆ {boutiqueLabel}
             </div>
@@ -68,7 +68,7 @@ function MiniCard({ produit, fullWidth }: { produit: Produit; fullWidth?: boolea
           <p className="line-clamp-2 text-[11px] font-bold uppercase leading-tight" style={{ color: "var(--v-text)" }}>
             {produit.nom}
           </p>
-          <p className="mt-1 font-[var(--font-mono)] text-[11px] font-black" style={{ color: "var(--v-gold)" }}>
+          <p className="mt-1 font-[var(--font-mono)] text-[11px] font-black" style={{ color: "var(--v-gold-text)" }}>
             {(prixPromo ?? prix).toLocaleString("fr-FR")}
             <span className="ml-0.5 text-[9px] font-normal" style={{ color: "var(--v-muted)" }}>FCFA</span>
           </p>
@@ -106,7 +106,7 @@ function OneCategorySection({ categorie }: { categorie: Categorie }) {
       {/* Header */}
       <div className="mb-4 flex items-center justify-between px-4 md:px-0">
         <div>
-          <p className="text-[9px] font-black uppercase tracking-[0.3em]" style={{ color: "var(--v-gold)" }}>
+          <p className="text-[9px] font-black uppercase tracking-[0.3em]" style={{ color: "var(--v-gold-text)" }}>
             Collection
           </p>
           <h2
@@ -119,7 +119,7 @@ function OneCategorySection({ categorie }: { categorie: Categorie }) {
         <Link
           href={`/catalogue?categorieId=${categorie.id}`}
           className="flex items-center gap-1 rounded-full border px-3 py-1.5 text-[10px] font-black uppercase tracking-wider transition-colors active:scale-95"
-          style={{ borderColor: "var(--v-gold)", color: "var(--v-gold)" }}
+          style={{ borderColor: "var(--v-gold)", color: "var(--v-gold-text)" }}
         >
           Voir tout &rarr;
         </Link>
@@ -188,7 +188,7 @@ export function HomeCategorySections() {
         >
           Qu&rsquo;est-ce que
           <br />
-          <span style={{ color: "var(--v-gold)" }}>tu cherches ?</span>
+          <span style={{ color: "var(--v-gold-text)" }}>tu cherches ?</span>
         </h2>
       </div>
 

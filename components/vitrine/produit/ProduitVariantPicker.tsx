@@ -53,7 +53,7 @@ export function ProduitVariantPicker({
           >
             Taille
             {selectedTaille && (
-              <span className="ml-2" style={{ color: "var(--v-lime)" }}>
+              <span className="ml-2" style={{ color: "var(--v-gold-text)" }}>
                 — {selectedTaille}
               </span>
             )}
@@ -105,7 +105,7 @@ export function ProduitVariantPicker({
         >
           Couleur
           {selectedCouleur && (
-            <span className="ml-2" style={{ color: "var(--v-lime)" }}>
+            <span className="ml-2" style={{ color: "var(--v-gold-text)" }}>
               — {selectedCouleur}
             </span>
           )}
@@ -124,7 +124,7 @@ export function ProduitVariantPicker({
                   stock === 0
                     ? { borderColor: "var(--v-border)", color: "var(--v-dim)", opacity: 0.4, cursor: "not-allowed" }
                     : isActive
-                    ? { borderColor: "var(--v-lime)", backgroundColor: "rgba(200,118,44,0.1)", color: "var(--v-lime)" }
+                    ? { borderColor: "var(--v-lime)", backgroundColor: "rgba(200,118,44,0.1)", color: "var(--v-gold-text)" }
                     : { borderColor: "var(--v-border)", color: "var(--v-text)" }
                 }
               >

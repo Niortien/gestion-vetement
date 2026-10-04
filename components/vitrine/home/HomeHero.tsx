@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { AuroraBackground } from "@/components/common/AuroraBackground";
 import { getWhatsappUrl } from "@/lib/whatsapp";
 
 const waUrl = getWhatsappUrl("Allo Dri Valé, je veux voir vos nouveautés 🔥");
@@ -9,14 +10,11 @@ const waUrl = getWhatsappUrl("Allo Dri Valé, je veux voir vos nouveautés 🔥"
 export function HomeHero() {
   return (
     <section
-      className="relative flex flex-col overflow-hidden md:min-h-[100svh]"
+      className="relative isolate flex flex-col overflow-hidden md:min-h-[100svh]"
       style={{ backgroundColor: "var(--v-bg)" }}
     >
-      {/* Glow or */}
-      <div
-        className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 h-[500px] w-[700px] rounded-full"
-        style={{ background: "radial-gradient(ellipse, rgba(240,180,41,0.12) 0%, transparent 68%)" }}
-      />
+      {/* Fond aurore (adapté de 21st.dev « Aurora Hero ») : très discret, il suit le thème de la vitrine. */}
+      <AuroraBackground intensity={0.16} fadeTo="var(--v-bg)" />
       {/* Grain texture */}
       <div
         className="pointer-events-none absolute inset-0"
@@ -51,7 +49,7 @@ export function HomeHero() {
           className="absolute bottom-4 left-5 rounded-full border px-3 py-1"
           style={{ borderColor: "var(--v-border-gold)", backdropFilter: "blur(8px)", backgroundColor: "rgba(0,0,0,0.4)" }}
         >
-          <p className="text-[10px] font-black uppercase tracking-[0.22em]" style={{ color: "var(--v-gold)" }}>
+          <p className="text-[10px] font-black uppercase tracking-[0.22em]" style={{ color: "var(--v-gold-text)" }}>
             Yopougon · Abidjan
           </p>
         </div>
@@ -71,7 +69,7 @@ export function HomeHero() {
           >
             <span
               className="inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.25em]"
-              style={{ borderColor: "var(--v-border-gold)", color: "var(--v-gold)" }}
+              style={{ borderColor: "var(--v-border-gold)", color: "var(--v-gold-text)" }}
             >
               <span className="h-1.5 w-1.5 rounded-full animate-pulse" style={{ backgroundColor: "var(--v-hot)" }} />
               Nouveaux drops disponibles
@@ -92,9 +90,8 @@ export function HomeHero() {
               className="block"
               style={{
                 fontSize: "clamp(56px, 10vw, 130px)",
-                color: "var(--v-gold)",
-                textShadow: "0 0 60px rgba(240,180,41,0.3)",
-              }}
+                color: "var(--v-gold-text)",
+                              }}
             >
               PLUS STYLÉ
             </span>
@@ -110,14 +107,14 @@ export function HomeHero() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <span style={{ color: "var(--v-gold)", fontSize: 16 }}>★</span>
+            <span style={{ color: "var(--v-gold-text)", fontSize: 16 }}>★</span>
             <p
               className="font-[var(--font-display)] text-sm font-black uppercase tracking-[0.12em] md:text-base"
-              style={{ color: "var(--v-gold)" }}
+              style={{ color: "var(--v-gold-text)" }}
             >
               Sortez toujours bien habillé
             </p>
-            <span style={{ color: "var(--v-gold)", fontSize: 16 }}>★</span>
+            <span style={{ color: "var(--v-gold-text)", fontSize: 16 }}>★</span>
           </motion.div>
 
           {/* Tagline */}
@@ -142,8 +139,8 @@ export function HomeHero() {
           >
             <Link
               href="/catalogue"
-              className="inline-flex items-center gap-2 rounded-xl px-7 py-4 font-[var(--font-display)] text-sm font-black uppercase tracking-widest transition-all hover:scale-[1.03] hover:shadow-[0_0_32px_rgba(240,180,41,0.35)] active:scale-[0.97]"
-              style={{ backgroundColor: "var(--v-gold)", color: "#000" }}
+              className="inline-flex items-center gap-2 rounded-xl px-7 py-4 font-[var(--font-display)] text-sm font-black uppercase tracking-widest transition-all hover:scale-[1.03] hover:shadow-[0_0_32px_rgba(198,240,58,0.35)] active:scale-[0.97]"
+              style={{ backgroundColor: "var(--v-gold)", color: "#0E1A14" }}
             >
               Explorer le catalogue
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -154,7 +151,7 @@ export function HomeHero() {
               href={waUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-xl border px-7 py-4 font-[var(--font-display)] text-sm font-black uppercase tracking-widest transition-all hover:border-[var(--v-gold)] hover:text-[var(--v-gold)]"
+              className="inline-flex items-center gap-2 rounded-xl border px-7 py-4 font-[var(--font-display)] text-sm font-black uppercase tracking-widest transition-all hover:border-[var(--v-gold)] hover:text-[var(--v-gold-text)]"
               style={{ borderColor: "var(--v-border)", color: "var(--v-muted)" }}
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -177,7 +174,7 @@ export function HomeHero() {
               { val: "24h",  label: "livraison locale" },
             ].map((s) => (
               <div key={s.label} className="flex flex-col">
-                <span className="font-[var(--font-display)] text-xl font-black" style={{ color: "var(--v-gold)" }}>
+                <span className="font-[var(--font-display)] text-xl font-black" style={{ color: "var(--v-gold-text)" }}>
                   {s.val}
                 </span>
                 <span className="text-[10px] uppercase tracking-wider" style={{ color: "var(--v-dim)" }}>
@@ -221,7 +218,7 @@ export function HomeHero() {
               className="absolute bottom-6 left-6 rounded-full border px-4 py-1.5"
               style={{ borderColor: "var(--v-border-gold)", backdropFilter: "blur(8px)", backgroundColor: "rgba(0,0,0,0.4)" }}
             >
-              <p className="text-[10px] font-black uppercase tracking-[0.22em]" style={{ color: "var(--v-gold)" }}>
+              <p className="text-[10px] font-black uppercase tracking-[0.22em]" style={{ color: "var(--v-gold-text)" }}>
                 Yopougon · Abidjan
               </p>
             </div>

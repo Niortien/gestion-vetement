@@ -5,6 +5,8 @@ interface BrandMarkProps {
   variant?: "full" | "icon";
   /** Force le texte clair (fond toujours sombre : barre latérale forêt). Omis : suit le thème. */
   onDark?: boolean;
+  /** Couleurs de la vitrine publique (tokens `--v-*`, indépendants du thème du back-office). */
+  vitrine?: boolean;
   /** Affiche la signature sous le nom. */
   tagline?: boolean;
   className?: string;
@@ -25,7 +27,7 @@ function Mark({ className }: { className?: string }) {
 }
 
 /** Logo Dri Valé en code (le fichier d'origine est un JPEG noir avec filigrane, inutilisable sur fond coloré). */
-export function BrandMark({ variant = "full", onDark, tagline = false, className }: BrandMarkProps) {
+export function BrandMark({ variant = "full", onDark, vitrine = false, tagline = false, className }: BrandMarkProps) {
   if (variant === "icon") return <Mark className={className} />;
 
   return (
@@ -35,13 +37,24 @@ export function BrandMark({ variant = "full", onDark, tagline = false, className
         <span
           className={cn(
             "font-display text-xl font-extrabold tracking-tight",
-            onDark ? "text-sidebar-text" : "text-text"
+            !vitrine && (onDark ? "text-sidebar-text" : "text-text")
           )}
+          style={vitrine ? { color: "var(--v-text)" } : undefined}
         >
-          Dri<span className={onDark ? "text-sidebar-accent" : "text-accent-text"}> Valé</span>
+          Dri
+          <span
+            className={vitrine ? undefined : onDark ? "text-sidebar-accent" : "text-accent-text"}
+            style={vitrine ? { color: "var(--v-gold-text)" } : undefined}
+          >
+            {" "}
+            Valé
+          </span>
         </span>
         {tagline && (
-          <span className={cn("mt-1 text-[10px] font-medium tracking-wide", onDark ? "text-sidebar-muted" : "text-text-muted")}>
+          <span
+            className={cn("mt-1 text-[10px] font-medium tracking-wide", !vitrine && (onDark ? "text-sidebar-muted" : "text-text-muted"))}
+            style={vitrine ? { color: "var(--v-muted)" } : undefined}
+          >
             Sortez toujours bien habillé
           </span>
         )}

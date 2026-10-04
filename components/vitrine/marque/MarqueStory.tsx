@@ -41,7 +41,7 @@ export function MarqueStory() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         className="mb-2 text-[10px] font-black uppercase tracking-[0.4em]"
-        style={{ color: "var(--v-gold)" }}
+        style={{ color: "var(--v-gold-text)" }}
       >
         Notre histoire
       </motion.p>
@@ -85,7 +85,7 @@ export function MarqueStory() {
               <div className={`md:w-[45%] ${i % 2 === 0 ? "md:text-right md:pr-12" : "md:pl-12"}`}>
                 <p
                   className="mb-1 font-[var(--font-mono)] text-sm font-black"
-                  style={{ color: "var(--v-gold)" }}
+                  style={{ color: "var(--v-gold-text)" }}
                 >
                   {item.year}
                 </p>

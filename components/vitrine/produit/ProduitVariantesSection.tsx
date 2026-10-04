@@ -57,7 +57,7 @@ export function ProduitVariantesSection({
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-black uppercase tracking-widest"
-          style={{ backgroundColor: "#25D366", color: "#000" }}
+          style={{ backgroundColor: "#25D366", color: "#0E1A14" }}
         >
           Demander les tailles
         </a>
@@ -77,7 +77,7 @@ export function ProduitVariantesSection({
         className="flex items-center justify-between rounded-xl px-4 py-3"
         style={{ backgroundColor: "var(--v-s2)" }}
       >
-        <p className="text-[10px] font-black uppercase tracking-[0.35em]" style={{ color: "var(--v-lime)" }}>
+        <p className="text-[10px] font-black uppercase tracking-[0.35em]" style={{ color: "var(--v-gold-text)" }}>
           Disponibilités
         </p>
         <span className="text-[10px] font-semibold" style={{ color: "var(--v-dim)" }}>

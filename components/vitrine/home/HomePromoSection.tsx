@@ -14,12 +14,12 @@ export function HomePromoSection() {
   return (
     <section
       className="relative overflow-hidden py-20"
-      style={{ background: "linear-gradient(170deg, rgba(255,51,89,0.08) 0%, var(--v-bg) 55%)" }}
+      style={{ background: "linear-gradient(170deg, rgba(255,107,136,0.08) 0%, var(--v-bg) 55%)" }}
     >
       {/* Glow rouge */}
       <div
         className="pointer-events-none absolute -top-16 left-0 right-0 h-40 blur-3xl"
-        style={{ background: "linear-gradient(90deg, rgba(255,51,89,0.12) 0%, transparent 60%)" }}
+        style={{ background: "linear-gradient(90deg, rgba(255,107,136,0.12) 0%, transparent 60%)" }}
         aria-hidden
       />
 

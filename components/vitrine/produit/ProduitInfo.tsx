@@ -33,7 +33,7 @@ function StockBadge({ stock }: { stock: number }) {
   return (
     <span
       className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider"
-      style={{ backgroundColor: "rgba(200,118,44,0.12)", color: "var(--v-lime)" }}
+      style={{ backgroundColor: "rgba(200,118,44,0.12)", color: "var(--v-gold-text)" }}
     >
       <span className="h-1.5 w-1.5 rounded-full bg-[var(--v-lime)]" />
       Disponible
@@ -67,7 +67,7 @@ export function ProduitInfo({ produit, totalStock }: ProduitInfoProps) {
       {produit.categorie && (
         <p
           className="mb-2 text-[10px] font-bold uppercase tracking-[0.3em]"
-          style={{ color: "var(--v-lime)" }}
+          style={{ color: "var(--v-gold-text)" }}
         >
           {produit.categorie.nom}
         </p>
@@ -110,7 +110,7 @@ export function ProduitInfo({ produit, totalStock }: ProduitInfoProps) {
             <span
               key={b.id}
               className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold"
-              style={{ borderColor: "rgba(200,118,44,0.35)", backgroundColor: "rgba(200,118,44,0.08)", color: "var(--v-lime)" }}
+              style={{ borderColor: "rgba(200,118,44,0.35)", backgroundColor: "rgba(200,118,44,0.08)", color: "var(--v-gold-text)" }}
             >
               📍 {b.nom}{b.ville ? ` — ${b.ville}` : ""}
             </span>
@@ -130,7 +130,7 @@ export function ProduitInfo({ produit, totalStock }: ProduitInfoProps) {
             </span>
             <span
               className="[font-family:var(--font-mono)] font-black"
-              style={{ fontSize: "clamp(28px, 4vw, 40px)", color: "var(--v-lime)" }}
+              style={{ fontSize: "clamp(28px, 4vw, 40px)", color: "var(--v-gold-text)" }}
             >
               {prixPromo.toLocaleString("fr-FR")}
               <span
@@ -144,7 +144,7 @@ export function ProduitInfo({ produit, totalStock }: ProduitInfoProps) {
         ) : (
           <span
             className="[font-family:var(--font-mono)] font-black"
-            style={{ fontSize: "clamp(28px, 4vw, 40px)", color: "var(--v-lime)" }}
+            style={{ fontSize: "clamp(28px, 4vw, 40px)", color: "var(--v-gold-text)" }}
           >
             {prix.toLocaleString("fr-FR")}
             <span

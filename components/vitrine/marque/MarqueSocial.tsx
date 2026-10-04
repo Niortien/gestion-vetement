@@ -59,7 +59,7 @@ export function MarqueSocial() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="mb-2 text-[10px] font-bold uppercase tracking-[0.4em]"
-          style={{ color: "var(--v-lime)" }}
+          style={{ color: "var(--v-gold-text)" }}
         >
           Reste connecté
         </motion.p>
@@ -73,7 +73,7 @@ export function MarqueSocial() {
         >
           Follow the
           <br />
-          <span style={{ color: "var(--v-lime)" }}>Dri Valé</span>
+          <span style={{ color: "var(--v-gold-text)" }}>Dri Valé</span>
         </motion.h2>
 
         {/* Socials */}
@@ -115,7 +115,7 @@ export function MarqueSocial() {
         >
           <p
             className="mb-2 text-[10px] font-bold uppercase tracking-[0.4em]"
-            style={{ color: "var(--v-lime)" }}
+            style={{ color: "var(--v-gold-text)" }}
           >
             Newsletter
           </p>
@@ -136,7 +136,7 @@ export function MarqueSocial() {
               className="rounded-xl px-6 py-4 text-center"
               style={{ backgroundColor: "rgba(200,118,44,0.1)", border: "1px solid var(--v-lime)" }}
             >
-              <p className="text-sm font-black" style={{ color: "var(--v-lime)" }}>
+              <p className="text-sm font-black" style={{ color: "var(--v-gold-text)" }}>
                 Bienvenue dans la famille Dri Valé ✓
               </p>
             </motion.div>

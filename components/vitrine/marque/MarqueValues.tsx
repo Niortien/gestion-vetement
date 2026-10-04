@@ -35,7 +35,7 @@ export function MarqueValues() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="mb-2 text-[10px] font-black uppercase tracking-[0.4em]"
-          style={{ color: "var(--v-gold)" }}
+          style={{ color: "var(--v-gold-text)" }}
         >
           Ce en quoi on croit
         </motion.p>
@@ -73,7 +73,7 @@ export function MarqueValues() {
               <div className="relative z-10">
                 <p
                   className="mb-4 font-[var(--font-mono)] text-xs font-black"
-                  style={{ color: "var(--v-gold)" }}
+                  style={{ color: "var(--v-gold-text)" }}
                 >
                   {val.num}
                 </p>
