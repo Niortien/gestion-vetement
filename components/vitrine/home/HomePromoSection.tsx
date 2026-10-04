@@ -8,8 +8,8 @@ import { IconArrow } from "@/components/vitrine/common/VitrineIcons";
 
 /** Promotions du moment : le prix barré ancre le prix, le rouge est réservé à ce qui est réellement en promo. */
 export function HomePromoSection() {
-  const { data, isLoading } = useVitrineProduits({ enPromo: true, limit: 8 });
-  const produits = data?.pages[0]?.data ?? [];
+  const { data, isLoading } = useVitrineProduits({ enPromo: true, limit: 100 });
+  const produits = data?.pages.flatMap((p) => p.data) ?? [];
 
   if (!isLoading && produits.length === 0) return null;
 
@@ -43,7 +43,7 @@ export function HomePromoSection() {
                   <div className="aspect-[4/5] animate-pulse rounded-xl" style={{ backgroundColor: "var(--v-s2)" }} />
                 </div>
               ))
-            : produits.slice(0, 8).map((p, i) => (
+            : produits.map((p, i) => (
                 <motion.div
                   key={p.id}
                   className="w-[62vw] max-w-[260px] md:w-auto md:max-w-none"

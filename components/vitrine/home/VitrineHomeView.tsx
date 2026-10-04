@@ -2,7 +2,7 @@
 
 import { HomeHero } from "./HomeHero";
 import { HomeTicker } from "./HomeTicker";
-import { HomeNewArrivals } from "./HomeNewArrivals";
+import { HomeCollection } from "./HomeCollection";
 import { HomeCategories } from "./HomeCategories";
 import { HomePromoSection } from "./HomePromoSection";
 import { HomeBrandStatement } from "./HomeBrandStatement";
@@ -13,7 +13,7 @@ export function VitrineHomeView() {
     <>
       <HomeHero />
       <HomeTicker />
-      <HomeNewArrivals />
+      <HomeCollection />
       <HomeCategories />
       <HomePromoSection />
       <HomeBrandStatement />
