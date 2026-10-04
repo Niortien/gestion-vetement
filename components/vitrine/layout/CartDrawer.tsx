@@ -137,7 +137,7 @@ export function CartDrawer() {
                               className="h-full w-full object-cover"
                             />
                           ) : (
-                            <div className="flex h-full items-center justify-center text-xl opacity-20">👟</div>
+                            <div className="flex h-full items-center justify-center text-[10px]" style={{ color: "var(--v-dim)" }}>Photo</div>
                           )}
                         </div>
 

@@ -1,252 +1,80 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { AuroraBackground } from "@/components/common/AuroraBackground";
+import Image from "next/image";
+import { IconArrow, IconWhatsapp } from "@/components/vitrine/common/VitrineIcons";
 import { getWhatsappUrl } from "@/lib/whatsapp";
 
-const waUrl = getWhatsappUrl("Allo Dri Valé, je veux voir vos nouveautés 🔥");
+const waUrl = getWhatsappUrl("Bonjour Dri Valé, je veux voir vos nouveautés");
 
+const LINES = [
+  { text: "Sois le", gold: false },
+  { text: "plus stylé", gold: true },
+  { text: "de Yop.", gold: false },
+];
+
+/**
+ * Affiche d'accueil : la photo de la boutique plein écran, le titre en bandes condensées posé dessus.
+ * Une seule animation signée : chaque bande se découvre vers le bas (clip-path), en cascade.
+ */
 export function HomeHero() {
   return (
-    <section
-      className="relative isolate flex flex-col overflow-hidden md:min-h-[100svh]"
-      style={{ backgroundColor: "var(--v-bg)" }}
-    >
-      {/* Fond aurore (adapté de 21st.dev « Aurora Hero ») : très discret, il suit le thème de la vitrine. */}
-      <AuroraBackground intensity={0.16} fadeTo="var(--v-bg)" />
-      {/* Grain texture */}
+    <section className="relative isolate flex min-h-[calc(100svh-4rem)] flex-col justify-end overflow-hidden" style={{ backgroundColor: "var(--v-bg)" }}>
+      <Image
+        src="/images/dri_style/dir_hero.jpeg"
+        alt="Dri Valé, vitrine de la boutique à Yopougon"
+        fill
+        priority
+        sizes="100vw"
+        className="-z-20 object-cover object-top"
+      />
       <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          opacity: 0.03,
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-          backgroundSize: "200px 200px",
-        }}
+        aria-hidden
+        className="absolute inset-0 -z-10"
+        style={{ background: "linear-gradient(to top, var(--v-bg) 8%, color-mix(in srgb, var(--v-bg) 55%, transparent) 45%, transparent 80%)" }}
       />
 
-      {/* ── Image éditoriale mobile — bandeau pleine largeur en tête de section ── */}
-      <motion.div
-        className="relative h-[52svh] w-full md:hidden"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6 }}
-        aria-hidden
-      >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/images/dri_style/dir_hero.jpeg"
-          alt="Dri Valé — style Yopougon"
-          className="h-full w-full object-cover object-top"
-        />
-        {/* Fondu bas pour raccorder au fond de la section */}
-        <div
-          className="absolute inset-x-0 bottom-0 h-32"
-          style={{ background: "linear-gradient(to top, var(--v-bg) 0%, transparent 100%)" }}
-        />
-        {/* Étiquette décorative — même contenu que la version desktop */}
-        <div
-          className="absolute bottom-4 left-5 rounded-full border px-3 py-1"
-          style={{ borderColor: "var(--v-border-gold)", backdropFilter: "blur(8px)", backgroundColor: "rgba(0,0,0,0.4)" }}
-        >
-          <p className="text-[10px] font-black uppercase tracking-[0.22em]" style={{ color: "var(--v-gold-text)" }}>
-            Yopougon · Abidjan
+      <div className="relative mx-auto w-full max-w-7xl px-5 pb-24 pt-24 md:pb-12">
+        <h1 className="poster text-[clamp(64px,17vw,208px)]" aria-label="Sois le plus stylé de Yop.">
+          {LINES.map((l, i) => (
+            <span key={l.text} aria-hidden className="block overflow-hidden pb-[0.04em]">
+              <span
+                className="poster-line block"
+                style={{ color: l.gold ? "var(--v-gold-text)" : "var(--v-text)", animationDelay: `${i * 90}ms` }}
+              >
+                {l.text}
+              </span>
+            </span>
+          ))}
+        </h1>
+
+        <div className="mt-8 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+          <p className="max-w-md text-[15px] leading-relaxed" style={{ color: "var(--v-muted)" }}>
+            Vêtements, sneakers et accessoires importés, en rayon à Yopougon. Choisis ta pièce, commande sur WhatsApp.
           </p>
-        </div>
-      </motion.div>
 
-      {/* Main content — split gauche/droite sur desktop */}
-      <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 flex-col md:flex-row md:items-center gap-8 px-5 pb-12 pt-6 md:pt-28">
-
-        {/* ── COLONNE GAUCHE : texte ── */}
-        <div className="flex flex-col justify-center md:flex-[0_0_55%]">
-
-          {/* Eyebrow badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <span
-              className="inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.25em]"
-              style={{ borderColor: "var(--v-border-gold)", color: "var(--v-gold-text)" }}
-            >
-              <span className="h-1.5 w-1.5 rounded-full animate-pulse" style={{ backgroundColor: "var(--v-hot)" }} />
-              Nouveaux drops disponibles
-            </span>
-          </motion.div>
-
-          {/* Titre principal */}
-          <motion.h1
-            className="mt-6 font-[var(--font-display)] font-black leading-[0.92] tracking-[-0.02em]"
-            initial={{ opacity: 0, y: 32 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, delay: 0.1 }}
-          >
-            <span className="block" style={{ fontSize: "clamp(56px, 10vw, 130px)", color: "var(--v-text)" }}>
-              SOIS LE
-            </span>
-            <span
-              className="block"
-              style={{
-                fontSize: "clamp(56px, 10vw, 130px)",
-                color: "var(--v-gold-text)",
-                              }}
-            >
-              PLUS STYLÉ
-            </span>
-            <span className="block" style={{ fontSize: "clamp(56px, 10vw, 130px)", color: "var(--v-text)" }}>
-              DE YOP.
-            </span>
-          </motion.h1>
-
-          {/* Slogan */}
-          <motion.div
-            className="mt-6 flex items-center gap-3"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            <span style={{ color: "var(--v-gold-text)", fontSize: 16 }}>★</span>
-            <p
-              className="font-[var(--font-display)] text-sm font-black uppercase tracking-[0.12em] md:text-base"
-              style={{ color: "var(--v-gold-text)" }}
-            >
-              Sortez toujours bien habillé
-            </p>
-            <span style={{ color: "var(--v-gold-text)", fontSize: 16 }}>★</span>
-          </motion.div>
-
-          {/* Tagline */}
-          <motion.p
-            className="mt-3 max-w-md text-sm leading-relaxed"
-            style={{ color: "var(--v-muted)" }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-          >
-            Vêtements, sneakers et accessoires importés. Directo depuis
-            Yopougon —{" "}
-            <span style={{ color: "var(--v-text)", fontWeight: 600 }}>100% authentique.</span>
-          </motion.p>
-
-          {/* CTAs */}
-          <motion.div
-            className="mt-8 flex flex-wrap items-center gap-4"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-          >
+          <div className="flex flex-col gap-3 sm:flex-row">
             <Link
               href="/catalogue"
-              className="inline-flex items-center gap-2 rounded-xl px-7 py-4 font-[var(--font-display)] text-sm font-black uppercase tracking-widest transition-all hover:scale-[1.03] hover:shadow-[0_0_32px_rgba(198,240,58,0.35)] active:scale-[0.97]"
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-7 text-sm font-bold transition-transform duration-150 active:scale-[0.98]"
               style={{ backgroundColor: "var(--v-gold)", color: "var(--v-on-gold)" }}
             >
-              Explorer le catalogue
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-              </svg>
+              Voir le catalogue
+              <IconArrow size={18} />
             </Link>
             <a
               href={waUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-xl border px-7 py-4 font-[var(--font-display)] text-sm font-black uppercase tracking-widest transition-all hover:border-[var(--v-gold)] hover:text-[var(--v-gold-text)]"
-              style={{ borderColor: "var(--v-border)", color: "var(--v-muted)" }}
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border px-6 text-sm font-semibold transition-colors duration-150 hover:border-[var(--v-gold)]"
+              style={{ borderColor: "var(--v-border-gold)", color: "var(--v-text)" }}
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-              </svg>
-              Commander sur WA
+              <IconWhatsapp size={18} />
+              Écrire sur WhatsApp
             </a>
-          </motion.div>
-
-          {/* Stats */}
-          <motion.div
-            className="mt-10 flex items-center gap-8"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.75 }}
-          >
-            {[
-              { val: "Yopougon", label: "boutique physique" },
-              { val: "WhatsApp", label: "commande en 1 message" },
-              { val: "100%", label: "pièces authentiques" },
-            ].map((s) => (
-              <div key={s.label} className="flex flex-col">
-                <span className="font-[var(--font-display)] text-xl font-black" style={{ color: "var(--v-gold-text)" }}>
-                  {s.val}
-                </span>
-                <span className="text-[10px] uppercase tracking-wider" style={{ color: "var(--v-dim)" }}>
-                  {s.label}
-                </span>
-              </div>
-            ))}
-          </motion.div>
-        </div>
-
-        {/* ── COLONNE DROITE : image éditoriale (desktop uniquement) ── */}
-        <motion.div
-          className="hidden md:flex md:flex-1 md:items-center md:justify-end"
-          initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.9, delay: 0.35 }}
-          aria-hidden
-        >
-          <div
-            className="relative w-full overflow-hidden rounded-2xl"
-            style={{ maxHeight: "78vh", aspectRatio: "3/4" }}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/images/dri_style/dir_hero.jpeg"
-              alt="Dri Valé — style Yopougon"
-              className="h-full w-full object-cover object-center"
-            />
-            {/* Fondu gauche pour le blend avec le fond */}
-            <div
-              className="absolute inset-0"
-              style={{ background: "linear-gradient(to right, var(--v-bg) 0%, transparent 22%)" }}
-            />
-            {/* Fondu bas */}
-            <div
-              className="absolute inset-0"
-              style={{ background: "linear-gradient(to top, var(--v-bg) 0%, transparent 28%)" }}
-            />
-            {/* Étiquette décorative */}
-            <div
-              className="absolute bottom-6 left-6 rounded-full border px-4 py-1.5"
-              style={{ borderColor: "var(--v-border-gold)", backdropFilter: "blur(8px)", backgroundColor: "rgba(0,0,0,0.4)" }}
-            >
-              <p className="text-[10px] font-black uppercase tracking-[0.22em]" style={{ color: "var(--v-gold-text)" }}>
-                Yopougon · Abidjan
-              </p>
-            </div>
           </div>
-        </motion.div>
+        </div>
       </div>
-
-      {/* Bande dorée en bas */}
-      <div
-        className="absolute bottom-0 left-0 right-0 h-px"
-        style={{ background: "linear-gradient(to right, transparent 0%, var(--v-gold) 40%, var(--v-gold) 60%, transparent 100%)", opacity: 0.3 }}
-      />
-
-      {/* Scroll indicator */}
-      <motion.div
-        className="absolute bottom-8 right-8 hidden md:flex flex-col items-center gap-2"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.2 }}
-      >
-        <motion.div
-          className="h-10 w-px"
-          style={{ backgroundColor: "var(--v-dim)" }}
-          animate={{ scaleY: [1, 0.3, 1] }}
-          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <span className="text-[9px] uppercase tracking-[0.3em]" style={{ color: "var(--v-dim)" }}>scroll</span>
-      </motion.div>
     </section>
   );
 }

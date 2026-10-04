@@ -20,10 +20,11 @@ const THEME_INIT_SCRIPT = `
 `;
 
 // Dri Valé : Bricolage Grotesque (titres, affiches de la vitrine), DM Sans (corps), JetBrains Mono (données).
+// Police variable : les axes `wdth` (affiche condensée de la vitrine) et `opsz` sont exposés.
 const displayFont = Bricolage_Grotesque({
   variable: "--font-display",
   subsets: ["latin"],
-  weight: ["500", "600", "700", "800"],
+  axes: ["wdth", "opsz"],
 });
 
 const bodyFont = DM_Sans({

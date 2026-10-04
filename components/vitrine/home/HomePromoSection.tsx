@@ -3,130 +3,58 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useVitrineProduits } from "@/features/vitrine/query/vitrine-queries";
-import { ProduitCard } from "@/components/vitrine/common/ProduitCard";
+import { ProductTile } from "@/components/vitrine/common/ProductTile";
+import { IconArrow } from "@/components/vitrine/common/VitrineIcons";
 
+/** Promotions du moment : le prix barré ancre le prix, le rouge est réservé à ce qui est réellement en promo. */
 export function HomePromoSection() {
-  const { data, isLoading } = useVitrineProduits({ enPromo: true, limit: 6 });
-  const produits = data?.pages[0]?.data ?? [];
+  const { data, isLoading } = useVitrineProduits({ enPromo: true, limit: 100 });
+  const produits = data?.pages.flatMap((p) => p.data) ?? [];
 
   if (!isLoading && produits.length === 0) return null;
 
   return (
-    <section
-      className="relative overflow-hidden py-20"
-      style={{ background: "linear-gradient(170deg, rgba(255,107,136,0.08) 0%, var(--v-bg) 55%)" }}
-    >
-      {/* Glow rouge */}
-      <div
-        className="pointer-events-none absolute -top-16 left-0 right-0 h-40 blur-3xl"
-        style={{ background: "linear-gradient(90deg, rgba(255,107,136,0.12) 0%, transparent 60%)" }}
-        aria-hidden
-      />
-
-      <div className="relative mx-auto max-w-7xl px-5">
-        {/* Header */}
-        <div className="mb-12 flex items-end justify-between gap-4">
-          <div>
-            <div className="mb-4 inline-flex items-center gap-2">
-              <span className="h-2 w-2 animate-pulse rounded-full" style={{ backgroundColor: "var(--v-hot)" }} />
-              <span className="text-[10px] font-black uppercase tracking-[0.35em]" style={{ color: "var(--v-hot)" }}>
-                Vente flash &bull; Prix cassés
-              </span>
-            </div>
-            <h2
-              className="font-[var(--font-display)] font-black uppercase leading-none tracking-tight"
-              style={{ fontSize: "clamp(36px, 6vw, 72px)", color: "var(--v-text)" }}
-            >
-              Promos
-              <br />
-              <span style={{ color: "var(--v-hot)" }}>du moment</span>
-            </h2>
-            {!isLoading && produits.length > 0 && (
-              <p className="mt-3 text-sm" style={{ color: "var(--v-muted)" }}>
-                {produits.length} article{produits.length > 1 ? "s" : ""} en promotion
-              </p>
-            )}
-          </div>
-          <Link
-            href="/catalogue"
-            className="hidden shrink-0 rounded-full border px-5 py-2 text-xs font-black uppercase tracking-widest transition-all hover:border-[var(--v-hot)] hover:text-[var(--v-hot)] md:flex items-center gap-2"
-            style={{ borderColor: "var(--v-border)", color: "var(--v-muted)" }}
-          >
-            Tout voir &rarr;
-          </Link>
+    <section className="py-16 md:py-24" style={{ backgroundColor: "var(--v-s1)" }}>
+      <div className="mx-auto flex max-w-7xl items-end justify-between gap-4 px-5">
+        <div>
+          <h2 className="tag-title text-[clamp(30px,6vw,56px)]" style={{ color: "var(--v-text)" }}>
+            Prix baissés
+          </h2>
+          {!isLoading && (
+            <p className="mt-2 text-sm" style={{ color: "var(--v-muted)" }}>
+              {produits.length} pièce{produits.length > 1 ? "s" : ""} en promotion en ce moment.
+            </p>
+          )}
         </div>
+        <Link
+          href="/catalogue"
+          className="hidden min-h-11 shrink-0 items-center gap-2 text-sm font-semibold md:flex"
+          style={{ color: "var(--v-gold-text)" }}
+        >
+          Tout voir <IconArrow size={16} />
+        </Link>
+      </div>
 
-        {/* Grille mobile : 2 colonnes uniformes */}
-        {isLoading ? (
-          <div className="grid grid-cols-2 gap-4 md:hidden">
-            {Array(4).fill(null).map((_, i) => (
-              <div key={i} className="aspect-square animate-pulse rounded-2xl" style={{ backgroundColor: "var(--v-s2)" }} />
-            ))}
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 gap-4 md:hidden">
-            {produits.slice(0, 6).map((produit, i) => (
-              <motion.div
-                key={produit.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.07, duration: 0.45 }}
-              >
-                <ProduitCard produit={produit} />
-              </motion.div>
-            ))}
-          </div>
-        )}
-
-        {/* Grille desktop : grande carte gauche + 2×2 droite */}
-        {isLoading ? (
-          <div className="hidden md:flex md:gap-4">
-            <div className="flex-[0_0_40%] aspect-[3/4] animate-pulse rounded-2xl" style={{ backgroundColor: "var(--v-s2)" }} />
-            <div className="flex-1 grid grid-cols-2 gap-4">
-              {Array(4).fill(null).map((_, i) => (
-                <div key={i} className="aspect-square animate-pulse rounded-2xl" style={{ backgroundColor: "var(--v-s2)" }} />
-              ))}
-            </div>
-          </div>
-        ) : (
-          <div className="hidden md:flex md:gap-4 md:items-start">
-            {/* Grande carte — premier produit promo */}
-            <motion.div
-              className="flex-[0_0_40%]"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-            >
-              <ProduitCard produit={produits[0]} large />
-            </motion.div>
-            {/* Grille 2×2 — produits suivants */}
-            <div className="flex-1 grid grid-cols-2 gap-4">
-              {produits.slice(1, 5).map((produit, i) => (
+      <div className="mx-auto mt-8 max-w-7xl md:px-5">
+        <div className="snap-rail md:grid md:grid-cols-4 md:gap-5 md:overflow-visible md:px-0">
+          {isLoading
+            ? Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="w-[62vw] max-w-[260px] md:w-auto md:max-w-none">
+                  <div className="aspect-[4/5] animate-pulse rounded-xl" style={{ backgroundColor: "var(--v-s2)" }} />
+                </div>
+              ))
+            : produits.map((p, i) => (
                 <motion.div
-                  key={produit.id}
-                  initial={{ opacity: 0, y: 20 }}
+                  key={p.id}
+                  className="w-[62vw] max-w-[260px] md:w-auto md:max-w-none"
+                  initial={{ opacity: 0, y: 16 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: (i + 1) * 0.07, duration: 0.45 }}
+                  viewport={{ once: true, margin: "0px 0px -40px 0px" }}
+                  transition={{ delay: Math.min(i, 4) * 0.05, duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  <ProduitCard produit={produit} />
+                  <ProductTile produit={p} />
                 </motion.div>
               ))}
-            </div>
-          </div>
-        )}
-
-        {/* CTA mobile */}
-        <div className="mt-8 text-center md:hidden">
-          <Link
-            href="/catalogue"
-            className="inline-block rounded-full border px-6 py-3 text-xs font-black uppercase tracking-widest transition-all"
-            style={{ borderColor: "var(--v-hot)", color: "var(--v-hot)" }}
-          >
-            Voir toutes les promos &rarr;
-          </Link>
         </div>
       </div>
     </section>

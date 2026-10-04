@@ -530,3 +530,49 @@ input[type="number"] {
   .marquee-track { animation: none !important; flex-wrap: wrap; justify-content: center; }
   .marquee-track [aria-hidden="true"] { display: none; }
 }
+
+
+/* ── Vitrine : deux voix typographiques ───────────────────────────────── */
+/* Affiche : condensée, majuscules, serrée. Réservée au titre d'accueil et aux grands chiffres. */
+.poster {
+  font-family: var(--font-display), sans-serif;
+  font-variation-settings: "wdth" 75, "opsz" 96;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 0.86;
+}
+/* Étiquette : titres de section et noms de produits, casse normale. */
+.tag-title {
+  font-family: var(--font-display), sans-serif;
+  font-variation-settings: "wdth" 100, "opsz" 36;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+/* Rail horizontal à aimantation (mobile) : barre de défilement discrète, fondu sur les bords. */
+.snap-rail {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 20px;
+  padding-inline: 20px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.snap-rail::-webkit-scrollbar { display: none; }
+.snap-rail > * { scroll-snap-align: start; flex: 0 0 auto; }
+
+/* Surfaces du navigateur aux couleurs de la vitrine. */
+[data-vitrine] ::selection { background: var(--v-gold); color: var(--v-on-gold); }
+[data-vitrine] { scrollbar-color: var(--v-s3) var(--v-bg); }
+[data-vitrine] :focus-visible { outline: 2px solid var(--v-gold-text); outline-offset: 3px; border-radius: 4px; }
+
+@keyframes poster-reveal {
+  from { clip-path: inset(0 0 100% 0); transform: translateY(0.35em); }
+  to   { clip-path: inset(0 0 -20% 0); transform: translateY(0); }
+}
+.poster-line { animation: poster-reveal 0.75s cubic-bezier(0.16, 1, 0.3, 1) both; }
+@media (prefers-reduced-motion: reduce) { .poster-line { animation: none; } }

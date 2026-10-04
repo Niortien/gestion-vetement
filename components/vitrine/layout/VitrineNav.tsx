@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { useVitrineStore } from "@/stores/vitrineStore";
+import { IconStar } from "@/components/vitrine/common/VitrineIcons";
 
 const NAV_LINKS = [
   { href: "/catalogue", label: "Catalogue" },
@@ -166,11 +167,11 @@ export function VitrineNav() {
 
             <div className="border-t px-6 py-6" style={{ borderColor: "var(--v-border)" }}>
               <div className="flex items-center gap-2">
-                <span style={{ color: "var(--v-gold-text)" }}>★</span>
+                <IconStar size={12} style={{ color: "var(--v-gold-text)" }} />
                 <span className="font-[var(--font-display)] text-sm font-black uppercase tracking-wider" style={{ color: "var(--v-gold-text)" }}>
                   Sortez toujours bien habillé
                 </span>
-                <span style={{ color: "var(--v-gold-text)" }}>★</span>
+                <IconStar size={12} style={{ color: "var(--v-gold-text)" }} />
               </div>
               <p className="mt-1 text-xs" style={{ color: "var(--v-dim)" }}>Dri Valé · Yopougon · Abidjan · CI</p>
             </div>

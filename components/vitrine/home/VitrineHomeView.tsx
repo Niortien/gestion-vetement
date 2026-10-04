@@ -2,9 +2,9 @@
 
 import { HomeHero } from "./HomeHero";
 import { HomeTicker } from "./HomeTicker";
-import { HomeFeaturedDrops } from "./HomeFeaturedDrops";
+import { HomeCollection } from "./HomeCollection";
+import { HomeCategories } from "./HomeCategories";
 import { HomePromoSection } from "./HomePromoSection";
-import { HomeCategorySections } from "./HomeCategorySections";
 import { HomeBrandStatement } from "./HomeBrandStatement";
 import { HomeWhatsappCta } from "./HomeWhatsappCta";
 
@@ -13,9 +13,9 @@ export function VitrineHomeView() {
     <>
       <HomeHero />
       <HomeTicker />
-      <HomeFeaturedDrops />
+      <HomeCollection />
+      <HomeCategories />
       <HomePromoSection />
-      <HomeCategorySections />
       <HomeBrandStatement />
       <HomeWhatsappCta />
     </>

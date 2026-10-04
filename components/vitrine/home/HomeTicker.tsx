@@ -1,36 +1,36 @@
-﻿"use client";
+"use client";
 
+import { IconStar } from "@/components/vitrine/common/VitrineIcons";
+
+/** Bandeau de faits : seulement ce que la boutique affirme sans réserve (slogan, lieu, commande, paiements). */
 const ITEMS = [
-  "★ SORTEZ TOUJOURS BIEN HABILLÉ ★",
-  "YOP CITY ON EST LÀ 🔥",
-  "PAIEMENT WAVE · ORANGE MONEY · CASH",
-  "LIVRAISON YOPOUGON 24H",
-  "DROPS LIMITÉS — SOIS RAPIDE",
-  "★ SORTEZ TOUJOURS BIEN HABILLÉ ★",
-  "STYLE GARANTI OU REMBOURSÉ",
-  "AUTHENTIQUE DEPUIS YOP",
-  "TROP FORT C'EST DRI VALÉ",
+  "Sortez toujours bien habillé",
+  "Boutique à Yopougon, Abidjan",
+  "Commande sur WhatsApp",
+  "Paiement Wave · Orange Money · Cash",
 ];
 
-export function HomeTicker() {
-  const text = ITEMS.join("   ✦   ") + "   ✦   ";
-
+function Row({ hidden }: { hidden?: boolean }) {
   return (
-    <div
-      className="overflow-hidden border-y py-3.5"
-      style={{ borderColor: "var(--v-border)", backgroundColor: "var(--v-s1)" }}
-    >
-      <div className="vitrine-marquee-track flex whitespace-nowrap">
-        {[text, text].map((t, i) => (
-          <span
-            key={i}
-            aria-hidden={i > 0}
-            className="font-[var(--font-display)] text-[11px] font-black uppercase tracking-[0.22em]"
-            style={{ color: "var(--v-gold-text)" }}
-          >
+    <ul aria-hidden={hidden || undefined} className="flex shrink-0 items-center">
+      {ITEMS.map((t) => (
+        <li key={t} className="flex shrink-0 items-center">
+          <span className="tag-title px-6 text-sm" style={{ color: "var(--v-text)" }}>
             {t}
           </span>
-        ))}
+          <IconStar size={10} style={{ color: "var(--v-gold-text)" }} />
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+export function HomeTicker() {
+  return (
+    <div className="overflow-hidden border-y py-3.5" style={{ borderColor: "var(--v-border)", backgroundColor: "var(--v-s1)" }}>
+      <div className="vitrine-marquee-track flex w-max">
+        <Row />
+        <Row hidden />
       </div>
     </div>
   );

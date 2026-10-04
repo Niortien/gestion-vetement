@@ -42,21 +42,12 @@ export function LookbookHero() {
         style={{ opacity }}
         className="relative z-10 w-full px-5 pb-20 md:px-16"
       >
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="mb-4 text-[10px] font-black uppercase tracking-[0.5em]"
-          style={{ color: "var(--v-gold-text)" }}
-        >
-          Saison 2025 &mdash; Collection Yop City
-        </motion.p>
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="font-[var(--font-display)] font-black uppercase leading-none tracking-tighter"
-          style={{ fontSize: "clamp(52px,10vw,120px)", color: "var(--v-text)" }}
+          className="poster"
+          style={{ fontSize: "clamp(64px,15vw,190px)", color: "var(--v-text)" }}
         >
           ABIDJAN
           <br />
