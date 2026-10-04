@@ -1,6 +1,7 @@
 import {
   IconActivity,
   IconBoxSeam,
+  IconChartDots3,
   IconBuildingStore,
   IconCategory2,
   IconCoin,
@@ -34,6 +35,7 @@ export const BOUTIQUE_NAV: NavSection[] = [
     items: [
       { href: "/dashboard", label: "Dashboard", icon: IconLayoutDashboard },
       { href: "/activite", label: "Activité", icon: IconActivity },
+      { href: "/analyse", label: "Analyse", icon: IconChartDots3 },
       { href: "/activite/hebdomadaire", label: "Recette hebdo", icon: IconReportMoney },
     ],
   },

@@ -201,6 +201,14 @@ export function ActiviteView() {
         )}
       </SectionCard>
 
+      <Link
+        href="/analyse"
+        className="flex min-h-11 w-fit cursor-pointer items-center gap-1.5 text-sm font-semibold text-accent-text hover:underline"
+      >
+        Voir l&apos;analyse : jours, heures et produits à pousser
+        <IconArrowRight size={15} aria-hidden />
+      </Link>
+
       {/* Lien vers le rapport hebdomadaire */}
       <Link
         href="/activite/hebdomadaire"
