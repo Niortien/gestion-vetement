@@ -134,7 +134,7 @@ export function AnalyseView() {
             </p>
           )}
 
-          <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-3 2xl:grid-cols-5">
             <StatTile tone="cash" icon={IconShoppingBag} label="Ventes" value={<CountUp value={analyse.indicateurs.ventes} />} hint={`${jours} derniers jours`} />
             <StatTile
               tone="in"
