@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { getWhatsappUrl } from "@/lib/whatsapp";
+import { IconStar } from "@/components/vitrine/common/VitrineIcons";
 
 const FOOTER_LINKS = [
   {
@@ -44,9 +45,9 @@ export function VitrineFooter() {
           <span style={{ color: "var(--v-gold-text)" }}>On est là.</span>
         </p>
         <p className="mt-3 flex items-center justify-center gap-2 text-sm font-bold" style={{ color: "var(--v-gold-text)" }}>
-          <span>★</span>
+          <IconStar size={12} />
           <span>Sortez toujours bien habillé</span>
-          <span>★</span>
+          <IconStar size={12} />
         </p>
         <p className="mt-1 text-xs" style={{ color: "var(--v-muted)" }}>
           Dri Valé &mdash; La boutique des jeunes classés de Yopougon.

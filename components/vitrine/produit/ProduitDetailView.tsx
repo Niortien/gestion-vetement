@@ -11,6 +11,7 @@ import { ProduitVariantesSection } from "./ProduitVariantesSection";
 import { ProduitOrderPanel } from "./ProduitOrderPanel";
 import { ProduitCare } from "./ProduitCare";
 import { ProduitRelated } from "./ProduitRelated";
+import { ProduitStickyBar } from "./ProduitStickyBar";
 
 interface ProduitDetailViewProps {
   id: string;
@@ -36,7 +37,7 @@ export function ProduitDetailView({ id }: ProduitDetailViewProps) {
     const isNotFound = axios.isAxiosError(error) && error.response?.status === 404;
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-4 px-5">
-        <p className="text-5xl">¯\_(ツ)_/¯</p>
+        <p className="tag-title text-3xl" style={{ color: "var(--v-text)" }}>Oups</p>
         <p className="text-sm" style={{ color: "var(--v-muted)" }}>
           {isNotFound ? "Produit introuvable" : "Connexion au serveur impossible"}
         </p>
@@ -78,6 +79,7 @@ export function ProduitDetailView({ id }: ProduitDetailViewProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
+      className="pb-24 lg:pb-0"
     >
       {/* Breadcrumb */}
       <div className="mx-auto max-w-7xl px-5 pt-8">
@@ -115,12 +117,16 @@ export function ProduitDetailView({ id }: ProduitDetailViewProps) {
               onCouleurChange={setSelectedCouleur}
             />
 
-            <ProduitOrderPanel produit={produit} variante={selectedVariante} />
+            <div id="commande" className="scroll-mt-24">
+              <ProduitOrderPanel produit={produit} variante={selectedVariante} />
+            </div>
 
             <ProduitCare />
           </div>
         </div>
       </div>
+
+      <ProduitStickyBar produit={produit} variante={selectedVariante} enRupture={totalStock === 0} />
 
       {/* Produits similaires */}
       {produit.categorieId && (

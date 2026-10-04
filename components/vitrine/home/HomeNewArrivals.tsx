@@ -6,26 +6,19 @@ import { useVitrineProduits } from "@/features/vitrine/query/vitrine-queries";
 import { ProductTile } from "@/components/vitrine/common/ProductTile";
 import { IconArrow } from "@/components/vitrine/common/VitrineIcons";
 
-/** Promotions du moment : le prix barré ancre le prix, le rouge est réservé à ce qui est réellement en promo. */
-export function HomePromoSection() {
-  const { data, isLoading } = useVitrineProduits({ enPromo: true, limit: 8 });
+/** Dernières pièces arrivées : rail à aimantation sur mobile, grille sur grand écran. */
+export function HomeNewArrivals() {
+  const { data, isLoading } = useVitrineProduits({ limit: 8 });
   const produits = data?.pages[0]?.data ?? [];
 
   if (!isLoading && produits.length === 0) return null;
 
   return (
-    <section className="py-16 md:py-24" style={{ backgroundColor: "var(--v-s1)" }}>
+    <section className="py-16 md:py-24">
       <div className="mx-auto flex max-w-7xl items-end justify-between gap-4 px-5">
-        <div>
-          <h2 className="tag-title text-[clamp(30px,6vw,56px)]" style={{ color: "var(--v-text)" }}>
-            Prix baissés
-          </h2>
-          {!isLoading && (
-            <p className="mt-2 text-sm" style={{ color: "var(--v-muted)" }}>
-              {produits.length} pièce{produits.length > 1 ? "s" : ""} en promotion en ce moment.
-            </p>
-          )}
-        </div>
+        <h2 className="tag-title text-[clamp(30px,6vw,56px)]" style={{ color: "var(--v-text)" }}>
+          Dernières pièces arrivées
+        </h2>
         <Link
           href="/catalogue"
           className="hidden min-h-11 shrink-0 items-center gap-2 text-sm font-semibold md:flex"

@@ -15,16 +15,7 @@ export function CatalogueHero({ total, search, onSearch }: CatalogueHeroProps) {
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
-            <p
-              className="mb-2 text-[10px] font-black uppercase tracking-[0.3em]"
-              style={{ color: "var(--v-gold-text)" }}
-            >
-              Dri Val&eacute; &mdash; Yop City
-            </p>
-            <h1
-              className="font-[var(--font-display)] font-black uppercase leading-none tracking-tight"
-              style={{ fontSize: "clamp(48px, 9vw, 96px)", color: "var(--v-text)" }}
-            >
+            <h1 className="poster text-[clamp(56px,13vw,150px)]" style={{ color: "var(--v-text)" }}>
               Catalogue
             </h1>
             <p className="mt-2 font-[var(--font-mono)] text-sm" style={{ color: "var(--v-muted)" }}>

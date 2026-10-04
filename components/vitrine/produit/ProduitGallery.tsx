@@ -44,7 +44,7 @@ export function ProduitGallery({ produit }: ProduitGalleryProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
             >
-              👟
+              <span className="text-sm" style={{ color: "var(--v-dim)" }}>Photo à venir</span>
             </motion.div>
           )}
         </AnimatePresence>
