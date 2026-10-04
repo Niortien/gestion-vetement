@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
+import { AuthCard } from "@/components/auth/AuthCard";
 import { apiPost } from "@/lib/api";
 import { loginSchema, type LoginInput } from "@/lib/validators/auth.schema";
 import { useAuthStore } from "@/stores/authStore";
@@ -59,13 +60,20 @@ export function LoginView() {
   });
 
   return (
-    <section className="mx-auto mt-16 max-w-md rounded-lg border border-border bg-surface p-6">
-      <h1 className="mb-4 font-[var(--font-display)] text-2xl md:text-3xl">Connexion</h1>
-      <div className="space-y-3">
+    <AuthCard title="Connexion" description="Accédez à votre boutique : stock, caisse et ventes.">
+      <form
+        className="space-y-4"
+        onSubmit={(e) => {
+          e.preventDefault();
+          void onSubmit();
+        }}
+        noValidate
+      >
         <Input
           type="email"
           label="Email"
           variant="bordered"
+          autoComplete="username"
           isInvalid={Boolean(errors.email)}
           errorMessage={errors.email?.message}
           {...register("email")}
@@ -74,6 +82,7 @@ export function LoginView() {
           type={showPassword ? "text" : "password"}
           label="Mot de passe"
           variant="bordered"
+          autoComplete="current-password"
           isInvalid={Boolean(errors.password)}
           errorMessage={errors.password?.message}
           endContent={
@@ -81,24 +90,20 @@ export function LoginView() {
               type="button"
               aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
               onClick={() => setShowPassword((v) => !v)}
-              className="text-default-400 hover:text-default-600 focus:outline-none"
+              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-text-muted transition-colors duration-150 hover:text-text"
             >
-              {showPassword ? (
-                <IconEyeOff size={20} />
-              ) : (
-                <IconEye size={20} />
-              )}
+              {showPassword ? <IconEyeOff size={20} aria-hidden /> : <IconEye size={20} aria-hidden />}
             </button>
           }
           {...register("password")}
         />
-        <Button className="w-full bg-accent text-on-accent" onPress={() => void onSubmit()} isLoading={isSubmitting}>
+        <Button type="submit" size="lg" className="w-full bg-accent font-semibold text-on-accent" isLoading={isSubmitting}>
           Se connecter
         </Button>
-        <Link href="/forgot-password" className="block text-center text-sm text-default-500 hover:underline">
+        <Link href="/forgot-password" className="block text-center text-sm font-medium text-accent-text hover:underline">
           Mot de passe oublié ?
         </Link>
-      </div>
-    </section>
+      </form>
+    </AuthCard>
   );
 }

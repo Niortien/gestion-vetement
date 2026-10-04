@@ -1,5 +1,6 @@
 "use client";
 
+import { AuthCard } from "@/components/auth/AuthCard";
 import { useState } from "react";
 import { Button, Input } from "@heroui/react";
 import Link from "next/link";
@@ -36,16 +37,15 @@ export function ForgotPasswordView() {
   });
 
   return (
-    <section className="mx-auto mt-16 max-w-md rounded-lg border border-border bg-surface p-6">
-      <h1 className="mb-4 font-[var(--font-display)] text-2xl md:text-3xl">Mot de passe oublié</h1>
+    <AuthCard title="Mot de passe oublié">
 
       {sent ? (
-        <p className="text-sm text-default-600">
+        <p className="text-sm text-text-muted">
           Si un compte existe avec cet email, un lien de réinitialisation vient d&apos;être envoyé.
         </p>
       ) : (
         <div className="space-y-3">
-          <p className="text-sm text-default-600">
+          <p className="text-sm text-text-muted">
             Indique ton email, tu recevras un lien pour réinitialiser ton mot de passe.
           </p>
           <Input
@@ -62,9 +62,9 @@ export function ForgotPasswordView() {
         </div>
       )}
 
-      <Link href="/login" className="mt-4 block text-center text-sm text-default-500 hover:underline">
+      <Link href="/login" className="mt-4 block text-center text-sm font-medium text-accent-text hover:underline">
         ← Retour à la connexion
       </Link>
-    </section>
+    </AuthCard>
   );
 }

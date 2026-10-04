@@ -1,5 +1,6 @@
 "use client";
 
+import { AuthCard } from "@/components/auth/AuthCard";
 import { useState } from "react";
 import { Button, Input } from "@heroui/react";
 import Link from "next/link";
@@ -46,21 +47,19 @@ export function ResetPasswordView() {
 
   if (!token || !email) {
     return (
-      <section className="mx-auto mt-16 max-w-md rounded-lg border border-border bg-surface p-6">
-        <h1 className="mb-4 font-[var(--font-display)] text-2xl md:text-3xl">Lien invalide</h1>
-        <p className="text-sm text-default-600">
+      <AuthCard title="Lien invalide">
+        <p className="text-sm text-text-muted">
           Ce lien de réinitialisation est incomplet ou a expiré.
         </p>
         <Link href="/forgot-password" className="mt-4 block text-center text-sm text-accent hover:underline">
           Demander un nouveau lien
         </Link>
-      </section>
+      </AuthCard>
     );
   }
 
   return (
-    <section className="mx-auto mt-16 max-w-md rounded-lg border border-border bg-surface p-6">
-      <h1 className="mb-4 font-[var(--font-display)] text-2xl md:text-3xl">Nouveau mot de passe</h1>
+    <AuthCard title="Nouveau mot de passe">
       <div className="space-y-3">
         <Input
           type="password"
@@ -74,6 +73,6 @@ export function ResetPasswordView() {
           Réinitialiser
         </Button>
       </div>
-    </section>
+    </AuthCard>
   );
 }
