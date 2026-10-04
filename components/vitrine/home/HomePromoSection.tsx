@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { useVitrineProduits } from "@/features/vitrine/query/vitrine-queries";
 import { ProductTile } from "@/components/vitrine/common/ProductTile";
 import { IconArrow } from "@/components/vitrine/common/VitrineIcons";
@@ -15,7 +14,7 @@ export function HomePromoSection() {
 
   return (
     <section className="py-16 md:py-24" style={{ backgroundColor: "var(--v-s1)" }}>
-      <div className="mx-auto flex max-w-7xl items-end justify-between gap-4 px-5">
+      <div className="mx-auto flex max-w-[1600px] items-end justify-between gap-4 px-5">
         <div>
           <h2 className="tag-title text-[clamp(30px,6vw,56px)]" style={{ color: "var(--v-text)" }}>
             Prix baissés
@@ -35,27 +34,20 @@ export function HomePromoSection() {
         </Link>
       </div>
 
-      <div className="mx-auto mt-8 max-w-7xl md:px-5">
-        <div className="snap-rail md:grid md:grid-cols-4 md:gap-5 md:overflow-visible md:px-0">
+      <div className="mx-auto mt-8 max-w-[1600px] px-5">
+        <ul className="grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
           {isLoading
-            ? Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="w-[62vw] max-w-[260px] md:w-auto md:max-w-none">
-                  <div className="aspect-[4/5] animate-pulse rounded-xl" style={{ backgroundColor: "var(--v-s2)" }} />
-                </div>
+            ? Array.from({ length: 6 }).map((_, i) => (
+                <li key={i}>
+                  <div className="aspect-[4/5] animate-pulse rounded-md" style={{ backgroundColor: "var(--v-s2)" }} />
+                </li>
               ))
-            : produits.map((p, i) => (
-                <motion.div
-                  key={p.id}
-                  className="w-[62vw] max-w-[260px] md:w-auto md:max-w-none"
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "0px 0px -40px 0px" }}
-                  transition={{ delay: Math.min(i, 4) * 0.05, duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  <ProductTile produit={p} />
-                </motion.div>
+            : produits.map((p) => (
+                <li key={p.id}>
+                  <ProductTile produit={p} dense />
+                </li>
               ))}
-        </div>
+        </ul>
       </div>
     </section>
   );

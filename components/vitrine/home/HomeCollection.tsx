@@ -1,18 +1,15 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import Link from "next/link";
-import { motion } from "framer-motion";
 import { useVitrineCategories, useVitrineProduits } from "@/features/vitrine/query/vitrine-queries";
 import { ProductTile } from "@/components/vitrine/common/ProductTile";
-import { IconArrow } from "@/components/vitrine/common/VitrineIcons";
 
 const PAGE_SIZE = 24;
 
 /**
- * Toute la collection sur l'accueil : chaque pièce de la boutique, sans plafond.
- * Les pages suivantes se chargent d'elles-mêmes en descendant (et par un bouton, pour le clavier et les connexions lentes).
- * Les rayons filtrent la grille sur place, sans quitter l'accueil.
+ * Toute la collection (esprit Palace) : onglets de rayons en texte, puis grille serrée de 2 à 6 colonnes pour voir
+ * un maximum de pièces d'un coup. Aucune pièce n'est masquée : les pages suivantes se chargent en descendant, et par
+ * un bouton pour le clavier et les connexions lentes. La section ferme la page, juste avant le pied de page.
  */
 export function HomeCollection() {
   const [categorieId, setCategorieId] = useState<string | undefined>(undefined);
@@ -34,43 +31,38 @@ export function HomeCollection() {
       ([entry]) => {
         if (entry?.isIntersecting && !isFetchingNextPage) void fetchNextPage();
       },
-      { rootMargin: "600px 0px" }
+      { rootMargin: "800px 0px" }
     );
     io.observe(el);
     return () => io.disconnect();
   }, [hasNextPage, isFetchingNextPage, fetchNextPage, produits.length]);
 
-  const chip = (active: boolean) => ({
-    backgroundColor: active ? "var(--v-gold)" : "transparent",
-    color: active ? "var(--v-on-gold)" : "var(--v-muted)",
-    borderColor: active ? "var(--v-gold)" : "var(--v-border)",
+  const tab = (active: boolean) => ({
+    color: active ? "var(--v-text)" : "var(--v-dim)",
+    boxShadow: active ? "inset 0 -2px 0 var(--v-gold)" : "none",
   });
+  const tabClass =
+    "min-h-11 shrink-0 px-1 text-[13px] font-semibold uppercase tracking-wide transition-colors duration-150 hover:text-[var(--v-text)]";
 
   return (
-    <section className="py-16 md:py-24" aria-labelledby="collection-titre">
-      <div className="mx-auto flex max-w-7xl items-end justify-between gap-4 px-5">
-        <div>
-          <h2 id="collection-titre" className="tag-title text-[clamp(30px,6vw,56px)]" style={{ color: "var(--v-text)" }}>
-            Toute la collection
-          </h2>
-          <p className="mt-2 text-sm" style={{ color: "var(--v-muted)" }} aria-live="polite">
-            {isLoading ? "Chargement des pièces…" : `${total} pièce${total > 1 ? "s" : ""} en rayon`}
-          </p>
-        </div>
-        <Link href="/catalogue" className="hidden min-h-11 shrink-0 items-center gap-2 text-sm font-semibold md:flex" style={{ color: "var(--v-gold-text)" }}>
-          Filtres et tailles <IconArrow size={16} />
-        </Link>
+    <section className="py-12 md:py-20" aria-labelledby="collection-titre">
+      <div className="mx-auto flex max-w-[1600px] items-baseline justify-between gap-4 px-5">
+        <h2 id="collection-titre" className="tag-title text-[clamp(28px,5vw,48px)]" style={{ color: "var(--v-text)" }}>
+          Toute la collection
+        </h2>
+        <p className="text-sm" style={{ color: "var(--v-muted)" }} aria-live="polite">
+          {isLoading ? "Chargement…" : `${total} pièce${total > 1 ? "s" : ""}`}
+        </p>
       </div>
 
       {categories.length > 0 && (
-        <div className="snap-rail mt-6 md:mx-auto md:max-w-7xl md:flex-wrap md:overflow-visible md:px-5" role="group" aria-label="Filtrer par rayon">
-          <button
-            type="button"
-            aria-pressed={!categorieId}
-            onClick={() => setCategorieId(undefined)}
-            className="min-h-11 shrink-0 rounded-full border px-4 text-sm font-semibold transition-colors duration-150"
-            style={chip(!categorieId)}
-          >
+        <div
+          className="snap-rail mx-auto mt-5 max-w-[1600px] gap-5 border-b"
+          style={{ borderColor: "var(--v-border)" }}
+          role="group"
+          aria-label="Filtrer par rayon"
+        >
+          <button type="button" aria-pressed={!categorieId} onClick={() => setCategorieId(undefined)} className={tabClass} style={tab(!categorieId)}>
             Tout
           </button>
           {categories.map((c) => (
@@ -79,8 +71,8 @@ export function HomeCollection() {
               type="button"
               aria-pressed={categorieId === c.id}
               onClick={() => setCategorieId(categorieId === c.id ? undefined : c.id)}
-              className="min-h-11 shrink-0 rounded-full border px-4 text-sm font-semibold transition-colors duration-150"
-              style={chip(categorieId === c.id)}
+              className={tabClass}
+              style={tab(categorieId === c.id)}
             >
               {c.nom}
             </button>
@@ -88,7 +80,7 @@ export function HomeCollection() {
         </div>
       )}
 
-      <div className="mx-auto mt-8 max-w-7xl px-5">
+      <div className="mx-auto mt-6 max-w-[1600px] px-5">
         {isError ? (
           <div className="py-16 text-center">
             <p className="text-sm" style={{ color: "var(--v-muted)" }}>
@@ -97,16 +89,16 @@ export function HomeCollection() {
             <button
               type="button"
               onClick={() => void refetch()}
-              className="mt-4 min-h-11 rounded-xl px-6 text-sm font-bold"
+              className="mt-4 min-h-11 rounded-sm px-6 text-xs font-bold uppercase tracking-[0.14em]"
               style={{ backgroundColor: "var(--v-gold)", color: "var(--v-on-gold)" }}
             >
               Réessayer
             </button>
           </div>
         ) : isLoading ? (
-          <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 xl:grid-cols-4">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="aspect-[4/5] animate-pulse rounded-xl" style={{ backgroundColor: "var(--v-s2)" }} />
+          <div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+            {Array.from({ length: 12 }).map((_, i) => (
+              <div key={i} className="aspect-[4/5] animate-pulse rounded-md" style={{ backgroundColor: "var(--v-s2)" }} />
             ))}
           </div>
         ) : produits.length === 0 ? (
@@ -114,18 +106,11 @@ export function HomeCollection() {
             Aucune pièce dans ce rayon pour le moment.
           </p>
         ) : (
-          <ul className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 md:gap-x-6 xl:grid-cols-4">
-            {produits.map((p, i) => (
-              <motion.li
-                key={p.id}
-                initial={{ opacity: 0, y: 14 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "0px 0px -30px 0px" }}
-                transition={{ delay: (i % 4) * 0.05, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-               
-              >
-                <ProductTile produit={p} />
-              </motion.li>
+          <ul className="grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+            {produits.map((p) => (
+              <li key={p.id}>
+                <ProductTile produit={p} dense />
+              </li>
             ))}
           </ul>
         )}
@@ -138,7 +123,7 @@ export function HomeCollection() {
               type="button"
               onClick={() => void fetchNextPage()}
               disabled={isFetchingNextPage}
-              className="min-h-12 rounded-xl border px-8 text-sm font-semibold transition-colors duration-150 hover:border-[var(--v-gold)] disabled:opacity-60"
+              className="min-h-12 rounded-sm border px-8 text-xs font-bold uppercase tracking-[0.14em] transition-colors duration-150 hover:border-[var(--v-gold)] disabled:opacity-60"
               style={{ borderColor: "var(--v-border-gold)", color: "var(--v-text)" }}
             >
               {isFetchingNextPage ? "Chargement…" : `Voir plus (${produits.length} sur ${total})`}
