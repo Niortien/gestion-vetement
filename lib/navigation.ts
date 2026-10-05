@@ -11,6 +11,7 @@ import {
   IconPackageImport,
   IconPhoto,
   IconReportMoney,
+  IconShieldLock,
   IconRosetteDiscount,
   IconUsers,
 } from "@tabler/icons-react";
@@ -65,6 +66,7 @@ export const BOUTIQUE_ADMIN_NAV: NavSection = {
     { href: "/admin/boutiques", label: "Boutiques", icon: IconBuildingStore },
     { href: "/admin/utilisateurs", label: "Caissiers", icon: IconUsers },
     { href: "/admin/photos-clients", label: "Photos clients", icon: IconPhoto },
+    { href: "/admin/audit", label: "Journal d'audit", icon: IconShieldLock },
   ],
 };
 
