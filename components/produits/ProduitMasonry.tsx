@@ -8,6 +8,8 @@ interface ProduitMasonryProps {
   grouped?: boolean;
 }
 
+const GRID = "grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4 sm:grid-cols-[repeat(auto-fill,minmax(200px,1fr))] sm:gap-[18px]";
+
 export function ProduitMasonry({ items, onSelect, grouped = false }: ProduitMasonryProps) {
   const groups = useMemo(() => {
     if (!grouped) return null;
@@ -22,19 +24,16 @@ export function ProduitMasonry({ items, onSelect, grouped = false }: ProduitMaso
 
   if (grouped && groups) {
     return (
-      <div className="space-y-4 pr-6">
+      <div className="space-y-6">
         {groups.map(([letter, produits]) => (
-          <section key={letter}>
-            <div
-              id={`alpha-${letter}`}
-              className="sticky top-0 z-10 -mx-1 mb-2 flex items-center gap-2 bg-base/90 px-1 py-1 backdrop-blur-sm"
-            >
-              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-accent-dim font-mono text-xs font-bold text-accent-text">
-                {letter}
+          <section key={letter} aria-label={`Produits en ${letter}`}>
+            <div id={`alpha-${letter}`} className="mb-3 flex scroll-mt-4 items-center gap-2.5">
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-text font-display text-sm font-bold text-accent">{letter}</span>
+              <span className="text-[13px] text-text-muted">
+                {produits.length} produit{produits.length > 1 ? "s" : ""}
               </span>
-              <span className="text-xs text-text-muted">{produits.length} produit{produits.length > 1 ? "s" : ""}</span>
             </div>
-            <div className="columns-1 gap-3 md:columns-2 xl:columns-3">
+            <div className={GRID}>
               {produits.map((produit) => (
                 <ProduitCard key={produit.id} produit={produit} onPress={() => onSelect(produit.id)} />
               ))}
@@ -46,7 +45,7 @@ export function ProduitMasonry({ items, onSelect, grouped = false }: ProduitMaso
   }
 
   return (
-    <div className="columns-1 gap-3 md:columns-2 xl:columns-3">
+    <div className={GRID}>
       {items.map((produit) => (
         <ProduitCard key={produit.id} produit={produit} onPress={() => onSelect(produit.id)} />
       ))}

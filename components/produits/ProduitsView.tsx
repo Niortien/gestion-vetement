@@ -58,11 +58,8 @@ export function ProduitsView() {
   return (
     <PageWrapper>
       <PageHero
-        tone="accent"
-        icon={IconShirt}
-        eyebrow="Catalogue"
         title="Produits"
-        description="Votre catalogue : fiches, variantes, prix et promotions. Touchez un produit pour l'ouvrir."
+        description="Ce qui est actif ici apparaît sur la vitrine. Touche un produit pour ouvrir sa fiche."
         actions={
           <Button
             className="min-h-11 bg-accent font-semibold text-on-accent"
@@ -73,7 +70,7 @@ export function ProduitsView() {
           </Button>
         }
       >
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <StatTile
             tone="accent"
             icon={IconShirt}
@@ -97,6 +94,7 @@ export function ProduitsView() {
         </div>
       </PageHero>
 
+      <div className="flex flex-col gap-3 rounded-[22px] bg-surface p-4 shadow-[0_0_0_1px_var(--color-border)]">
       <ProduitSearchBar
         search={searchInput}
         onSearch={handleSearch}
@@ -107,6 +105,8 @@ export function ProduitsView() {
         count={produits.length}
         isLoading={isLoading}
       />
+      {showGrouped && <ProduitAlphaIndex produits={produits} />}
+      </div>
 
       {isLoading && (
         <div role="status" aria-label="Chargement des produits" className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
@@ -150,7 +150,6 @@ export function ProduitsView() {
             onSelect={(id) => router.push(`/produits/${id}`)}
             grouped={showGrouped}
           />
-          {showGrouped && <ProduitAlphaIndex produits={produits} />}
         </>
       )}
 

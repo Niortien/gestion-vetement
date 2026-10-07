@@ -9,6 +9,7 @@ interface ProduitAlphaIndexProps {
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
+/** Index A à Z : les lettres sans produit sont grisées et inertes. */
 export function ProduitAlphaIndex({ produits }: ProduitAlphaIndexProps) {
   const activeLetters = useMemo(() => {
     const set = new Set<string>();
@@ -22,35 +23,26 @@ export function ProduitAlphaIndex({ produits }: ProduitAlphaIndexProps) {
   if (produits.length === 0) return null;
 
   function jumpTo(letter: string) {
-    const el = document.getElementById(`alpha-${letter}`);
-    el?.scrollIntoView({ behavior: "smooth", block: "start" });
+    document.getElementById(`alpha-${letter}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   return (
-    <div
-      className="fixed right-1 top-1/2 z-[200] -translate-y-1/2 flex flex-col items-center gap-px rounded-full border border-border/40 bg-surface/80 px-1 py-2 backdrop-blur-sm"
-      role="navigation"
-      aria-label="Index alphabétique"
-    >
+    <nav aria-label="Index alphabétique" className="flex flex-wrap gap-0.5">
       {ALPHABET.map((letter) => {
         const active = activeLetters.has(letter);
         return (
           <button
             key={letter}
+            type="button"
             onClick={() => active && jumpTo(letter)}
             disabled={!active}
             aria-label={`Aller à ${letter}`}
-            className={[
-              "flex h-5 w-5 items-center justify-center rounded-full text-[9px] font-bold transition-all leading-none",
-              active
-                ? "cursor-pointer text-accent hover:bg-accent/20 active:scale-90"
-                : "cursor-default text-text-dim/30",
-            ].join(" ")}
+            className={`flex h-8 w-[30px] items-center justify-center rounded-lg text-[13px] font-bold ${active ? "cursor-pointer text-text hover:bg-text hover:text-accent" : "cursor-default text-text/25"}`}
           >
             {letter}
           </button>
         );
       })}
-    </div>
+    </nav>
   );
 }

@@ -50,7 +50,7 @@ export function EntreesView() {
           description="Chaque réception de marchandise, avec son fournisseur et son coût. Le stock se met à jour à l'enregistrement."
           actions={
             <Button
-              className="min-h-11 bg-in font-semibold text-white"
+              className="min-h-11 bg-accent font-semibold text-on-accent"
               startContent={<IconPlus size={18} aria-hidden />}
               onPress={() => setPanelOpen(true)}
             >

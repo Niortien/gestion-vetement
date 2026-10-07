@@ -6,65 +6,43 @@ import type { Icon } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { motionDurations, motionEasing } from "@/lib/motionVariants";
-import { TONE_CLASS, type Tone } from "@/components/common/tone";
+import type { Tone } from "@/components/common/tone";
 
 interface PageHeroProps {
+  /** Conservés pour compatibilité : l'en-tête de l'atelier ne se teinte plus par page. */
   tone?: Tone;
-  eyebrow?: string;
   icon?: Icon;
+  eyebrow?: string;
   title: ReactNode;
   description?: ReactNode;
-  /** Actions principales (une seule primaire par écran). */
+  /** Actions principales (un seul bouton or par écran). */
   actions?: ReactNode;
-  /** Rangée de `StatTile` ou contenu libre sous le titre. */
+  /** Rangée d'indicateurs ou contenu libre sous le titre. */
   children?: ReactNode;
   className?: string;
 }
 
-/**
- * En-tête de page : surface teintée par le rôle couleur de la page, halos qui dérivent lentement et grille de points.
- * Les halos sont décoratifs (`aria-hidden`) et figés sous `prefers-reduced-motion`.
- */
-export function PageHero({ tone = "accent", eyebrow, icon: Icon, title, description, actions, children, className }: PageHeroProps) {
+/** En-tête de page de l'atelier : titre, phrase d'aide, actions à droite. Sur papier, sans carte ni halo. */
+export function PageHero({ eyebrow, title, description, actions, children, className }: PageHeroProps) {
   const reduced = useReducedMotion();
 
   return (
     <motion.header
-      initial={reduced ? false : { opacity: 0, y: 10 }}
+      initial={reduced ? false : { opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: motionDurations.slow, ease: motionEasing.outExpo }}
-      className={cn(
-        TONE_CLASS[tone],
-        "relative isolate overflow-hidden rounded-xl border border-[color-mix(in_srgb,var(--tone)_28%,var(--color-border))] bg-surface p-5 md:p-7",
-        className
-      )}
+      className={cn("flex flex-col gap-5", className)}
     >
-      <div aria-hidden className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-[color-mix(in_srgb,var(--tone)_7%,transparent)]" />
-        <div className="dot-grid absolute inset-0 opacity-50 [mask-image:linear-gradient(to_bottom_left,black,transparent_70%)]" />
-        <span className="aurora-blob aurora-a -right-10 -top-16 h-56 w-56 bg-[color-mix(in_srgb,var(--tone)_30%,transparent)]" />
-        <span className="aurora-blob aurora-b -bottom-24 left-1/3 h-52 w-52 bg-[color-mix(in_srgb,var(--color-text)_7%,transparent)]" />
-      </div>
-
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="min-w-0">
-          {(eyebrow || Icon) && (
-            <p className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[var(--tone-text)]">
-              {Icon && (
-                <span className="flex h-7 w-7 items-center justify-center rounded-md bg-[color-mix(in_srgb,var(--tone)_16%,transparent)]">
-                  <Icon size={16} aria-hidden />
-                </span>
-              )}
-              {eyebrow}
-            </p>
-          )}
-          <h1 className="font-display text-3xl font-extrabold leading-tight tracking-tight text-text md:text-4xl">{title}</h1>
-          {description && <p className="mt-1.5 max-w-xl text-sm leading-relaxed text-text-muted">{description}</p>}
+          {eyebrow && <p className="mb-1 text-[13px] font-bold text-text-muted">{eyebrow}</p>}
+          <h1 className="font-display text-[34px] font-bold leading-[1.05] tracking-[-0.022em] text-text md:text-[40px]">{title}</h1>
+          {description && <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-text-muted">{description}</p>}
         </div>
-        {actions && <div className="flex shrink-0 flex-wrap items-center gap-2">{actions}</div>}
+        {actions && <div className="flex shrink-0 flex-wrap items-center gap-2.5">{actions}</div>}
       </div>
 
-      {children && <div className="mt-5">{children}</div>}
+      {children}
     </motion.header>
   );
 }

@@ -14,8 +14,8 @@ export function Card({ children, className = "", as, elevated = false, glow = fa
   return (
     <Tag
       className={[
-        "rounded-lg border border-border/50 bg-surface",
-        elevated ? "shadow-md" : "shadow-card",
+        "rounded-[22px] bg-surface shadow-[0_0_0_1px_var(--color-border)]",
+        elevated && "shadow-md",
         glow && "shadow-glow-orange",
         className,
       ]

@@ -3,8 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { IconPhoto } from "@tabler/icons-react";
-import { CurrencyDisplay } from "@/components/common/CurrencyDisplay";
-import { SpotlightCard } from "@/components/common/SpotlightCard";
+import { isNouveau } from "@/lib/merchandising";
 import { cn } from "@/lib/utils";
 import type { Produit } from "@/types";
 
@@ -13,24 +12,32 @@ interface ProduitCardProps {
   onPress: () => void;
 }
 
+const fcfa = (v: string | number) => Number(v).toLocaleString("fr-FR");
+
 export function ProduitCard({ produit, onPress }: ProduitCardProps) {
   const [imgError, setImgError] = useState(false);
   const imageUrl = produit.imageUrl ?? produit.images?.[0]?.url ?? null;
-  const totalStock = produit.variantes?.reduce((sum, v) => sum + v.quantiteStock, 0) ?? 0;
+  const variantes = produit.variantes ?? [];
+  const totalStock = variantes.reduce((sum, v) => sum + v.quantiteStock, 0);
   const isPromo = produit.enPromo && !!produit.prixPromo;
   const prixVente = parseFloat(produit.prixVente);
-  const tauxReduction = isPromo
-    ? Math.round(((prixVente - parseFloat(produit.prixPromo!)) / prixVente) * 100)
-    : null;
+  const taux = isPromo ? Math.round(((prixVente - parseFloat(produit.prixPromo!)) / prixVente) * 100) : null;
   const rupture = totalStock <= 0;
 
+  // Une pastille par taille ; barrée quand plus aucune pièce n'existe dans cette taille.
+  const tailles = [...new Set(variantes.map((v) => String(v.taille)))].map((t) => ({
+    taille: t,
+    dispo: variantes.some((v) => String(v.taille) === t && v.quantiteStock > 0),
+  }));
+  const rare = totalStock >= 1 && totalStock <= 3;
+
   return (
-    <SpotlightCard as="article" tone={isPromo ? "return" : "accent"} className="group mb-3 break-inside-avoid hover:-translate-y-0.5">
+    <article className="group flex flex-col overflow-hidden rounded-[20px] bg-surface shadow-[0_0_0_1px_var(--color-border)] transition-transform duration-200 hover:-translate-y-0.5">
       <button
         type="button"
         onClick={onPress}
         aria-label={`Ouvrir la fiche de ${produit.nom}`}
-        className="block w-full cursor-pointer text-left focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[var(--tone)]"
+        className="flex w-full cursor-pointer flex-col text-left focus-visible:outline focus-visible:outline-[3px] focus-visible:-outline-offset-2 focus-visible:outline-accent"
       >
         <div className="relative aspect-[4/5] w-full overflow-hidden bg-surface-high">
           {imageUrl && !imgError ? (
@@ -38,49 +45,65 @@ export function ProduitCard({ produit, onPress }: ProduitCardProps) {
               src={imageUrl}
               alt={produit.nom}
               fill
-              sizes="(max-width: 768px) 50vw, (max-width: 1280px) 33vw, 25vw"
+              sizes="(max-width: 768px) 50vw, (max-width: 1280px) 33vw, 20vw"
               className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
               onError={() => setImgError(true)}
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center text-text-muted">
-              <IconPhoto size={36} aria-hidden />
+            <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-[13px] font-semibold text-text-muted">
+              <IconPhoto size={28} aria-hidden />
+              Ajouter une photo
             </div>
           )}
-          {isPromo && (
-            <span className="absolute left-2.5 top-2.5 rounded-full bg-return px-2.5 py-0.5 text-xs font-bold text-white shadow-sm">
-              -{tauxReduction}%
-            </span>
-          )}
-          <span
-            className={cn(
-              "absolute right-2.5 top-2.5 rounded-full px-2.5 py-0.5 text-xs font-semibold backdrop-blur-sm",
-              rupture ? "bg-out text-white" : "bg-surface/90 text-text"
+          <div className="absolute left-2.5 top-2.5 flex flex-col items-start gap-1.5">
+            {rupture && <span className="inline-flex min-h-[26px] items-center rounded-full bg-[#0C0C0E] px-2.5 text-xs font-bold text-white">Rupture</span>}
+            {!rupture && rare && (
+              <span className="inline-flex min-h-[26px] items-center gap-1.5 rounded-full bg-white px-2.5 text-xs font-bold text-[#0C0C0E]">
+                <span aria-hidden className="h-[7px] w-[7px] rounded-full bg-[#C8102E]" />
+                {totalStock === 1 ? "Dernière pièce" : `${totalStock} restants`}
+              </span>
             )}
-          >
-            {rupture ? "Rupture" : `${totalStock} en stock`}
-          </span>
-        </div>
-
-        <div className="p-3.5">
-          <p className="truncate text-sm font-semibold text-text">{produit.nom}</p>
-          <p className="truncate font-mono text-xs text-text-muted">{produit.sku}</p>
-          <div className="mt-2.5 flex items-baseline justify-between gap-2">
-            {isPromo ? (
-              <>
-                <span className="font-mono text-sm font-bold text-return-text">
-                  {Number(produit.prixPromo).toLocaleString("fr-FR")} FCFA
-                </span>
-                <span className="font-mono text-xs text-text-muted line-through">
-                  {prixVente.toLocaleString("fr-FR")}
-                </span>
-              </>
-            ) : (
-              <CurrencyDisplay montant={produit.prixVente} size="md" className="font-semibold" />
+            {isPromo && <span className="inline-flex min-h-[26px] items-center rounded-full bg-[#C8102E] px-2.5 text-xs font-bold text-white">−{taux} %</span>}
+            {!isPromo && isNouveau(produit.createdAt) && (
+              <span className="inline-flex min-h-[26px] items-center rounded-full bg-[#F0B429] px-2.5 text-xs font-bold text-[#0C0C0E]">Nouveau</span>
             )}
           </div>
         </div>
+
+        <div className="flex flex-col gap-1 px-3.5 pb-3.5 pt-3">
+          <p className="truncate font-display text-[17px] font-semibold leading-tight text-text">{produit.nom}</p>
+          <p className="truncate text-[13px] text-text-muted">
+            {produit.sku}
+            {produit.categorie ? ` · ${produit.categorie.nom}` : ""}
+          </p>
+          <p className="font-display font-bold tabular-nums text-text">
+            {isPromo ? (
+              <>
+                <span className="text-[#C8102E]">{fcfa(produit.prixPromo!)}</span>
+                <s className="ml-1.5 text-[13px] font-medium text-text-muted">{fcfa(prixVente)}</s>
+              </>
+            ) : (
+              fcfa(prixVente)
+            )}{" "}
+            <span className="text-[13px] font-medium text-text-muted">achat {fcfa(produit.prixAchat)}</span>
+          </p>
+          {tailles.length > 0 && (
+            <ul className="mt-1.5 flex flex-wrap gap-1" aria-label="Tailles">
+              {tailles.map((t) => (
+                <li
+                  key={t.taille}
+                  className={cn(
+                    "flex h-6 min-w-7 items-center justify-center rounded-[7px] bg-base px-1.5 text-[11.5px] font-bold",
+                    !t.dispo && "text-text-muted/60 line-through"
+                  )}
+                >
+                  {t.taille}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </button>
-    </SpotlightCard>
+    </article>
   );
 }

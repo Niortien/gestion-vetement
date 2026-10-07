@@ -52,10 +52,10 @@ export function ProduitSearchBar({
           value={search}
           onChange={(e) => onSearch(e.target.value)}
           className={[
-            "w-full rounded-xl border bg-surface py-3 pl-10 pr-20 text-base text-text placeholder:text-text-muted md:text-sm",
+            "min-h-[46px] w-full rounded-full border bg-surface py-3 pl-10 pr-20 text-base text-text placeholder:text-text-muted md:text-sm",
             "outline-none transition-all duration-150",
-            "focus:border-accent/60 focus:ring-2 focus:ring-accent/20",
-            search ? "border-accent/50" : "border-border",
+            "focus:border-text focus:ring-2 focus:ring-accent/40",
+            search ? "border-text" : "border-border",
           ].join(" ")}
         />
 
@@ -86,10 +86,10 @@ export function ProduitSearchBar({
           aria-pressed={!categorieId && !enPromo}
           onClick={() => onCategorie(undefined)}
           className={[
-            "min-h-9 shrink-0 cursor-pointer rounded-full border px-3.5 text-sm font-medium transition-colors duration-150",
+            "min-h-11 shrink-0 cursor-pointer rounded-full border px-4 text-sm font-semibold transition-colors duration-150",
             !categorieId && !enPromo
-              ? "border-accent bg-accent text-on-accent"
-              : "border-border bg-surface text-text-muted hover:border-accent hover:text-text",
+              ? "border-text bg-text text-white"
+              : "border-border bg-surface text-text hover:border-text",
           ].join(" ")}
         >
           Tous
@@ -103,10 +103,10 @@ export function ProduitSearchBar({
             key={cat.id}
             onClick={() => onCategorie(cat.id === categorieId ? undefined : cat.id)}
             className={[
-              "min-h-9 shrink-0 cursor-pointer rounded-full border px-3.5 text-sm font-medium transition-colors duration-150",
+              "min-h-11 shrink-0 cursor-pointer rounded-full border px-4 text-sm font-semibold transition-colors duration-150",
               categorieId === cat.id
-                ? "border-accent bg-accent text-on-accent"
-                : "border-border bg-surface text-text-muted hover:border-accent hover:text-text",
+                ? "border-text bg-text text-white"
+                : "border-border bg-surface text-text hover:border-text",
             ].join(" ")}
           >
             {cat.nom}
@@ -119,10 +119,10 @@ export function ProduitSearchBar({
           aria-pressed={enPromo}
           onClick={() => onPromo(!enPromo)}
           className={[
-            "flex min-h-9 shrink-0 cursor-pointer items-center gap-1 rounded-full border px-3.5 text-sm font-medium transition-colors duration-150",
+            "flex min-h-11 shrink-0 cursor-pointer items-center gap-1.5 rounded-full border px-4 text-sm font-semibold transition-colors duration-150",
             enPromo
-              ? "border-return bg-return text-white"
-              : "border-border bg-surface text-text-muted hover:border-return hover:text-text",
+              ? "border-text bg-text text-white"
+              : "border-border bg-surface text-text hover:border-text",
           ].join(" ")}
         >
           <IconTag size={13} aria-hidden />

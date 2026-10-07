@@ -10,17 +10,20 @@ import { TONE_CLASS, type Tone } from "@/components/common/tone";
 
 interface StatTileProps {
   tone?: Tone;
+  /** Conservé pour compatibilité : l'indicateur de l'atelier n'affiche plus de pastille d'icône. */
   icon?: Icon;
   label: string;
   value: ReactNode;
   hint?: ReactNode;
   /** Décalage d'apparition (s) pour une cascade courte entre tuiles. */
   delay?: number;
+  /** Carte d'encre : l'indicateur principal de l'écran. */
+  ink?: boolean;
   className?: string;
 }
 
-/** Indicateur : pastille icône teintée, libellé, valeur en `font-display`, sous-texte. */
-export function StatTile({ tone = "accent", icon: Icon, label, value, hint, delay = 0, className }: StatTileProps) {
+/** Indicateur : libellé, grande valeur Bricolage, sous-texte. Une seule carte d'encre par écran. */
+export function StatTile({ tone = "accent", label, value, hint, delay = 0, ink = false, className }: StatTileProps) {
   const reduced = useReducedMotion();
 
   return (
@@ -30,20 +33,14 @@ export function StatTile({ tone = "accent", icon: Icon, label, value, hint, dela
       transition={{ duration: motionDurations.slow, ease: motionEasing.outExpo, delay }}
       className={cn(
         TONE_CLASS[tone],
-        "flex min-w-0 items-center gap-3 rounded-lg border border-border bg-surface/80 p-3.5 backdrop-blur-sm",
+        "flex min-w-0 flex-col gap-1.5 rounded-[22px] p-5",
+        ink ? "bg-[#0C0C0E] text-white" : "bg-surface text-text shadow-[0_0_0_1px_var(--color-border)]",
         className
       )}
     >
-      {Icon && (
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-[color-mix(in_srgb,var(--tone)_14%,transparent)] text-[var(--tone-text)]">
-          <Icon size={20} aria-hidden />
-        </span>
-      )}
-      <div className="min-w-0">
-        <p className="truncate text-xs font-medium text-text-muted">{label}</p>
-        <p className="truncate font-display text-xl font-extrabold leading-tight tabular-nums text-text">{value}</p>
-        {hint && <p className="truncate text-xs text-text-muted">{hint}</p>}
-      </div>
+      <p className={cn("truncate text-sm font-semibold", ink ? "text-[#C9C9CE]" : "text-text-muted")}>{label}</p>
+      <p className="truncate font-display text-[30px] font-bold leading-[1.05] tracking-[-0.02em] tabular-nums">{value}</p>
+      {hint && <p className={cn("truncate text-[13px] font-semibold", ink ? "text-[#F0B429]" : "text-text-muted")}>{hint}</p>}
     </motion.div>
   );
 }

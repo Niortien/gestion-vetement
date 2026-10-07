@@ -1,6 +1,5 @@
 "use client";
 
-import { IconAlertTriangle, IconBoxSeam, IconCircleCheck } from "@tabler/icons-react";
 import { CountUp } from "@/components/common/CountUp";
 import { FeedDensityToggle } from "@/components/common/FeedDensityToggle";
 import { PageHero } from "@/components/common/PageHero";
@@ -31,23 +30,18 @@ export function StockView() {
   return (
     <PageWrapper>
       <PageHero
-        tone="accent"
-        icon={IconBoxSeam}
-        eyebrow="Catalogue"
         title="Stock"
-        description="Chaque variante, son niveau et son seuil d'alerte. Les articles bas remontent en premier."
+        description="Ce qui est en rayon, variante par variante. Le repère noir de chaque barre marque le seuil d'alerte."
       >
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <StatTile
             tone="accent"
-            icon={IconBoxSeam}
             label="Variantes affichées"
             value={<CountUp value={total} />}
             hint={`${unites.toLocaleString("fr-FR")} unités au total`}
           />
           <StatTile
             tone="out"
-            icon={IconAlertTriangle}
             label="À réapprovisionner"
             value={<CountUp value={alertesCount} />}
             hint={alertesCount > 0 ? "Sous le seuil d'alerte" : "Rien d'urgent"}
@@ -55,7 +49,6 @@ export function StockView() {
           />
           <StatTile
             tone="in"
-            icon={IconCircleCheck}
             label="Niveau confortable"
             value={<CountUp value={Math.max(total - alertesCount, 0)} />}
             hint="Au-dessus du seuil"

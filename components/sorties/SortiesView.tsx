@@ -66,7 +66,7 @@ export function SortiesView() {
           description="Ventes, pertes, dons, retours fournisseur et dépenses : chaque sortie diminue le stock et garde sa référence."
           actions={
             <Button
-              className="min-h-11 bg-out font-semibold text-white"
+              className="min-h-11 bg-accent font-semibold text-on-accent"
               startContent={<IconPlus size={18} aria-hidden />}
               onPress={() => setPanelOpen(true)}
             >
