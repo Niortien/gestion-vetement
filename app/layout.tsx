@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, DM_Sans, JetBrains_Mono } from "next/font/google";
+import { Anton, Bricolage_Grotesque, DM_Sans, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import { Providers } from "@/providers";
 import { ThemeInit } from "@/components/common/ThemeInit";
 import "./globals.css";
@@ -39,6 +39,20 @@ const monoFont = JetBrains_Mono({
   weight: ["400", "500"],
 });
 
+// Héros de la vitrine : Anton (affiche) et Instrument Serif italique (mot qui tourne).
+const heroPosterFont = Anton({
+  variable: "--font-hero-poster",
+  subsets: ["latin"],
+  weight: "400",
+});
+
+const heroAccentFont = Instrument_Serif({
+  variable: "--font-hero-accent",
+  subsets: ["latin"],
+  weight: "400",
+  style: "italic",
+});
+
 export const metadata: Metadata = {
   title: "Dri Valé — Gestion Boutique",
   description: "Gestion de stock et de caisse pour Dri Valé Boutique, Yopougon Abidjan",
@@ -52,7 +66,7 @@ export default function RootLayout({
   return (
     <html
       lang="fr"
-      className={`${displayFont.variable} ${bodyFont.variable} ${monoFont.variable} h-full antialiased light`}
+      className={`${displayFont.variable} ${bodyFont.variable} ${monoFont.variable} ${heroPosterFont.variable} ${heroAccentFont.variable} h-full antialiased light`}
     >
       <head>
         <link rel="preconnect" href="https://res.cloudinary.com" />

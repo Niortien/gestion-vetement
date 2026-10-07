@@ -1,7 +1,6 @@
 "use client";
 
 import { HomeHero } from "./HomeHero";
-import { HomeTicker } from "./HomeTicker";
 import { HomeCollection } from "./HomeCollection";
 import { HomeCategories } from "./HomeCategories";
 import { HomePromoSection } from "./HomePromoSection";
@@ -12,7 +11,6 @@ export function VitrineHomeView() {
   return (
     <>
       <HomeHero />
-      <HomeTicker />
       <HomePromoSection />
       <HomeCategories />
       <HomeBrandStatement />

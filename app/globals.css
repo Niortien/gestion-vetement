@@ -576,3 +576,8 @@ input[type="number"] {
 }
 .poster-line { animation: poster-reveal 0.75s cubic-bezier(0.16, 1, 0.3, 1) both; }
 @media (prefers-reduced-motion: reduce) { .poster-line { animation: none; } }
+
+/* Héros d'accueil : texte circulaire de la pastille lookbook. */
+@keyframes hero-spin { to { transform: rotate(360deg); } }
+.hero-spin { animation: hero-spin 18s linear infinite; transform-origin: 50% 50%; }
+@media (prefers-reduced-motion: reduce) { .hero-spin { animation: none; } }
