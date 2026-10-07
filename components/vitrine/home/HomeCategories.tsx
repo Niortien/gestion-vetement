@@ -40,9 +40,9 @@ export function HomeCategories() {
   if (items.length === 0) return null;
 
   return (
-    <section className="mx-auto max-w-7xl px-5 py-16 md:py-24">
-      <h2 className="tag-title text-[clamp(30px,6vw,56px)]" style={{ color: "var(--v-text)" }}>
-        Choisis ton rayon
+    <section className="mx-auto max-w-[1280px] px-5 py-16 md:px-8 md:py-20">
+      <h2 className="v-t1">
+        Les rayons
       </h2>
       <HoverImageList items={items} className="mt-8" />
     </section>

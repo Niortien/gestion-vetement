@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useVitrineCategories, useVitrineProduits } from "@/features/vitrine/query/vitrine-queries";
 import { ProductTile } from "@/components/vitrine/common/ProductTile";
+import { ProductCell, ProductGrid } from "@/components/vitrine/common/ProductRail";
 
 const PAGE_SIZE = 24;
 
@@ -37,17 +38,10 @@ export function HomeCollection() {
     return () => io.disconnect();
   }, [hasNextPage, isFetchingNextPage, fetchNextPage, produits.length]);
 
-  const tab = (active: boolean) => ({
-    color: active ? "var(--v-text)" : "var(--v-dim)",
-    boxShadow: active ? "inset 0 -2px 0 var(--v-gold)" : "none",
-  });
-  const tabClass =
-    "min-h-11 shrink-0 px-1 text-[13px] font-semibold uppercase tracking-wide transition-colors duration-150 hover:text-[var(--v-text)]";
-
   return (
     <section className="py-12 md:py-20" aria-labelledby="collection-titre">
-      <div className="mx-auto flex max-w-[1600px] items-baseline justify-between gap-4 px-5">
-        <h2 id="collection-titre" className="tag-title text-[clamp(28px,5vw,48px)]" style={{ color: "var(--v-text)" }}>
+      <div className="mx-auto flex max-w-[1280px] items-baseline justify-between gap-4 px-5 md:px-8">
+        <h2 id="collection-titre" className="v-t1">
           Toute la collection
         </h2>
         <p className="text-sm" style={{ color: "var(--v-muted)" }} aria-live="polite">
@@ -56,77 +50,64 @@ export function HomeCollection() {
       </div>
 
       {categories.length > 0 && (
-        <div
-          className="snap-rail mx-auto mt-5 max-w-[1600px] gap-5 border-b"
-          style={{ borderColor: "var(--v-border)" }}
-          role="group"
-          aria-label="Filtrer par rayon"
-        >
-          <button type="button" aria-pressed={!categorieId} onClick={() => setCategorieId(undefined)} className={tabClass} style={tab(!categorieId)}>
-            Tout
-          </button>
-          {categories.map((c) => (
-            <button
-              key={c.id}
-              type="button"
-              aria-pressed={categorieId === c.id}
-              onClick={() => setCategorieId(categorieId === c.id ? undefined : c.id)}
-              className={tabClass}
-              style={tab(categorieId === c.id)}
-            >
-              {c.nom}
+        <div className="mx-auto mt-5 max-w-[1280px] px-5 md:px-8">
+          <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }} role="group" aria-label="Filtrer par rayon">
+            <button type="button" aria-pressed={!categorieId} onClick={() => setCategorieId(undefined)} className="v-chip">
+              Tout
             </button>
-          ))}
+            {categories.map((c) => (
+              <button
+                key={c.id}
+                type="button"
+                aria-pressed={categorieId === c.id}
+                onClick={() => setCategorieId(categorieId === c.id ? undefined : c.id)}
+                className="v-chip"
+              >
+                {c.nom}
+              </button>
+            ))}
+          </div>
         </div>
       )}
 
-      <div className="mx-auto mt-6 max-w-[1600px] px-5">
+      <div className="mx-auto mt-4 max-w-[1280px] px-5 md:px-8">
         {isError ? (
           <div className="py-16 text-center">
             <p className="text-sm" style={{ color: "var(--v-muted)" }}>
               Impossible de charger les pièces. Vérifie ta connexion puis réessaie.
             </p>
-            <button
-              type="button"
-              onClick={() => void refetch()}
-              className="mt-4 min-h-11 rounded-sm px-6 text-xs font-bold uppercase tracking-[0.14em]"
-              style={{ backgroundColor: "var(--v-gold)", color: "var(--v-on-gold)" }}
-            >
+            <button type="button" onClick={() => void refetch()} className="v-btn v-btn-gold mt-4">
               Réessayer
             </button>
           </div>
         ) : isLoading ? (
-          <div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
-            {Array.from({ length: 12 }).map((_, i) => (
-              <div key={i} className="aspect-[4/5] animate-pulse rounded-md" style={{ backgroundColor: "var(--v-s2)" }} />
+          <ProductGrid label="Chargement des pièces">
+            {Array.from({ length: 10 }).map((_, i) => (
+              <ProductCell key={i}>
+                <div className="aspect-[4/5] animate-pulse rounded-[18px]" style={{ backgroundColor: "var(--v-s2)" }} />
+              </ProductCell>
             ))}
-          </div>
+          </ProductGrid>
         ) : produits.length === 0 ? (
           <p className="py-16 text-center text-sm" style={{ color: "var(--v-muted)" }}>
             Aucune pièce dans ce rayon pour le moment.
           </p>
         ) : (
-          <ul className="grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+          <ProductGrid label="Toute la collection">
             {produits.map((p) => (
-              <li key={p.id}>
-                <ProductTile produit={p} dense />
-              </li>
+              <ProductCell key={p.id}>
+                <ProductTile produit={p} />
+              </ProductCell>
             ))}
-          </ul>
+          </ProductGrid>
         )}
 
         <div ref={sentinel} aria-hidden className="h-px" />
 
         {hasNextPage && (
           <div className="mt-10 flex justify-center">
-            <button
-              type="button"
-              onClick={() => void fetchNextPage()}
-              disabled={isFetchingNextPage}
-              className="min-h-12 rounded-sm border px-8 text-xs font-bold uppercase tracking-[0.14em] transition-colors duration-150 hover:border-[var(--v-gold)] disabled:opacity-60"
-              style={{ borderColor: "var(--v-border-gold)", color: "var(--v-text)" }}
-            >
-              {isFetchingNextPage ? "Chargement…" : `Voir plus (${produits.length} sur ${total})`}
+            <button type="button" onClick={() => void fetchNextPage()} disabled={isFetchingNextPage} className="v-btn v-btn-line disabled:opacity-60">
+              {isFetchingNextPage ? "Chargement…" : `Afficher plus (${produits.length} sur ${total})`}
             </button>
           </div>
         )}

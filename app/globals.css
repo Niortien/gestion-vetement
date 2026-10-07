@@ -368,6 +368,7 @@ input[type="number"] {
   --v-shadow-gold: 0 0 24px rgba(240, 180, 41, 0.20);
   --v-shadow-hot:  0 0 20px rgba(255, 77, 94, 0.20);
   --v-shadow-card: 0 2px 16px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  --v-card:     #1A1A1E;           /* Surface d'une carte */
 }
 
 [data-vitrine] body,
@@ -403,6 +404,7 @@ input[type="number"] {
   --v-shadow-gold: 0 0 20px rgba(240, 180, 41, 0.25);
   --v-shadow-hot:  0 0 16px rgba(214, 31, 54, 0.15);
   --v-shadow-card: 0 2px 14px rgba(12, 12, 14, 0.10), 0 0 0 1px rgba(12, 12, 14, 0.06);
+  --v-card:        #FFFFFF;
   background: var(--v-bg);
   color: var(--v-text);
 }
@@ -581,3 +583,104 @@ input[type="number"] {
 @keyframes hero-spin { to { transform: rotate(360deg); } }
 .hero-spin { animation: hero-spin 18s linear infinite; transform-origin: 50% 50%; }
 @media (prefers-reduced-motion: reduce) { .hero-spin { animation: none; } }
+
+/* ── Vitrine — refonte « Le portant » ─────────────────────────────────────
+   Un rail (barre noire) où les pièces s'accrochent par un crochet, et une étiquette blanche posée sur la photo.
+   Les couleurs viennent des variables --v-* : le thème clair (papier / encre / or) est le thème par défaut. */
+@keyframes v-swing {
+  0%   { transform: rotate(3deg); }
+  22%  { transform: rotate(-2deg); }
+  44%  { transform: rotate(1.1deg); }
+  64%  { transform: rotate(-0.5deg); }
+  82%  { transform: rotate(0.2deg); }
+  100% { transform: rotate(0); }
+}
+
+.v-rail { position: relative; padding-top: 26px; }
+.v-rail::before {
+  content: "";
+  position: absolute; left: 0; right: 0; top: 9px; height: 3px; border-radius: 3px;
+  background: var(--v-text);
+}
+.v-rail-row {
+  display: flex; gap: 14px; overflow-x: auto; scrollbar-width: none;
+  scroll-snap-type: x mandatory; padding-bottom: 10px;
+}
+.v-rail-row::-webkit-scrollbar { display: none; }
+.v-rail-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+@media (min-width: 768px) { .v-rail-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; } }
+@media (min-width: 1024px) { .v-rail-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (min-width: 1280px) { .v-rail-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+
+.v-hang { position: relative; flex: 0 0 auto; scroll-snap-align: start; transform-origin: 50% -18px; }
+.v-hang::before {
+  content: "";
+  position: absolute; left: 50%; top: -20px; width: 18px; height: 15px; margin-left: -9px;
+  border: 2.5px solid var(--v-text); border-bottom: 0; border-radius: 12px 12px 0 0;
+}
+.v-swing { animation: v-swing 1.4s cubic-bezier(0.25, 0.8, 0.3, 1) both; }
+
+/* Étiquette posée sur le bas de la photo. */
+.v-tag {
+  position: relative; margin: -30px 10px 0; padding: 12px 12px 12px 30px; border-radius: 12px;
+  background: #fff; color: #0C0C0E;
+  box-shadow: 0 10px 24px -14px rgba(12, 12, 14, 0.45), 0 0 0 1px rgba(12, 12, 14, 0.04);
+}
+.v-tag::before {
+  content: "";
+  position: absolute; left: 11px; top: 16px; width: 9px; height: 9px; border-radius: 50%;
+  background: #F6F6F5; box-shadow: inset 0 0 0 2px #E1E1DF;
+}
+
+.v-badge {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 26px; padding: 0 10px; border-radius: 999px;
+  font-size: 12px; font-weight: 700; line-height: 1;
+}
+
+/* Bouton or : le seul de l'écran, celui qui fait commander. */
+.v-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; padding: 0 24px;
+  border-radius: 999px; font-weight: 700; font-size: 16px; line-height: 1; white-space: nowrap;
+  transition: transform 150ms ease;
+}
+.v-btn:active { transform: scale(0.98); }
+.v-btn-gold { background: #F0B429; color: #0C0C0E; }
+.v-btn-ink { background: #0C0C0E; color: #fff; }
+.v-btn-line { background: transparent; color: var(--v-text); box-shadow: inset 0 0 0 1.5px var(--v-text); }
+.v-btn-soft { background: var(--v-card); color: var(--v-text); box-shadow: inset 0 0 0 1px var(--v-border); }
+.v-btn-sm { min-height: 44px; padding: 0 18px; font-size: 14px; }
+
+.v-chip {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px; border-radius: 999px;
+  background: var(--v-card); box-shadow: inset 0 0 0 1px var(--v-border);
+  font-size: 14px; font-weight: 600; color: var(--v-text); white-space: nowrap;
+}
+.v-chip[aria-pressed="true"], .v-chip.is-on { background: #0C0C0E; color: #fff; box-shadow: none; }
+.v-chip.is-off { color: var(--v-dim); text-decoration: line-through; background: var(--v-s1); box-shadow: none; }
+
+.v-card { background: var(--v-card); border-radius: 24px; box-shadow: 0 0 0 1px var(--v-border); }
+
+.v-link {
+  font-weight: 700; text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 2px;
+  text-decoration-color: #F0B429;
+}
+
+/* Stylo de titre « étiquette » de la refonte (Bricolage 650/700). */
+.v-t0 { font-family: var(--font-display), sans-serif; font-weight: 700; font-size: clamp(36px, 7vw, 56px); line-height: 1; letter-spacing: -0.025em; }
+.v-t1 { font-family: var(--font-display), sans-serif; font-weight: 700; font-size: clamp(28px, 5vw, 40px); line-height: 1.02; letter-spacing: -0.022em; }
+.v-t2 { font-family: var(--font-display), sans-serif; font-weight: 650; font-size: clamp(22px, 4vw, 28px); line-height: 1.08; letter-spacing: -0.016em; }
+.v-t3 { font-family: var(--font-display), sans-serif; font-weight: 650; font-size: 20px; line-height: 1.18; letter-spacing: -0.01em; }
+.v-t4 { font-family: var(--font-display), sans-serif; font-weight: 650; font-size: 17px; line-height: 1.2; }
+.v-price { font-family: var(--font-display), sans-serif; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+
+@media (prefers-reduced-motion: reduce) { .v-swing, .v-btn { animation: none !important; transition: none !important; } }
+
+/* Cellule de grille : un segment de rail + de la place pour le crochet. */
+.v-cell { position: relative; padding-top: 26px; min-width: 0; }
+.v-cell::before {
+  content: "";
+  position: absolute; left: -7px; right: -7px; top: 9px; height: 3px; background: var(--v-text);
+}
+@media (min-width: 768px) { .v-cell::before { left: -11px; right: -11px; } }
+.v-rail-row > li { flex: 0 0 auto; }
+.v-rail-row > li { scroll-snap-align: start; }

@@ -1,23 +1,25 @@
 "use client";
 
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import type { Produit } from "@/types";
 import { useVitrineStore } from "@/stores/vitrineStore";
 import { isNouveau } from "@/lib/merchandising";
-import { StockUrgency } from "@/components/vitrine/common/StockUrgency";
-import { IconPin, IconPlus } from "@/components/vitrine/common/VitrineIcons";
+import { LOW_STOCK_THRESHOLD } from "@/components/vitrine/common/StockUrgency";
+import { IconPlus } from "@/components/vitrine/common/VitrineIcons";
 
 interface ProductTileProps {
   produit: Produit;
-  /** Ancienne API : rang et grande carte sont ignorés, la carte est identique partout. */
+  /** Ancienne API : rang, grande carte et densité sont ignorés, la carte est identique partout. */
   rank?: number;
   large?: boolean;
-  priority?: boolean;
-  /** Version compacte (grilles denses) : coins nets, légende réduite, sans liste de tailles. */
   dense?: boolean;
+  priority?: boolean;
+  /** Classes de largeur quand la carte est posée dans un rail. */
+  className?: string;
+  /** Décalage du balancement d'arrivée (secondes), pour que les cartes ne bougent pas toutes ensemble. */
+  swingDelay?: number;
 }
-
-const MAX_TAILLES = 5;
 
 /** Boutiques qui ont réellement la pièce en stock (une seule fois chacune). */
 function boutiquesEnStock(variantes: Produit["variantes"]): string[] {
@@ -29,10 +31,10 @@ function boutiquesEnStock(variantes: Produit["variantes"]): string[] {
 }
 
 /**
- * Carte produit « étiquette » : photo 4:5, puis l'étiquette accrochée au vêtement (nom, prix, tailles).
- * Action rapide « ajouter au panier » toujours visible au tactile, révélée au survol sur ordinateur.
+ * Carte « portant » : la photo 4:5 est accrochée par un crochet, l'étiquette blanche (nom, prix, boutique) est posée
+ * sur son bas. Les pastilles disent ce que le stock confirme : promo, nouveauté, « plus que N », rupture.
  */
-export function ProductTile({ produit, dense = false }: ProductTileProps) {
+export function ProductTile({ produit, className, swingDelay }: ProductTileProps) {
   const addToCart = useVitrineStore((s) => s.addToCart);
   const setCartOpen = useVitrineStore((s) => s.setCartOpen);
 
@@ -41,19 +43,21 @@ export function ProductTile({ produit, dense = false }: ProductTileProps) {
   const variantes = produit.variantes ?? [];
   const totalStock = variantes.reduce((s, v) => s + v.quantiteStock, 0);
   const firstDispo = variantes.find((v) => v.quantiteStock > 0);
-  const tailles = [...new Set(variantes.filter((v) => v.quantiteStock > 0).map((v) => String(v.taille)))];
-
   const boutiques = boutiquesEnStock(variantes);
+
   const isPromo = produit.enPromo && !!produit.prixPromo;
   const prixPromo = isPromo ? parseFloat(produit.prixPromo!) : null;
   const taux = isPromo && prixPromo !== null && prix > 0 ? Math.round(((prix - prixPromo) / prix) * 100) : null;
   const nouveau = isNouveau(produit.createdAt) && !isPromo;
   const rupture = totalStock === 0;
+  const rare = totalStock >= 1 && totalStock <= LOW_STOCK_THRESHOLD;
+
+  const style: CSSProperties | undefined = swingDelay === undefined ? undefined : { animationDelay: `${swingDelay}s` };
 
   return (
-    <article className="group relative">
-      <div className={`relative aspect-[4/5] overflow-hidden ${dense ? "rounded-md" : "rounded-xl"}`} style={{ backgroundColor: "var(--v-s2)" }}>
-        <Link href={`/boutique/${produit.id}`} className="absolute inset-0 block" aria-label={`${produit.nom} — voir la fiche`}>
+    <article className={`v-hang v-swing group ${className ?? ""}`} style={style}>
+      <div className="relative aspect-[4/5] overflow-hidden rounded-[18px]" style={{ backgroundColor: "var(--v-s2)" }}>
+        <Link href={`/boutique/${produit.id}`} className="absolute inset-0 block" aria-label={`${produit.nom}, voir la fiche`}>
           {imageUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -61,7 +65,7 @@ export function ProductTile({ produit, dense = false }: ProductTileProps) {
               alt={produit.nom}
               loading="lazy"
               className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
-              style={rupture ? { opacity: 0.45 } : undefined}
+              style={rupture ? { opacity: 0.5 } : undefined}
             />
           ) : (
             <span className="flex h-full items-center justify-center text-sm" style={{ color: "var(--v-dim)" }}>
@@ -70,19 +74,25 @@ export function ProductTile({ produit, dense = false }: ProductTileProps) {
           )}
         </Link>
 
-        <div className="pointer-events-none absolute left-2.5 top-2.5 flex flex-col items-start gap-1.5">
+        <div className="pointer-events-none absolute left-2.5 top-2.5 z-[1] flex flex-col items-start gap-1.5">
           {taux !== null && (
-            <span className="rounded-md px-2 py-1 text-[11px] font-bold leading-none" style={{ backgroundColor: "var(--v-hot)", color: "#fff" }}>
-              −{taux}%
+            <span className="v-badge" style={{ backgroundColor: "#C8102E", color: "#fff" }}>
+              −{taux} %
             </span>
           )}
           {nouveau && (
-            <span className="rounded-md px-2 py-1 text-[11px] font-bold leading-none" style={{ backgroundColor: "var(--v-gold)", color: "var(--v-on-gold)" }}>
+            <span className="v-badge" style={{ backgroundColor: "#F0B429", color: "#0C0C0E" }}>
               Nouveau
             </span>
           )}
+          {rare && (
+            <span className="v-badge" style={{ backgroundColor: "#fff", color: "#0C0C0E" }}>
+              <span aria-hidden className="h-[7px] w-[7px] rounded-full" style={{ backgroundColor: "#C8102E" }} />
+              {totalStock === 1 ? "Dernière pièce" : `Plus que ${totalStock}`}
+            </span>
+          )}
           {rupture && (
-            <span className="rounded-md px-2 py-1 text-[11px] font-bold leading-none" style={{ backgroundColor: "var(--v-text)", color: "var(--v-bg)" }}>
+            <span className="v-badge" style={{ backgroundColor: "#0C0C0E", color: "#fff" }}>
               Rupture
             </span>
           )}
@@ -92,55 +102,39 @@ export function ProductTile({ produit, dense = false }: ProductTileProps) {
           <button
             type="button"
             aria-label={`Ajouter ${produit.nom} au panier`}
-            className="absolute bottom-2.5 right-2.5 flex h-11 w-11 items-center justify-center rounded-full transition-all duration-200 active:scale-95 md:translate-y-1 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 md:focus-visible:translate-y-0 md:focus-visible:opacity-100"
-            style={{ backgroundColor: "var(--v-gold)", color: "var(--v-on-gold)", boxShadow: "0 4px 14px rgba(0,0,0,0.35)" }}
+            className="absolute right-2.5 top-2.5 z-[2] flex h-10 w-10 items-center justify-center rounded-full transition-transform active:scale-95"
+            style={{ backgroundColor: "#fff", color: "#0C0C0E", boxShadow: "0 4px 12px -4px rgba(12,12,14,0.35)" }}
             onClick={() => {
               addToCart({ produit, variante: firstDispo, quantite: 1 });
               setCartOpen(true);
             }}
           >
-            <IconPlus size={20} />
+            <IconPlus size={18} />
           </button>
         )}
       </div>
 
-      <div className="mt-3 px-0.5">
-        <Link href={`/boutique/${produit.id}`}>
-          <h3 className={`tag-title transition-colors group-hover:text-[var(--v-gold-text)] ${dense ? "text-[13px]" : "text-[15px]"}`} style={{ color: "var(--v-text)" }}>
-            {produit.nom}
-          </h3>
+      <div className="v-tag">
+        <Link href={`/boutique/${produit.id}`} className="block">
+          <h3 className="v-t4 text-base">{produit.nom}</h3>
         </Link>
-
-        <div className="mt-1.5 flex items-baseline gap-2">
+        <p className="v-price mt-0.5 text-base">
           {isPromo && prixPromo !== null ? (
             <>
-              <span className="font-[var(--font-mono)] text-sm font-bold" style={{ color: "var(--v-hot)" }}>
-                {prixPromo.toLocaleString("fr-FR")} FCFA
-              </span>
-              <span className="font-[var(--font-mono)] text-xs line-through" style={{ color: "var(--v-dim)" }}>
+              <span style={{ color: "#C8102E" }}>{prixPromo.toLocaleString("fr-FR")} FCFA</span>
+              <s className="ml-1.5 text-[13px] font-medium" style={{ color: "#6B6B72" }}>
                 {prix.toLocaleString("fr-FR")}
-              </span>
+              </s>
             </>
           ) : (
-            <span className={`font-[var(--font-mono)] font-bold ${dense ? "text-xs" : "text-sm"}`} style={{ color: "var(--v-text)" }}>
-              {prix.toLocaleString("fr-FR")} FCFA
-            </span>
+            <>{prix.toLocaleString("fr-FR")} FCFA</>
           )}
-        </div>
-
-        {!dense && tailles.length > 0 && (
-          <p className="mt-1.5 text-[11px] tracking-wide" style={{ color: "var(--v-muted)" }}>
-            {tailles.slice(0, MAX_TAILLES).join(" · ")}
-            {tailles.length > MAX_TAILLES ? ` +${tailles.length - MAX_TAILLES}` : ""}
-          </p>
-        )}
+        </p>
         {boutiques.length > 0 && (
-          <p className={`mt-1.5 flex items-center gap-1.5 font-medium ${dense ? "text-[10px]" : "text-[11px]"}`} style={{ color: "var(--v-muted)" }}>
-            <IconPin size={12} style={{ color: "var(--v-gold-text)" }} />
-            <span className="truncate">{boutiques.join(" · ")}</span>
+          <p className="mt-0.5 truncate text-xs" style={{ color: "#55555B" }}>
+            {boutiques.join(" · ")}
           </p>
         )}
-        <StockUrgency totalStock={totalStock} className="mt-1.5" />
       </div>
     </article>
   );

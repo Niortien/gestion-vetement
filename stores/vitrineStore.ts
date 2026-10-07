@@ -25,7 +25,7 @@ export const useVitrineStore = create<VitrineState>()(
     (set) => ({
       cart: [],
       cartOpen: false,
-      theme: "dark",
+      theme: "light",
       toggleTheme: () =>
         set((state) => ({ theme: state.theme === "dark" ? "light" : "dark" })),
 
@@ -66,6 +66,12 @@ export const useVitrineStore = create<VitrineState>()(
         typeof window !== "undefined" ? localStorage : sessionStorage
       ),
       partialize: (state) => ({ cart: state.cart, theme: state.theme }),
+      // Refonte « Le portant » : le papier clair devient le thème par défaut, y compris pour les visiteurs déjà venus.
+      version: 2,
+      migrate: (persisted) => {
+        const state = (persisted ?? {}) as Partial<Pick<VitrineState, "cart" | "theme">>;
+        return { cart: state.cart ?? [], theme: "light" as const };
+      },
     }
   )
 );
