@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import type { Categorie } from "@/types";
 
@@ -10,6 +10,7 @@ interface CatalogueFiltersProps {
   onInStockChange: (v: boolean) => void;
 }
 
+/** Puces de rayons (état lu par les lecteurs d'écran via aria-pressed) et filtre « en stock ». */
 export function CatalogueFilters({
   categories,
   selectedCategorieId,
@@ -19,63 +20,32 @@ export function CatalogueFilters({
 }: CatalogueFiltersProps) {
   return (
     <div
-      className="sticky top-16 z-30 border-b"
-      style={{
-        borderColor: "var(--v-border)",
-        backgroundColor: "var(--v-nav-bg)",
-        backdropFilter: "blur(14px)",
-      }}
+      className="sticky top-[72px] z-30 py-3"
+      style={{ backgroundColor: "var(--v-bg)", boxShadow: "0 12px 18px -16px rgba(12,12,14,0.35)" }}
+      role="group"
+      aria-label="Filtres du catalogue"
     >
-      <div className="flex items-center gap-2 overflow-x-auto px-4 py-3" style={{ scrollbarWidth: "none" }}>
-        {/* Chip Tout */}
-        <button
-          onClick={() => onCategorieChange(null)}
-          className="shrink-0 rounded-full border px-4 py-2 text-[11px] font-black uppercase tracking-wider transition-all active:scale-95"
-          style={
-            !selectedCategorieId
-              ? { backgroundColor: "var(--v-gold)", borderColor: "var(--v-gold)", color: "var(--v-on-gold)" }
-              : { borderColor: "var(--v-border)", color: "var(--v-muted)", backgroundColor: "transparent" }
-          }
-        >
+      <div className="mx-auto flex max-w-[1280px] gap-2 overflow-x-auto px-5 md:px-8" style={{ scrollbarWidth: "none" }}>
+        <button type="button" aria-pressed={!selectedCategorieId} onClick={() => onCategorieChange(null)} className="v-chip shrink-0">
           Tout
         </button>
 
-        {/* Chips catégories */}
         {categories.map((cat) => (
           <button
             key={cat.id}
+            type="button"
+            aria-pressed={selectedCategorieId === cat.id}
             onClick={() => onCategorieChange(selectedCategorieId === cat.id ? null : cat.id)}
-            className="shrink-0 rounded-full border px-4 py-2 text-[11px] font-black uppercase tracking-wider transition-all active:scale-95"
-            style={
-              selectedCategorieId === cat.id
-                ? { backgroundColor: "var(--v-gold)", borderColor: "var(--v-gold)", color: "var(--v-on-gold)" }
-                : { borderColor: "var(--v-border)", color: "var(--v-muted)", backgroundColor: "transparent" }
-            }
+            className="v-chip shrink-0"
           >
             {cat.nom}
           </button>
         ))}
 
-        {/* Séparateur */}
-        <div
-          className="mx-1 h-5 w-px shrink-0"
-          style={{ backgroundColor: "var(--v-border)" }}
-        />
+        <span aria-hidden className="mx-1 my-2 w-px shrink-0" style={{ backgroundColor: "var(--v-border)" }} />
 
-        {/* Toggle En stock */}
-        <button
-          onClick={() => onInStockChange(!inStockOnly)}
-          className="flex shrink-0 items-center gap-1.5 rounded-full border px-4 py-2 text-[11px] font-black uppercase tracking-wider transition-all active:scale-95"
-          style={
-            inStockOnly
-              ? { backgroundColor: "var(--v-hot)", borderColor: "var(--v-hot)", color: "#fff" }
-              : { borderColor: "var(--v-border)", color: "var(--v-muted)", backgroundColor: "transparent" }
-          }
-        >
-          <span
-            className="h-1.5 w-1.5 rounded-full"
-            style={{ backgroundColor: inStockOnly ? "#fff" : "var(--v-dim)" }}
-          />
+        <button type="button" aria-pressed={inStockOnly} onClick={() => onInStockChange(!inStockOnly)} className="v-chip shrink-0">
+          <span aria-hidden className="h-2 w-2 rounded-full" style={{ backgroundColor: inStockOnly ? "#F0B429" : "var(--v-dim)" }} />
           En stock
         </button>
       </div>

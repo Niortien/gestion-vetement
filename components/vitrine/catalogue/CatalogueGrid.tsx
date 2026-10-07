@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { motion } from "framer-motion";
 import type { Produit, Taille } from "@/types";
 import { useVitrineProduits } from "@/features/vitrine/query/vitrine-queries";
-import { CatalogueProductCard } from "./CatalogueProductCard";
+import { ProductTile } from "@/components/vitrine/common/ProductTile";
+import { ProductCell, ProductGrid } from "@/components/vitrine/common/ProductRail";
 
 interface CatalogueGridProps {
   categorieId: string | null;
@@ -45,18 +45,14 @@ export function CatalogueGrid({ categorieId, taille, search, inStockOnly }: Cata
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const skeleton = (
-    <div className="mx-auto max-w-7xl px-5 py-12">
-      <div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
-        {Array(8).fill(null).map((_, i) => (
-          <div key={i} className="animate-pulse">
-            <div className="aspect-[3/4] rounded-xl" style={{ backgroundColor: "var(--v-s2)" }} />
-            <div className="mt-3 space-y-2">
-              <div className="h-3 w-3/4 rounded" style={{ backgroundColor: "var(--v-s2)" }} />
-              <div className="h-3 w-1/2 rounded" style={{ backgroundColor: "var(--v-s2)" }} />
-            </div>
-          </div>
+    <div className="mx-auto max-w-[1280px] px-5 py-6 md:px-8">
+      <ProductGrid label="Chargement des pièces">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <ProductCell key={i}>
+            <div className="aspect-[4/5] animate-pulse rounded-[18px]" style={{ backgroundColor: "var(--v-s2)" }} />
+          </ProductCell>
         ))}
-      </div>
+      </ProductGrid>
     </div>
   );
 
@@ -65,8 +61,7 @@ export function CatalogueGrid({ categorieId, taille, search, inStockOnly }: Cata
   if (isError) {
     return (
       <div className="flex flex-col items-center gap-4 py-24 text-center">
-        <span className="text-5xl opacity-20">⚠️</span>
-        <p className="text-sm font-bold" style={{ color: "var(--v-muted)" }}>
+        <p className="v-t3" style={{ color: "var(--v-muted)" }}>
           Impossible de charger les produits.
         </p>
         <p className="text-xs" style={{ color: "var(--v-dim)" }}>
@@ -82,8 +77,7 @@ export function CatalogueGrid({ categorieId, taille, search, inStockOnly }: Cata
   if (filtered.length === 0) {
     return (
       <div className="flex flex-col items-center gap-4 py-24 text-center">
-        <span className="text-5xl opacity-20">🔍</span>
-        <p className="text-sm" style={{ color: "var(--v-muted)" }}>
+        <p className="text-[15px]" style={{ color: "var(--v-muted)" }}>
           Aucun produit ne correspond à ces filtres.
         </p>
       </div>
@@ -91,27 +85,29 @@ export function CatalogueGrid({ categorieId, taille, search, inStockOnly }: Cata
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-5 py-10">
-      <div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+    <div className="mx-auto max-w-[1280px] px-5 pb-6 pt-2 md:px-8">
+      <p className="small pt-3 text-[13px]" style={{ color: "var(--v-muted)" }} aria-live="polite">
+        {filtered.length} pièce{filtered.length > 1 ? "s" : ""} affichée{filtered.length > 1 ? "s" : ""}
+      </p>
+      <ProductGrid label="Pièces du catalogue" className="mt-2">
         {filtered.map((produit, i) => (
-          <motion.div
-            key={produit.id}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: Math.min(i * 0.04, 0.4), duration: 0.4 }}
-          >
-            <CatalogueProductCard produit={produit} priority={i === 0} dense />
-          </motion.div>
+          <ProductCell key={produit.id}>
+            <ProductTile produit={produit} priority={i === 0} swingDelay={Math.min(i * 0.06, 0.5)} />
+          </ProductCell>
         ))}
-      </div>
+      </ProductGrid>
 
-      {/* Sentinel infinite scroll */}
+      {/* Sentinelle du défilement infini */}
       <div ref={loadMoreRef} className="mt-10 flex justify-center pb-4">
         {isFetchingNextPage && (
-          <div className="flex items-center gap-2 text-sm" style={{ color: "var(--v-muted)" }}>
-            <span className="animate-spin">◌</span>
-            Chargement...
-          </div>
+          <p className="flex items-center gap-2 text-sm" style={{ color: "var(--v-muted)" }}>
+            <span aria-hidden className="inline-flex gap-1">
+              {[0, 1, 2, 3].map((n) => (
+                <i key={n} className="block h-2 w-2 animate-pulse" style={{ backgroundColor: "#F0B429", animationDelay: `${n * 140}ms`, clipPath: "polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)" }} />
+              ))}
+            </span>
+            Chargement
+          </p>
         )}
       </div>
     </div>

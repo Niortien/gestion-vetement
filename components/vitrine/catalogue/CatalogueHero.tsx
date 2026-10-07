@@ -1,4 +1,6 @@
-﻿"use client";
+"use client";
+
+import { IconSearch } from "@/components/vitrine/common/VitrineIcons";
 
 interface CatalogueHeroProps {
   total: number;
@@ -6,61 +8,35 @@ interface CatalogueHeroProps {
   onSearch: (v: string) => void;
 }
 
+/** Titre, compteur honnête et recherche en pilule. */
 export function CatalogueHero({ total, search, onSearch }: CatalogueHeroProps) {
   return (
-    <section
-      className="border-b px-5 pb-10 pt-12"
-      style={{ borderColor: "var(--v-border)" }}
-    >
-      <div className="mx-auto max-w-7xl">
-        <div className="flex flex-wrap items-end justify-between gap-6">
-          <div>
-            <h1 className="poster text-[clamp(56px,13vw,150px)]" style={{ color: "var(--v-text)" }}>
-              Catalogue
-            </h1>
-            <p className="mt-2 font-[var(--font-mono)] text-sm" style={{ color: "var(--v-muted)" }}>
-              {total} article{total !== 1 ? "s" : ""}
-            </p>
-          </div>
-
-          {/* Barre de recherche */}
-          <div className="w-full max-w-sm">
-            <div
-              className="flex items-center gap-3 rounded-xl border px-4 py-3 transition-colors focus-within:border-[var(--v-gold)]"
-              style={{ borderColor: "var(--v-border)", backgroundColor: "var(--v-s2)" }}
-            >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                style={{ color: "var(--v-dim)", flexShrink: 0 }}
-              >
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
-              <input
-                type="text"
-                placeholder="Cherche ta pièce..."
-                value={search}
-                onChange={(e) => onSearch(e.target.value)}
-                className="flex-1 bg-transparent text-sm outline-none placeholder:text-[var(--v-dim)]"
-                style={{ color: "var(--v-text)" }}
-              />
-              {search && (
-                <button
-                  onClick={() => onSearch("")}
-                  className="text-xs transition-colors hover:text-[var(--v-text)]"
-                  style={{ color: "var(--v-dim)" }}
-                >
-                  &times;
-                </button>
-              )}
-            </div>
-          </div>
+    <section className="mx-auto max-w-[1280px] px-5 pb-4 pt-6 md:px-8 md:pt-10" aria-labelledby="catalogue-titre">
+      <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-4">
+        <div className="flex flex-wrap items-baseline gap-x-5 gap-y-1">
+          <h1 id="catalogue-titre" className="v-t0">
+            Catalogue
+          </h1>
+          <p className="text-sm" style={{ color: "var(--v-muted)" }} aria-live="polite">
+            {total} pièce{total !== 1 ? "s" : ""} en rayon
+          </p>
         </div>
+
+        <label
+          className="flex min-h-[50px] w-full items-center gap-2.5 rounded-full px-4 md:max-w-sm"
+          style={{ backgroundColor: "var(--v-card)", boxShadow: "inset 0 0 0 1px var(--v-border)", color: "var(--v-dim)" }}
+        >
+          <IconSearch size={20} />
+          <span className="sr-only">Chercher une pièce</span>
+          <input
+            type="search"
+            placeholder="Une pièce, une marque, une taille"
+            value={search}
+            onChange={(e) => onSearch(e.target.value)}
+            className="w-full bg-transparent text-[15px] outline-none placeholder:text-[var(--v-dim)]"
+            style={{ color: "var(--v-text)" }}
+          />
+        </label>
       </div>
     </section>
   );

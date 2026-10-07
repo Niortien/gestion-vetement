@@ -72,3 +72,9 @@ export const IconPin = (p: IconProps) => (
     <circle cx="12" cy="9.5" r="2.5" />
   </svg>
 );
+export const IconSearch = (p: IconProps) => (
+  <svg {...base(p)}>
+    <circle cx="11" cy="11" r="7" />
+    <path d="m20 20-3.5-3.5" />
+  </svg>
+);
