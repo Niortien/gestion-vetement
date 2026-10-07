@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { useVitrineProduit } from "@/features/vitrine/query/vitrine-queries";
@@ -24,11 +25,16 @@ export function ProduitDetailView({ id }: ProduitDetailViewProps) {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div
-          className="h-12 w-12 rounded-full border-2 border-t-transparent animate-spin"
-          style={{ borderColor: "var(--v-lime)" }}
-        />
+      <div className="flex min-h-[60vh] items-center justify-center" role="status" aria-label="Chargement de la pièce">
+        <span aria-hidden className="flex items-end gap-1">
+          {[10, 13, 17, 22].map((h, n) => (
+            <i
+              key={h}
+              className="block animate-pulse"
+              style={{ width: h, height: h, backgroundColor: "#F0B429", animationDelay: `${n * 140}ms`, clipPath: "polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)" }}
+            />
+          ))}
+        </span>
       </div>
     );
   }
@@ -36,16 +42,15 @@ export function ProduitDetailView({ id }: ProduitDetailViewProps) {
   if (isError || !data?.data) {
     const isNotFound = axios.isAxiosError(error) && error.response?.status === 404;
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4 px-5">
-        <p className="tag-title text-3xl" style={{ color: "var(--v-text)" }}>Oups</p>
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 px-5">
+        <p className="v-t1">Oups</p>
         <p className="text-sm" style={{ color: "var(--v-muted)" }}>
           {isNotFound ? "Produit introuvable" : "Connexion au serveur impossible"}
         </p>
         <button
           onClick={() => refetch()}
           disabled={isFetching}
-          className="mt-2 rounded-full px-6 py-2 text-xs font-bold uppercase tracking-widest transition-all hover:opacity-80 disabled:opacity-40"
-          style={{ backgroundColor: "var(--v-lime)", color: "var(--v-on-gold)" }}
+          className="v-btn v-btn-gold mt-2 disabled:opacity-40"
         >
           {isFetching ? "Chargement…" : "Réessayer"}
         </button>
@@ -78,37 +83,29 @@ export function ProduitDetailView({ id }: ProduitDetailViewProps) {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.4 }}
+      transition={{ duration: 0.3 }}
       className="pb-24 lg:pb-0"
     >
-      {/* Breadcrumb */}
-      <div className="mx-auto max-w-7xl px-5 pt-8">
-        <p className="text-[11px] font-semibold uppercase tracking-widest" style={{ color: "var(--v-dim)" }}>
-          <a href="/" className="hover:text-[var(--v-muted)] transition-colors">Accueil</a>
+      <div className="mx-auto max-w-[1280px] px-5 pt-5 md:px-8 md:pt-8">
+        <nav aria-label="Fil d'Ariane" className="text-[13px]" style={{ color: "var(--v-muted)" }}>
+          <Link href="/" className="hover:underline">Accueil</Link>
           {" / "}
-          <a href="/catalogue" className="hover:text-[var(--v-muted)] transition-colors">Catalogue</a>
+          <Link href="/catalogue" className="hover:underline">Catalogue</Link>
           {" / "}
-          <span style={{ color: "var(--v-muted)" }}>{produit.nom}</span>
-        </p>
+          <span aria-current="page" style={{ color: "var(--v-text)" }}>{produit.nom}</span>
+        </nav>
       </div>
 
-      {/* Contenu principal — 2 colonnes desktop */}
-      <div className="mx-auto max-w-7xl px-5 py-10">
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
-          {/* Colonne gauche — Galerie (sticky) */}
+      <div className="mx-auto max-w-[1280px] px-5 py-6 md:px-8 md:py-10">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
           <div className="lg:sticky lg:top-24 lg:self-start">
             <ProduitGallery produit={produit} />
+            <div className="-mt-11 px-3.5 lg:mt-5 lg:px-0">
+              <ProduitInfo produit={produit} totalStock={totalStock} />
+            </div>
           </div>
 
-          {/* Colonne droite — Info + Actions */}
           <div className="space-y-8">
-            <ProduitInfo produit={produit} totalStock={totalStock} />
-
-            <div
-              className="h-px w-full"
-              style={{ backgroundColor: "var(--v-border)" }}
-            />
-
             <ProduitVariantesSection
               variantes={variantes}
               selectedTaille={selectedTaille}
@@ -121,6 +118,26 @@ export function ProduitDetailView({ id }: ProduitDetailViewProps) {
               <ProduitOrderPanel produit={produit} variante={selectedVariante} />
             </div>
 
+            <section aria-labelledby="etapes-titre">
+              <h2 id="etapes-titre" className="v-t3 mb-1">Commander, en trois temps</h2>
+              <ol>
+                {[
+                  ["Choisis ta taille.", "On t'indique la boutique qui l'a en rayon."],
+                  ["Envoie le message pré-rempli", "sur WhatsApp, avec ton quartier."],
+                  ["On te répond", "pour la remise et le paiement : Wave, Orange Money ou cash."],
+                ].map(([titre, texte], i) => (
+                  <li key={titre} className="grid grid-cols-[34px_1fr] items-start gap-3 py-3">
+                    <b className="v-t4 flex h-[34px] w-[34px] items-center justify-center rounded-full" style={{ backgroundColor: "#0C0C0E", color: "#F0B429" }}>
+                      {i + 1}
+                    </b>
+                    <p className="text-[15px]">
+                      <strong>{titre}</strong> <span style={{ color: "var(--v-muted)" }}>{texte}</span>
+                    </p>
+                  </li>
+                ))}
+              </ol>
+            </section>
+
             <ProduitCare />
           </div>
         </div>
@@ -128,10 +145,7 @@ export function ProduitDetailView({ id }: ProduitDetailViewProps) {
 
       <ProduitStickyBar produit={produit} variante={selectedVariante} enRupture={totalStock === 0} />
 
-      {/* Produits similaires */}
-      {produit.categorieId && (
-        <ProduitRelated categorieId={produit.categorieId} excludeId={produit.id} />
-      )}
+      {produit.categorieId && <ProduitRelated categorieId={produit.categorieId} excludeId={produit.id} />}
     </motion.div>
   );
 }

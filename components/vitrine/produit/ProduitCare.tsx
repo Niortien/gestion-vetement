@@ -31,14 +31,13 @@ export function ProduitCare() {
 
   return (
     <div className="border-t pt-6" style={{ borderColor: "var(--v-border)" }}>
-      <p className="mb-4 text-[10px] font-bold uppercase tracking-[0.3em]" style={{ color: "var(--v-muted)" }}>
-        Infos produit
-      </p>
+      <h2 className="v-t3 mb-2">Infos produit</h2>
       <div className="divide-y" style={{ borderColor: "var(--v-border)" }}>
         {CARE_SECTIONS.map((section, i) => (
           <div key={section.title} className="divide-[var(--v-border)]">
             <button
-              className="flex w-full items-center justify-between py-4 text-left"
+              className="flex min-h-12 w-full items-center justify-between py-3 text-left"
+              aria-expanded={openIdx === i}
               onClick={() => setOpenIdx(openIdx === i ? null : i)}
             >
               <span className="text-sm font-bold" style={{ color: "var(--v-text)" }}>
@@ -48,7 +47,7 @@ export function ProduitCare() {
                 animate={{ rotate: openIdx === i ? 45 : 0 }}
                 transition={{ duration: 0.2 }}
                 className="text-xl font-light"
-                style={{ color: "var(--v-gold-text)" }}
+                style={{ color: "var(--v-text)" }}
               >
                 +
               </motion.span>

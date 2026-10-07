@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import type { Variante } from "@/types";
 import { Taille } from "@/types";
@@ -14,9 +14,9 @@ interface ProduitVariantPickerProps {
 const TAILLE_ORDER = [Taille.XS, Taille.S, Taille.M, Taille.L, Taille.XL, Taille.XXL, Taille.XXXL];
 
 function stockColor(stock: number): string {
-  if (stock === 0) return "var(--v-red)";
-  if (stock <= 3) return "#ff9a3c";
-  return "var(--v-lime)";
+  if (stock === 0) return "#C8102E";
+  if (stock <= 3) return "#C8102E";
+  return "#17703F";
 }
 
 export function ProduitVariantPicker({
@@ -43,53 +43,29 @@ export function ProduitVariantPicker({
       .reduce((s, v) => s + v.quantiteStock, 0);
 
   return (
-    <div className="space-y-5">
-      {/* Sélecteur taille */}
+    <div className="space-y-6">
+      {/* Taille */}
       <div>
-        <div className="mb-3 flex items-center justify-between">
-          <p
-            className="text-[11px] font-bold uppercase tracking-[0.25em]"
-            style={{ color: "var(--v-muted)" }}
-          >
-            Taille
-            {selectedTaille && (
-              <span className="ml-2" style={{ color: "var(--v-gold-text)" }}>
-                — {selectedTaille}
-              </span>
-            )}
-          </p>
+        <div className="mb-2.5 flex items-baseline justify-between">
+          <h3 className="v-t4">Taille</h3>
+          {selectedTaille && <span className="text-[13px]" style={{ color: "var(--v-muted)" }}>{selectedTaille}</span>}
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2" role="group" aria-label="Choisir une taille">
           {tailles.map((t) => {
             const stock = getStockForTaille(t);
             const isActive = selectedTaille === t;
             return (
               <button
                 key={t}
+                type="button"
                 onClick={() => stock > 0 && onTailleChange(t)}
                 disabled={stock === 0}
-                className="relative h-11 min-w-[44px] rounded-xl border px-3 text-sm font-black uppercase transition-all"
-                style={
-                  stock === 0
-                    ? {
-                        borderColor: "var(--v-border)",
-                        color: "var(--v-dim)",
-                        opacity: 0.4,
-                        cursor: "not-allowed",
-                        textDecoration: "line-through",
-                      }
-                    : isActive
-                    ? { borderColor: "var(--v-lime)", backgroundColor: "var(--v-lime)", color: "var(--v-on-gold)" }
-                    : { borderColor: "var(--v-border)", color: "var(--v-text)" }
-                }
+                aria-pressed={isActive}
+                className={`v-chip min-w-[58px] justify-center uppercase ${stock === 0 ? "is-off cursor-not-allowed" : ""}`}
               >
                 {t}
-                {/* Point de stock */}
-                {stock > 0 && !isActive && (
-                  <span
-                    className="absolute right-1 top-1 h-1.5 w-1.5 rounded-full"
-                    style={{ backgroundColor: stockColor(stock) }}
-                  />
+                {stock > 0 && stock <= 3 && (
+                  <span aria-label="stock limité" className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: isActive ? "#F0B429" : stockColor(stock) }} />
                 )}
               </button>
             );
@@ -97,49 +73,30 @@ export function ProduitVariantPicker({
         </div>
       </div>
 
-      {/* Sélecteur couleur */}
+      {/* Couleur */}
       <div>
-        <p
-          className="mb-3 text-[11px] font-bold uppercase tracking-[0.25em]"
-          style={{ color: "var(--v-muted)" }}
-        >
-          Couleur
-          {selectedCouleur && (
-            <span className="ml-2" style={{ color: "var(--v-gold-text)" }}>
-              — {selectedCouleur}
-            </span>
-          )}
-        </p>
-        <div className="flex flex-wrap gap-2">
+        <div className="mb-2.5 flex items-baseline justify-between">
+          <h3 className="v-t4">Couleur</h3>
+          {selectedCouleur && <span className="text-[13px]" style={{ color: "var(--v-muted)" }}>{selectedCouleur}</span>}
+        </div>
+        <div className="flex flex-wrap gap-2" role="group" aria-label="Choisir une couleur">
           {couleurs.map((c) => {
             const stock = getStockForCouleur(c);
             const isActive = selectedCouleur === c;
             return (
               <button
                 key={c}
+                type="button"
                 onClick={() => stock > 0 && onCouleurChange(c)}
                 disabled={stock === 0}
-                className="rounded-xl border px-4 py-2 text-sm font-bold transition-all"
-                style={
-                  stock === 0
-                    ? { borderColor: "var(--v-border)", color: "var(--v-dim)", opacity: 0.4, cursor: "not-allowed" }
-                    : isActive
-                    ? { borderColor: "var(--v-lime)", backgroundColor: "rgba(200,118,44,0.1)", color: "var(--v-gold-text)" }
-                    : { borderColor: "var(--v-border)", color: "var(--v-text)" }
-                }
+                aria-pressed={isActive}
+                className={`v-chip ${stock === 0 ? "is-off cursor-not-allowed" : ""}`}
               >
                 {c}
               </button>
             );
           })}
         </div>
-      </div>
-
-      {/* Légende stock */}
-      <div className="flex items-center gap-4 text-[10px]" style={{ color: "var(--v-dim)" }}>
-        <span className="flex items-center gap-1"><span className="h-1.5 w-1.5 rounded-full bg-[var(--v-lime)]" /> Disponible</span>
-        <span className="flex items-center gap-1"><span className="h-1.5 w-1.5 rounded-full bg-[#ff9a3c]" /> Limité</span>
-        <span className="flex items-center gap-1"><span className="h-1.5 w-1.5 rounded-full bg-[var(--v-red)]" /> Rupture</span>
       </div>
     </div>
   );

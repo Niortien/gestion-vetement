@@ -23,26 +23,20 @@ export function ProduitStickyBar({ produit, variante, enRupture }: ProduitSticky
 
   return (
     <div
-      className="fixed inset-x-0 bottom-0 z-40 flex items-center gap-3 border-t px-4 pb-[max(12px,env(safe-area-inset-bottom))] pt-3 lg:hidden"
-      style={{ backgroundColor: "var(--v-nav-bg)", borderColor: "var(--v-nav-border)", backdropFilter: "blur(16px)" }}
+      className="fixed inset-x-0 bottom-0 z-40 flex items-center gap-3 rounded-t-3xl px-4 pb-[max(20px,env(safe-area-inset-bottom))] pt-3.5 lg:hidden"
+      style={{ backgroundColor: "#fff", color: "#0C0C0E", boxShadow: "0 -12px 30px -14px rgba(12,12,14,0.35)" }}
     >
-      <div className="min-w-0">
-        <p className="truncate text-xs" style={{ color: "var(--v-muted)" }}>
-          {produit.nom}
-        </p>
-        <p className="font-[var(--font-mono)] text-base font-bold" style={{ color: isPromo ? "var(--v-hot)" : "var(--v-text)" }}>
+      <div className="min-w-0 flex-1">
+        <p className="v-price text-[19px]" style={{ color: isPromo ? "#C8102E" : "#0C0C0E" }}>
           {prix.toLocaleString("fr-FR")} FCFA
         </p>
+        <p className="truncate text-[13px]" style={{ color: "#55555B" }}>
+          {variante ? `Taille ${variante.taille}, ${variante.couleur}` : produit.nom}
+        </p>
       </div>
-      <button
-        type="button"
-        onClick={goToOrder}
-        disabled={enRupture}
-        className="ml-auto inline-flex min-h-12 items-center gap-2 rounded-xl px-5 text-sm font-bold transition-transform duration-150 active:scale-[0.98] disabled:opacity-50"
-        style={{ backgroundColor: "var(--v-gold)", color: "var(--v-on-gold)" }}
-      >
+      <button type="button" onClick={goToOrder} disabled={enRupture} className="v-btn v-btn-gold disabled:opacity-50" style={{ padding: "0 18px" }}>
         <IconWhatsapp size={18} />
-        {enRupture ? "Rupture de stock" : variante ? "Commander" : "Choisir ma taille"}
+        {enRupture ? "Rupture" : variante ? "Commander" : "Choisir ma taille"}
       </button>
     </div>
   );
