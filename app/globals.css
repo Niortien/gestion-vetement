@@ -684,3 +684,11 @@ input[type="number"] {
 @media (min-width: 768px) { .v-cell::before { left: -11px; right: -11px; } }
 .v-rail-row > li { flex: 0 0 auto; }
 .v-rail-row > li { scroll-snap-align: start; }
+
+/* Champ de formulaire de la vitrine. */
+[data-vitrine] .input-field {
+  min-height: 50px; width: 100%; padding: 0 16px; border-radius: 14px;
+  border: 1.5px solid var(--v-border); background: var(--v-card); color: var(--v-text); font: inherit; font-size: 15px;
+}
+[data-vitrine] .input-field::placeholder { color: var(--v-dim); }
+[data-vitrine] .input-field:focus { outline: none; border-color: var(--v-text); }

@@ -2,7 +2,6 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -15,6 +14,7 @@ const schema = z.object({
   nom: z.string().optional(),
   telephone: z.string().optional(),
   message: z.string().optional(),
+  consentement: z.literal(true, { errorMap: () => ({ message: "Ton accord est nécessaire pour publier la photo." }) }),
 });
 type FormData = z.infer<typeof schema>;
 
@@ -25,7 +25,7 @@ export function LookbookPhotoUpload() {
   const [fileError, setFileError] = useState<string | null>(null);
   const [status, setStatus] = useState<"idle" | "submitting" | "done" | "error">("idle");
 
-  const { register, handleSubmit, reset } = useForm<FormData>({ resolver: zodResolver(schema) });
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>({ resolver: zodResolver(schema) });
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const selected = e.target.files?.[0] ?? null;
@@ -71,116 +71,65 @@ export function LookbookPhotoUpload() {
     }
   });
 
+  const input = "input-field";
   return (
-    <section className="py-24" style={{ backgroundColor: "var(--v-bg)" }}>
-      <div className="mx-auto max-w-xl px-5 text-center md:px-16">
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mb-4 text-[10px] font-black uppercase tracking-[0.5em]"
-          style={{ color: "var(--v-gold-text)" }}
-        >
-          Ou envoie-la directement
-        </motion.p>
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.1 }}
-          className="mb-6 font-[var(--font-display)] font-black uppercase leading-tight tracking-tighter"
-          style={{ fontSize: "clamp(28px,5vw,52px)", color: "var(--v-text)" }}
-        >
-          Ta photo, ton style
-        </motion.h2>
-        <p className="mb-8 text-sm leading-relaxed" style={{ color: "var(--v-muted)" }}>
-          Partage la tenue ou l&rsquo;inspiration que tu veux recr&eacute;er, notre &eacute;quipe te
-          recontacte avec les pi&egrave;ces disponibles.
+    <section id="envoyer" className="mx-auto max-w-[1280px] scroll-mt-24 px-3.5 pb-16 pt-12 md:px-8 md:pb-24 md:pt-16" aria-labelledby="envoyer-titre">
+      <div className="v-card mx-auto max-w-xl p-5 md:p-8">
+        <h2 id="envoyer-titre" className="v-t2">Envoie ta photo</h2>
+        <p className="mt-2 text-[15px]" style={{ color: "var(--v-muted)" }}>
+          Une photo de toi avec une pièce Dri Valé. On la vérifie avant de la publier ici.
         </p>
 
         {status === "done" ? (
-          <div
-            className="rounded-2xl border p-8 text-sm font-semibold"
-            style={{ borderColor: "var(--v-gold)", color: "var(--v-gold-text)" }}
-          >
-            Photo bien re&ccedil;ue ! On te recontacte tr&egrave;s vite.
-          </div>
+          <p role="status" className="mt-6 rounded-2xl p-5 text-[15px] font-bold" style={{ backgroundColor: "var(--v-gold-dim)", color: "var(--v-text)" }}>
+            Photo bien reçue ! On te recontacte très vite.
+          </p>
         ) : (
-          <form onSubmit={onSubmit} className="space-y-4 text-left">
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="hidden"
-              id="lookbook-photo-input"
-            />
+          <form onSubmit={onSubmit} className="mt-6 space-y-4" noValidate>
+            <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileChange} className="sr-only" id="lookbook-photo-input" />
             <label
               htmlFor="lookbook-photo-input"
-              className="flex cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border border-dashed px-4 py-8 text-center transition-colors hover:border-[var(--v-gold)]"
-              style={{ borderColor: "var(--v-border)" }}
+              className="flex min-h-[150px] cursor-pointer flex-col items-center justify-center gap-2.5 rounded-2xl border-2 border-dashed p-5 text-center text-sm focus-within:outline focus-within:outline-2"
+              style={{ borderColor: "var(--v-dim)", color: "var(--v-muted)" }}
             >
               {preview ? (
-                <Image
-                  src={preview}
-                  alt="Aper&ccedil;u de la photo"
-                  width={160}
-                  height={160}
-                  unoptimized
-                  className="h-40 w-40 rounded-xl object-cover"
-                />
+                <Image src={preview} alt="Aperçu de la photo" width={160} height={160} unoptimized className="h-40 w-40 rounded-xl object-cover" />
               ) : (
                 <>
-                  <span className="text-3xl">📷</span>
-                  <span className="text-sm font-bold" style={{ color: "var(--v-text)" }}>
-                    Choisir une photo
-                  </span>
-                  <span className="text-xs" style={{ color: "var(--v-dim)" }}>
-                    JPG, PNG &mdash; 5 Mo max
-                  </span>
+                  <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden style={{ color: "var(--v-text)" }}>
+                    <path d="M12 16V4M7 9l5-5 5 5" />
+                    <path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3" />
+                  </svg>
+                  <strong style={{ color: "var(--v-text)" }}>Choisir une photo</strong>
+                  JPEG ou PNG, 5 Mo au plus
                 </>
               )}
             </label>
-            {fileError && (
-              <p className="text-xs" style={{ color: "var(--v-red)" }}>
-                {fileError}
-              </p>
-            )}
+            {fileError && <p role="alert" className="text-[13px]" style={{ color: "var(--v-red)" }}>{fileError}</p>}
 
-            <input
-              {...register("nom")}
-              placeholder="Ton nom (optionnel)"
-              className="w-full rounded-xl border bg-transparent px-4 py-3 text-sm outline-none transition-colors focus:border-[var(--v-gold)] placeholder:text-[var(--v-dim)]"
-              style={{ borderColor: "var(--v-border)", color: "var(--v-text)" }}
-            />
-            <input
-              {...register("telephone")}
-              type="tel"
-              placeholder="Ton num&eacute;ro WhatsApp (optionnel)"
-              className="w-full rounded-xl border bg-transparent px-4 py-3 text-sm outline-none transition-colors focus:border-[var(--v-gold)] placeholder:text-[var(--v-dim)]"
-              style={{ borderColor: "var(--v-border)", color: "var(--v-text)" }}
-            />
-            <textarea
-              {...register("message")}
-              placeholder="Un mot sur ce que tu cherches (optionnel)"
-              rows={3}
-              className="w-full resize-none rounded-xl border bg-transparent px-4 py-3 text-sm outline-none transition-colors focus:border-[var(--v-gold)] placeholder:text-[var(--v-dim)]"
-              style={{ borderColor: "var(--v-border)", color: "var(--v-text)" }}
-            />
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="lb-nom" className="text-[13px] font-bold">Ton prénom</label>
+              <input id="lb-nom" {...register("nom")} placeholder="Affiché sous la photo" className={input} />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="lb-tel" className="text-[13px] font-bold">Ton numéro WhatsApp (facultatif)</label>
+              <input id="lb-tel" {...register("telephone")} type="tel" placeholder="Pour te prévenir quand elle est en ligne" className={input} />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="lb-msg" className="text-[13px] font-bold">Un mot (facultatif)</label>
+              <textarea id="lb-msg" {...register("message")} rows={3} placeholder="La pièce que tu portes, la boutique…" className={`${input} resize-none py-3.5`} />
+            </div>
 
-            {status === "error" && (
-              <p className="text-xs" style={{ color: "var(--v-red)" }}>
-                Envoi impossible pour le moment. R&eacute;essaie dans un instant.
-              </p>
-            )}
+            <label htmlFor="lb-ok" className="flex items-start gap-3 text-sm leading-snug">
+              <input id="lb-ok" type="checkbox" {...register("consentement")} className="mt-0.5 h-[22px] w-[22px] shrink-0" style={{ accentColor: "#0C0C0E" }} />
+              J&rsquo;accepte que Dri Valé publie cette photo sur le site et ses réseaux.
+            </label>
+            {errors.consentement && <p role="alert" className="text-[13px]" style={{ color: "var(--v-red)" }}>{errors.consentement.message}</p>}
 
-            <button
-              type="submit"
-              disabled={status === "submitting"}
-              className="flex w-full items-center justify-center gap-2 rounded-2xl px-8 py-4 text-sm font-black uppercase tracking-widest transition-all hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
-              style={{ backgroundColor: "var(--v-gold)", color: "var(--v-on-gold)" }}
-            >
-              {status === "submitting" ? "Envoi en cours..." : "Envoyer ma photo"}
+            {status === "error" && <p role="alert" className="text-[13px]" style={{ color: "var(--v-red)" }}>Envoi impossible pour le moment. Réessaie dans un instant.</p>}
+
+            <button type="submit" disabled={status === "submitting"} className="v-btn v-btn-ink w-full disabled:cursor-not-allowed disabled:opacity-50">
+              {status === "submitting" ? "Envoi en cours…" : "Envoyer pour validation"}
             </button>
           </form>
         )}

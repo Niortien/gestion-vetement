@@ -1,19 +1,12 @@
-import { LookbookHero } from "./LookbookHero";
-import { LookbookEditorial } from "./LookbookEditorial";
-import { LookbookGrid } from "./LookbookGrid";
-import { LookbookBehindScenes } from "./LookbookBehindScenes";
-import { LookbookWhatsapp } from "./LookbookWhatsapp";
+import { LookbookHeader } from "./LookbookHeader";
+import { LookbookRack } from "./LookbookRack";
 import { LookbookPhotoUpload } from "./LookbookPhotoUpload";
 
 export function LookbookView() {
   return (
     <>
-      <LookbookHero />
-      <LookbookEditorial />
-      <LookbookGrid />
-      {/* <LookbookOutfit /> */}
-      <LookbookBehindScenes />
-      <LookbookWhatsapp />
+      <LookbookHeader />
+      <LookbookRack />
       <LookbookPhotoUpload />
     </>
   );

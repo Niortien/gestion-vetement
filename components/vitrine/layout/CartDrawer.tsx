@@ -1,40 +1,82 @@
 "use client";
 
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
+import type { CartItem } from "@/stores/vitrineStore";
 import { useVitrineStore } from "@/stores/vitrineStore";
 import { buildWhatsappMessage } from "@/lib/whatsapp";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { IconWhatsapp } from "@/components/vitrine/common/VitrineIcons";
 
+interface BoutiqueGroup {
+  nom: string;
+  whatsapp?: string;
+  items: CartItem[];
+}
+
+const STEPS = ["Panier", "Message", "Réponse", "Remise"];
+
+/** Les quatre étoiles du logo comme indicateur d'étape. */
+function Steps({ current }: { current: number }) {
+  return (
+    <ol className="v-card flex px-1.5 py-3.5" style={{ borderRadius: 18 }} aria-label="Étapes de la commande">
+      {STEPS.map((label, i) => {
+        const on = i <= current;
+        return (
+          <li key={label} aria-current={i === current ? "step" : undefined} className="flex flex-1 flex-col items-center gap-1.5 text-xs font-bold" style={{ color: on ? "var(--v-text)" : "var(--v-dim)" }}>
+            <i
+              aria-hidden
+              className="block"
+              style={{
+                width: on ? 16 : 12,
+                height: on ? 16 : 12,
+                backgroundColor: on ? "#F0B429" : "var(--v-border)",
+                clipPath: "polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)",
+              }}
+            />
+            {label}
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
+/** Panier : feuille qui monte du bas sur mobile, panneau à droite sur ordinateur. Un bouton or par boutique. */
 export function CartDrawer() {
   const cart = useVitrineStore((s) => s.cart);
   const cartOpen = useVitrineStore((s) => s.cartOpen);
   const setCartOpen = useVitrineStore((s) => s.setCartOpen);
   const removeFromCart = useVitrineStore((s) => s.removeFromCart);
   const updateQuantite = useVitrineStore((s) => s.updateQuantite);
+  const reduced = useReducedMotion();
+  const titleId = useId();
+  const closeRef = useRef<HTMLButtonElement>(null);
 
-  const total = cart.reduce(
-    (sum, item) => sum + item.quantite * parseFloat(item.produit.prixVente || "0"),
-    0
-  );
+  const [quartier, setQuartier] = useState("");
+  const [prenom, setPrenom] = useState("");
 
-  // Grouper les articles par boutique pour diriger chaque commande vers le bon numéro
-  const boutiqueGroups = cart.reduce<
-    Record<string, { nom: string; whatsapp?: string; items: typeof cart }>
-  >((acc, item) => {
-    const key = item.variante.boutique?.id ?? "__default__";
-    if (!acc[key]) {
-      acc[key] = {
+  const nbPieces = cart.reduce((s, i) => s + i.quantite, 0);
+  const total = cart.reduce((sum, item) => sum + item.quantite * parseFloat(item.produit.prixVente || "0"), 0);
+
+  // Une commande par boutique : chaque groupe part vers le WhatsApp de sa boutique.
+  const groups = useMemo(() => {
+    const acc: Record<string, BoutiqueGroup> = {};
+    for (const item of cart) {
+      const key = item.variante.boutique?.id ?? "__default__";
+      acc[key] ??= {
         nom: item.variante.boutique?.nom ?? "Boutique",
         whatsapp: item.variante.boutique?.whatsapp ?? undefined,
         items: [],
       };
+      acc[key].items.push(item);
     }
-    acc[key].items.push(item);
-    return acc;
-  }, {});
+    return Object.entries(acc);
+  }, [cart]);
 
-  const handleCommanderBoutique = (group: { nom: string; whatsapp?: string; items: typeof cart }) => {
-    const message = buildWhatsappMessage({
+  const messageFor = (group: BoutiqueGroup) =>
+    buildWhatsappMessage({
       lignes: group.items.map((item) => ({
         produitNom: item.produit.nom,
         sku: item.produit.sku,
@@ -44,200 +86,177 @@ export function CartDrawer() {
         prix: parseFloat(item.produit.prixVente || "0"),
         boutiqueNom: group.nom,
       })),
-      clientNom: "À préciser",
+      clientNom: prenom.trim() || "À préciser",
       clientTel: "À préciser",
       livraison: "boutique",
+      notes: quartier.trim() ? `Quartier : ${quartier.trim()}` : undefined,
     });
-    const number = group.whatsapp
-      ? group.whatsapp.replace(/\D/g, "")
-      : (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "2250709294468");
-    window.open(`https://wa.me/${number}?text=${encodeURIComponent(message)}`, "_blank");
+
+  const handleCommander = (group: BoutiqueGroup) => {
+    const number = group.whatsapp ? group.whatsapp.replace(/\D/g, "") : (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "2250709294468");
+    window.open(`https://wa.me/${number}?text=${encodeURIComponent(messageFor(group))}`, "_blank");
   };
+
+  // Échap ferme, le focus va sur « Fermer » à l'ouverture.
+  useEffect(() => {
+    if (!cartOpen) return;
+    closeRef.current?.focus();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setCartOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [cartOpen, setCartOpen]);
 
   return (
     <AnimatePresence>
       {cartOpen && (
         <>
-          {/* Backdrop */}
           <motion.div
             className="fixed inset-0 z-[90]"
-            style={{ backgroundColor: "rgba(4,8,15,0.7)", backdropFilter: "blur(4px)" }}
+            style={{ backgroundColor: "rgba(12,12,14,0.55)" }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setCartOpen(false)}
+            aria-hidden
           />
 
-          {/* Drawer */}
-          <motion.aside
-            className="fixed right-0 top-0 bottom-0 z-[95] flex w-full max-w-sm flex-col border-l"
-            style={{ backgroundColor: "var(--v-s1)", borderColor: "var(--v-border)" }}
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ type: "spring", damping: 28, stiffness: 280 }}
+          <motion.section
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={titleId}
+            className="fixed inset-x-0 bottom-0 top-16 z-[95] flex flex-col rounded-t-[28px] md:inset-y-0 md:left-auto md:right-0 md:w-[440px] md:rounded-none md:rounded-l-[28px]"
+            style={{ backgroundColor: "var(--v-bg)", color: "var(--v-text)" }}
+            initial={reduced ? { opacity: 0 } : { y: "100%" }}
+            animate={reduced ? { opacity: 1 } : { y: 0 }}
+            exit={reduced ? { opacity: 0 } : { y: "100%" }}
+            transition={{ type: "spring", damping: 30, stiffness: 300 }}
           >
-            {/* Header */}
-            <div
-              className="flex items-center justify-between border-b px-5 py-4"
-              style={{ borderColor: "var(--v-border)" }}
-            >
-              <h2
-                className="font-[var(--font-display)] text-base font-black tracking-widest uppercase"
-                style={{ color: "var(--v-text)" }}
-              >
-                Panier{" "}
-                <span style={{ color: "var(--v-gold-text)" }}>
-                  ({cart.reduce((s, i) => s + i.quantite, 0)})
-                </span>
-              </h2>
-              <button
-                onClick={() => setCartOpen(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-[var(--v-s3)]"
-                style={{ color: "var(--v-muted)" }}
-              >
-                ✕
+            <span aria-hidden className="mx-auto mt-2.5 h-[5px] w-11 rounded-[3px] md:hidden" style={{ backgroundColor: "var(--v-s3)" }} />
+
+            <div className="flex items-center justify-between px-5 pb-3 pt-3 md:pt-5">
+              <div>
+                <h2 id={titleId} className="v-t2">Ton panier</h2>
+                <p className="text-[13px]" style={{ color: "var(--v-muted)" }}>
+                  {nbPieces} pièce{nbPieces > 1 ? "s" : ""}
+                  {groups.length > 1 ? `, ${groups.length} boutiques` : ""}
+                </p>
+              </div>
+              <button ref={closeRef} type="button" onClick={() => setCartOpen(false)} aria-label="Fermer le panier" className="flex h-11 w-11 items-center justify-center rounded-full" style={{ backgroundColor: "var(--v-card)", boxShadow: "inset 0 0 0 1px var(--v-border)" }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden>
+                  <path d="M6 6l12 12M18 6 6 18" />
+                </svg>
               </button>
             </div>
 
-            {/* Items */}
-            <div className="flex-1 overflow-y-auto px-5 py-4">
+            <div className="flex-1 space-y-5 overflow-y-auto px-5 pb-6">
               {cart.length === 0 ? (
                 <div className="flex flex-col items-center gap-4 py-16 text-center">
-                  <span className="text-4xl opacity-30">🛒</span>
-                  <p style={{ color: "var(--v-muted)" }}>Ton panier est vide</p>
-                  <Link
-                    href="/catalogue"
-                    onClick={() => setCartOpen(false)}
-                    className="text-sm font-semibold underline"
-                    style={{ color: "var(--v-gold-text)" }}
-                  >
-                    Voir le catalogue →
+                  <p className="v-t3">Ton panier est vide</p>
+                  <Link href="/catalogue" onClick={() => setCartOpen(false)} className="v-btn v-btn-ink v-btn-sm">
+                    Voir le catalogue
                   </Link>
                 </div>
               ) : (
-                <div className="flex flex-col gap-4">
-                  {cart.map((item) => {
-                    const prix = parseFloat(item.produit.prixVente || "0");
-                    return (
-                      <div
-                        key={item.variante.id}
-                        className="flex gap-3 rounded-xl border p-3"
-                        style={{ borderColor: "var(--v-border)", backgroundColor: "var(--v-s2)" }}
-                      >
-                        {/* Image */}
-                        <div
-                          className="h-16 w-16 shrink-0 overflow-hidden rounded-lg"
-                          style={{ backgroundColor: "var(--v-s3)" }}
-                        >
-                          {item.produit.imageUrl ? (
-                            <img
-                              src={item.produit.imageUrl}
-                              alt={item.produit.nom}
-                              className="h-full w-full object-cover"
-                            />
-                          ) : (
-                            <div className="flex h-full items-center justify-center text-[10px]" style={{ color: "var(--v-dim)" }}>Photo</div>
-                          )}
-                        </div>
+                <>
+                  <Steps current={0} />
 
-                        {/* Info */}
-                        <div className="flex-1 min-w-0">
-                          <p
-                            className="truncate text-sm font-semibold"
-                            style={{ color: "var(--v-text)" }}
-                          >
-                            {item.produit.nom}
-                          </p>
-                          <p className="text-xs" style={{ color: "var(--v-muted)" }}>
-                            {item.variante.taille} · {item.variante.couleur}
-                          </p>
-                          {item.variante.boutique?.nom && (
-                            <p className="text-[10px] font-semibold" style={{ color: "var(--v-gold-text)" }}>
-                              ◆ {item.variante.boutique.nom}
-                            </p>
-                          )}
-                          <div className="mt-1.5 flex items-center gap-2">
-                            <button
-                              onClick={() => updateQuantite(item.variante.id, item.quantite - 1)}
-                              className="flex h-5 w-5 items-center justify-center rounded border text-xs"
-                              style={{ borderColor: "var(--v-border)", color: "var(--v-muted)" }}
-                            >
-                              −
-                            </button>
-                            <span className="text-xs font-semibold" style={{ color: "var(--v-text)" }}>
-                              {item.quantite}
-                            </span>
-                            <button
-                              onClick={() => updateQuantite(item.variante.id, item.quantite + 1)}
-                              className="flex h-5 w-5 items-center justify-center rounded border text-xs"
-                              style={{ borderColor: "var(--v-border)", color: "var(--v-muted)" }}
-                            >
-                              +
-                            </button>
-                            <span
-                              className="ml-auto font-[var(--font-mono)] text-sm font-bold"
-                              style={{ color: "var(--v-gold-text)" }}
-                            >
-                              {(prix * item.quantite).toLocaleString("fr-FR")}
-                            </span>
+                  <ul>
+                    {cart.map((item) => {
+                      const prix = parseFloat(item.produit.prixVente || "0");
+                      const image = item.produit.imageUrl ?? item.produit.images?.[0]?.url;
+                      return (
+                        <li key={item.variante.id} className="grid grid-cols-[84px_1fr] gap-3.5 border-b py-4" style={{ borderColor: "var(--v-border)" }}>
+                          <div className="h-[105px] w-[84px] overflow-hidden rounded-[14px]" style={{ backgroundColor: "var(--v-s2)" }}>
+                            {image && (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img src={image} alt={item.produit.nom} className="h-full w-full object-cover" />
+                            )}
                           </div>
-                        </div>
+                          <div className="flex min-w-0 flex-col gap-1">
+                            <div className="flex justify-between gap-2">
+                              <p className="v-t4 truncate">{item.produit.nom}</p>
+                              <p className="v-price">{(prix * item.quantite).toLocaleString("fr-FR")}</p>
+                            </div>
+                            <p className="text-[13px]" style={{ color: "var(--v-muted)" }}>
+                              Taille {item.variante.taille}, {item.variante.couleur}
+                            </p>
+                            {item.variante.boutique?.nom && (
+                              <p className="text-[13px]" style={{ color: "var(--v-muted)" }}>{item.variante.boutique.nom}</p>
+                            )}
+                            <div className="mt-1.5 flex items-center justify-between">
+                              <div className="inline-flex items-center rounded-full" style={{ backgroundColor: "var(--v-card)", boxShadow: "inset 0 0 0 1px var(--v-border)" }}>
+                                <button type="button" onClick={() => updateQuantite(item.variante.id, item.quantite - 1)} aria-label={`Retirer une pièce ${item.produit.nom}`} className="h-10 w-11 text-xl font-semibold">
+                                  −
+                                </button>
+                                <span className="min-w-5 text-center font-bold tabular-nums" aria-live="polite">{item.quantite}</span>
+                                <button type="button" onClick={() => updateQuantite(item.variante.id, item.quantite + 1)} aria-label={`Ajouter une pièce ${item.produit.nom}`} className="h-10 w-11 text-xl font-semibold">
+                                  +
+                                </button>
+                              </div>
+                              <button type="button" onClick={() => removeFromCart(item.variante.id)} className="v-link min-h-11 text-[13px]">
+                                Retirer
+                              </button>
+                            </div>
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
 
-                        {/* Supprimer */}
-                        <button
-                          onClick={() => removeFromCart(item.variante.id)}
-                          className="shrink-0 text-xs transition-colors hover:text-[var(--v-red)]"
-                          style={{ color: "var(--v-dim)" }}
-                          aria-label="Retirer"
-                        >
-                          ✕
-                        </button>
+                  <div>
+                    <div className="flex items-baseline justify-between">
+                      <p className="v-t4">Total</p>
+                      <p className="v-price text-2xl">{total.toLocaleString("fr-FR")} FCFA</p>
+                    </div>
+                    {groups.length > 1 && (
+                      <p className="mt-1.5 text-[13px]" style={{ color: "var(--v-muted)" }}>
+                        Tes pièces sont dans {groups.length} boutiques : une commande part vers chacune, et on te dira où et quand les récupérer.
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="space-y-3.5">
+                    <div className="flex flex-col gap-1.5">
+                      <label htmlFor="cart-quartier" className="text-[13px] font-bold">Ton quartier</label>
+                      <input id="cart-quartier" className="input-field" value={quartier} onChange={(e) => setQuartier(e.target.value)} placeholder="Par exemple Niangon, Selmer, Sicogi" />
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                      <label htmlFor="cart-prenom" className="text-[13px] font-bold">Ton prénom (facultatif)</label>
+                      <input id="cart-prenom" className="input-field" value={prenom} onChange={(e) => setPrenom(e.target.value)} placeholder="Pour qu'on sache à qui répondre" />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2.5">
+                    <h3 className="v-t4">Le message envoyé</h3>
+                    {groups.map(([key, group]) => (
+                      <div key={key} className="rounded-[22px] p-3.5" style={{ backgroundColor: "#ECE5DA", color: "#0C0C0E" }}>
+                        {groups.length > 1 && <p className="mb-1.5 text-xs font-bold">{group.nom}</p>}
+                        <p className="max-h-48 overflow-y-auto whitespace-pre-line rounded-[20px_20px_6px_20px] px-4 py-3.5 text-[13.5px] leading-relaxed" style={{ backgroundColor: "#F0B429" }}>
+                          {messageFor(group)}
+                        </p>
                       </div>
-                    );
-                  })}
-                </div>
+                    ))}
+                  </div>
+                </>
               )}
             </div>
 
-            {/* Footer */}
             {cart.length > 0 && (
-              <div
-                className="border-t px-5 py-5 space-y-3"
-                style={{ borderColor: "var(--v-border)" }}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-sm" style={{ color: "var(--v-muted)" }}>Total</span>
-                  <span
-                    className="font-[var(--font-mono)] text-lg font-black"
-                    style={{ color: "var(--v-text)" }}
-                  >
-                    {total.toLocaleString("fr-FR")} <span className="text-xs">FCFA</span>
-                  </span>
-                </div>
-                {Object.entries(boutiqueGroups).map(([key, group]) => (
-                  <button
-                    key={key}
-                    onClick={() => handleCommanderBoutique(group)}
-                    className="flex w-full flex-col items-center justify-center gap-0.5 rounded-xl py-3.5 text-sm font-black uppercase tracking-wider transition-opacity hover:opacity-90"
-                    style={{ backgroundColor: "#25D366", color: "var(--v-on-gold)" }}
-                  >
-                    <span className="flex items-center gap-2">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                      </svg>
-                      Commander — {group.nom}
-                    </span>
-                    {Object.keys(boutiqueGroups).length > 1 && (
-                      <span className="text-[10px] font-normal normal-case tracking-normal opacity-70">
-                        {group.items.reduce((s, i) => s + i.quantite, 0)} article{group.items.reduce((s, i) => s + i.quantite, 0) > 1 ? "s" : ""}
-                      </span>
-                    )}
+              <div className="space-y-2.5 border-t px-5 pb-[max(20px,env(safe-area-inset-bottom))] pt-4" style={{ borderColor: "var(--v-border)", backgroundColor: "var(--v-bg)" }}>
+                {groups.map(([key, group]) => (
+                  <button key={key} type="button" onClick={() => handleCommander(group)} className="v-btn v-btn-gold w-full">
+                    <IconWhatsapp size={20} />
+                    {groups.length > 1 ? `Envoyer à ${group.nom}` : "Envoyer sur WhatsApp"}
                   </button>
                 ))}
+                <p className="text-center text-[13px]" style={{ color: "var(--v-muted)" }}>
+                  Paiement : Wave, Orange Money, MTN Money ou cash. Rien n&rsquo;est payé sur le site.
+                </p>
               </div>
             )}
-          </motion.aside>
+          </motion.section>
         </>
       )}
     </AnimatePresence>
