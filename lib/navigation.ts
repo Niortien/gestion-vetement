@@ -34,7 +34,7 @@ export const BOUTIQUE_NAV: NavSection[] = [
   {
     label: "Pilotage",
     items: [
-      { href: "/dashboard", label: "Dashboard", icon: IconLayoutDashboard },
+      { href: "/dashboard", label: "Tableau de bord", icon: IconLayoutDashboard },
       { href: "/activite", label: "Activité", icon: IconActivity },
       { href: "/analyse", label: "Analyse", icon: IconChartDots3 },
       { href: "/activite/hebdomadaire", label: "Recette hebdo", icon: IconReportMoney },

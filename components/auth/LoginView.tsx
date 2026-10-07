@@ -60,7 +60,7 @@ export function LoginView() {
   });
 
   return (
-    <AuthCard title="Connexion" description="Accédez à votre boutique : stock, caisse et ventes.">
+    <AuthCard title="Connexion" description="Entre avec l'adresse que l'administrateur t'a donnée.">
       <form
         className="space-y-4"
         onSubmit={(e) => {
@@ -100,9 +100,14 @@ export function LoginView() {
         <Button type="submit" size="lg" className="w-full bg-accent font-semibold text-on-accent" isLoading={isSubmitting}>
           Se connecter
         </Button>
-        <Link href="/forgot-password" className="block text-center text-sm font-medium text-accent-text hover:underline">
-          Mot de passe oublié ?
-        </Link>
+        <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
+          <Link href="/forgot-password" className="font-bold underline decoration-accent decoration-2 underline-offset-4">
+            Mot de passe oublié ?
+          </Link>
+          <Link href="/" className="text-text-muted hover:underline">
+            Retour à la boutique
+          </Link>
+        </div>
       </form>
     </AuthCard>
   );

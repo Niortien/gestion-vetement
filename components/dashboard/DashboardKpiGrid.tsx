@@ -37,6 +37,8 @@ interface KpiCardProps {
   /** Prochaine action suggérée — rendue cliquable si `href` est fourni. */
   hint?: string;
   href?: string;
+  /** Carte d'encre : l'indicateur principal de l'écran. */
+  hero?: boolean;
 }
 
 // Pastille d'icône = aplat teinté ; texte de la valeur = variante « text » (contraste ≥ 4.5:1).
@@ -47,8 +49,27 @@ const TONE_CLASSES: Record<Tone, { chip: string; text: string }> = {
   cash: { chip: "bg-cash-dim text-cash-text", text: "text-cash-text" },
 };
 
-function KpiCard({ label, value, sub, tone, icon: Icon, isMontant = false, hint, href }: KpiCardProps) {
+function KpiCard({ label, value, sub, tone, icon: Icon, isMontant = false, hint, href, hero = false }: KpiCardProps) {
   const t = TONE_CLASSES[tone];
+  if (hero) {
+    return (
+      <div className="rounded-[22px] bg-[#0C0C0E] p-5 text-white">
+        <p className="text-sm font-semibold text-[#C9C9CE]">{label}</p>
+        {isMontant ? (
+          <CurrencyDisplay montant={String(value)} size="lg" className="tabular mt-2 block font-display font-bold text-white" />
+        ) : (
+          <p className="tabular mt-2 font-display text-3xl font-bold">{value}</p>
+        )}
+        {sub && <p className="mt-1 text-[13px] font-semibold text-[#F0B429]">{sub}</p>}
+        {hint && href && (
+          <Link href={href} className="mt-2 inline-flex min-h-11 items-center gap-1 text-xs font-bold text-[#F0B429] underline underline-offset-4">
+            {hint}
+            <IconArrowRight size={12} aria-hidden />
+          </Link>
+        )}
+      </div>
+    );
+  }
   const content = (
     <div className="p-4">
       <div className="flex items-center justify-between gap-2">
@@ -140,6 +161,7 @@ export function DashboardKpiGrid({
           }
           tone="cash"
           isMontant
+          hero
           hint={!hasSession ? "Ouvrir une session" : undefined}
           href={!hasSession ? "/caisse" : undefined}
         />

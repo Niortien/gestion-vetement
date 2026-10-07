@@ -43,9 +43,19 @@ export function AuthShell({ children }: { children: ReactNode }) {
           transition={{ duration: motionDurations.xslow, ease: motionEasing.outExpo }}
           className="relative max-w-md"
         >
-          <h2 className="font-display text-4xl font-extrabold leading-tight tracking-tight">
-            Sortez toujours <span className="text-sidebar-accent">bien habillé.</span>
-          </h2>
+          <h2 className="font-display text-4xl font-bold leading-tight tracking-tight">L&rsquo;atelier</h2>
+          <p className="mt-3 text-[17px] leading-relaxed text-sidebar-text/85">
+            Le stock, la caisse et les ventes des deux boutiques, au même endroit.
+          </p>
+          <span aria-hidden className="mt-4 flex items-end gap-[3px]">
+            {[8, 10, 12, 15].map((h) => (
+              <i
+                key={h}
+                className="block bg-sidebar-accent"
+                style={{ width: h, height: h, clipPath: "polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)" }}
+              />
+            ))}
+          </span>
           <ul className="mt-8 flex flex-col gap-4">
             {HIGHLIGHTS.map(({ icon: Icon, text }) => (
               <li key={text} className="flex items-start gap-3 text-sm text-sidebar-muted">
@@ -62,7 +72,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
           href="/"
           className="relative inline-flex w-fit cursor-pointer items-center gap-2 text-sm font-medium text-sidebar-muted transition-colors duration-150 hover:text-sidebar-text"
         >
-          <IconArrowLeft size={16} aria-hidden /> Voir la vitrine
+          <IconArrowLeft size={16} aria-hidden /> Retour à la boutique
         </Link>
       </aside>
 
