@@ -23,8 +23,8 @@ const waUrl = getWhatsappUrl("Bonjour Dri Valé, je veux voir vos nouveautés");
 const EASE = [0.2, 0.8, 0.2, 1] as const;
 
 /**
- * Héros d'accueil animé : titre affiche avec mot qui tourne, rayons cliquables et carte d'affiche
- * (croquis du vêtement), bandeau doré en pied. Fond sombre teinté, indépendant du thème de la vitrine
+ * Héros d'accueil animé : titre affiche avec mot qui tourne, rayons cliquables et carte photo
+ * (photos par rayon), bandeau doré en pied. Fond sombre teinté, indépendant du thème de la vitrine
  * (la barre flottante est déjà sombre). Les animations s'arrêtent avec « réduire les animations ».
  */
 export function HomeHero() {
@@ -36,7 +36,6 @@ export function HomeHero() {
     HERO_WORD_INTERVAL_MS,
     reduced,
   );
-  const current = HERO_CATEGORIES[category];
 
   const rise = (delay: number) => ({
     initial: reduced ? false : { opacity: 0, y: 18 },
@@ -171,7 +170,7 @@ export function HomeHero() {
         </div>
 
         <motion.div {...rise(0.29)} className="relative mx-auto w-full max-w-[420px] md:max-w-[500px] md:justify-self-center">
-          <HeroStage category={current} index={category} total={HERO_CATEGORIES.length} />
+          <HeroStage categories={HERO_CATEGORIES} index={category} />
           <HeroLookbookBadge />
         </motion.div>
       </div>
