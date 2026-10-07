@@ -114,15 +114,18 @@ export function ProductTile({ produit, className, swingDelay }: ProductTileProps
         )}
       </div>
 
-      <div className="v-tag">
+      {/* Étiquette : couleurs posées en dur (encre sur blanc) pour rester lisibles quel que soit le thème de la vitrine. */}
+      <div className="v-tag" style={{ backgroundColor: "#FFFFFF", boxShadow: "0 10px 24px -12px rgba(12,12,14,0.55), 0 0 0 1px rgba(12,12,14,0.12)" }}>
         <Link href={`/boutique/${produit.id}`} className="block">
-          <h3 className="v-t4 text-base">{produit.nom}</h3>
+          <h3 className="v-t4 text-[17px] font-bold leading-tight" style={{ color: "#0C0C0E" }}>
+            {produit.nom}
+          </h3>
         </Link>
-        <p className="v-price mt-0.5 text-base">
+        <p className="v-price mt-1 text-[17px] font-extrabold" style={{ color: "#0C0C0E" }}>
           {isPromo && prixPromo !== null ? (
             <>
-              <span style={{ color: "#C8102E" }}>{prixPromo.toLocaleString("fr-FR")} FCFA</span>
-              <s className="ml-1.5 text-[13px] font-medium" style={{ color: "#6B6B72" }}>
+              <span style={{ color: "#B00D27" }}>{prixPromo.toLocaleString("fr-FR")} FCFA</span>
+              <s className="ml-1.5 text-sm font-semibold" style={{ color: "#4A4A50" }}>
                 {prix.toLocaleString("fr-FR")}
               </s>
             </>
@@ -131,7 +134,7 @@ export function ProductTile({ produit, className, swingDelay }: ProductTileProps
           )}
         </p>
         {boutiques.length > 0 && (
-          <p className="mt-0.5 truncate text-xs" style={{ color: "#55555B" }}>
+          <p className="mt-1 truncate text-[13px] font-medium" style={{ color: "#3A3A40" }}>
             {boutiques.join(" · ")}
           </p>
         )}
