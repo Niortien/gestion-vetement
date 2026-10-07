@@ -14,7 +14,7 @@ import {
   useDisclosure,
 } from "@heroui/react";
 import { motion } from "framer-motion";
-import { IconCategory2, IconLayoutGrid, IconPencil, IconPlus, IconTrash } from "@tabler/icons-react";
+import { IconCategory2, IconLayoutGrid, IconPencil, IconPlus, IconSearch, IconTrash } from "@tabler/icons-react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -79,6 +79,7 @@ export function CategoriesView() {
     formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(schema) });
 
+  const [recherche, setRecherche] = useState("");
   const nomValue = watch("nom");
 
   useEffect(() => {
@@ -109,11 +110,12 @@ export function CategoriesView() {
   });
 
   // Grouper par description pour l'affichage
+  const visibles = categories.filter((c) => c.nom.toLowerCase().includes(recherche.trim().toLowerCase()));
   const grouped = GROUPES.map((label) => ({
     label,
-    items: categories.filter((c) => c.description === label),
+    items: visibles.filter((c) => c.description === label),
   })).filter((g) => g.items.length > 0);
-  const autres = categories.filter((c) => !GROUPES.includes(c.description ?? ""));
+  const autres = visibles.filter((c) => !GROUPES.includes(c.description ?? ""));
   if (autres.length > 0) grouped.push({ label: "Autres", items: autres });
 
   const isPending = createMutation.isPending || updateMutation.isPending;
@@ -121,9 +123,6 @@ export function CategoriesView() {
   return (
     <PageWrapper>
       <PageHero
-        tone="cash"
-        icon={IconCategory2}
-        eyebrow="Catalogue"
         title="Catégories"
         description={
           isAdmin
@@ -133,7 +132,7 @@ export function CategoriesView() {
         actions={
           isAdmin && (
             <Button
-              className="min-h-11 bg-cash font-semibold text-white"
+              className="min-h-11 bg-accent font-semibold text-on-accent"
               startContent={<IconPlus size={18} aria-hidden />}
               onPress={openCreate}
             >
@@ -142,7 +141,7 @@ export function CategoriesView() {
           )
         }
       >
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <StatTile tone="cash" icon={IconCategory2} label="Catégories" value={isLoading ? "—" : <CountUp value={categories.length} />} />
           <StatTile tone="accent" icon={IconLayoutGrid} label="Groupes" value={isLoading ? "—" : <CountUp value={grouped.length} />} delay={0.05} />
         </div>
@@ -162,12 +161,26 @@ export function CategoriesView() {
           hint={isAdmin ? "Créez une première catégorie pour classer vos produits." : "L'administrateur n'en a pas encore créé."}
           action={
             isAdmin && (
-              <Button size="sm" className="bg-cash font-semibold text-white" onPress={openCreate}>
+              <Button size="sm" className="bg-accent font-semibold text-on-accent" onPress={openCreate}>
                 Créer une catégorie
               </Button>
             )
           }
         />
+      )}
+
+      {categories.length > 0 && (
+        <label className="flex min-h-[46px] w-full items-center gap-2.5 rounded-full bg-surface px-4 text-text-muted shadow-[0_0_0_1px_var(--color-border)] sm:max-w-sm">
+          <IconSearch size={20} aria-hidden />
+          <span className="sr-only">Chercher une catégorie</span>
+          <input
+            type="search"
+            value={recherche}
+            onChange={(e) => setRecherche(e.target.value)}
+            placeholder="Chercher une catégorie"
+            className="w-full bg-transparent text-[15px] text-text outline-none placeholder:text-text-muted"
+          />
+        </label>
       )}
 
       <div className="grid gap-4 lg:grid-cols-2">
@@ -178,18 +191,18 @@ export function CategoriesView() {
             initial={reduced ? false : { opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.38, ease: motionEasing.outExpo, delay: gi * 0.05 }}
-            className="overflow-hidden rounded-lg border border-border bg-surface shadow-card"
+            className="overflow-hidden rounded-[22px] bg-surface shadow-[0_0_0_1px_var(--color-border)]"
           >
-            <header className="flex items-center justify-between gap-2 border-b border-border bg-surface-high px-4 py-2.5">
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-text-muted">{label}</h2>
-              <span className="rounded-full bg-cash-dim px-2 py-0.5 font-mono text-xs font-semibold text-cash-text">{items.length}</span>
+            <header className="flex items-center justify-between gap-2 px-5 pb-1 pt-4">
+              <h2 className="font-display text-[19px] font-semibold text-text">{label}</h2>
+              <span className="rounded-full bg-[#FDF1D3] px-2.5 py-0.5 text-xs font-bold text-[#7A5600]">{items.length}</span>
             </header>
             <ul className="divide-y divide-border">
               {items.map((c) => (
-                <li key={c.id} className="flex items-center justify-between gap-3 px-4 py-2.5 transition-colors duration-150 hover:bg-surface-high">
+                <li key={c.id} className="flex items-center justify-between gap-3 px-5 py-3 transition-colors duration-150 hover:bg-surface-high">
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-medium text-text">{c.nom}</p>
-                    <code className="font-mono text-xs text-text-muted">{c.slug}</code>
+                    <p className="truncate font-bold text-text">{c.nom}</p>
+                    <code className="text-[13px] text-text-muted">{c.slug}</code>
                   </div>
                   {isAdmin && (
                     <div className="flex shrink-0 items-center gap-1.5">
@@ -271,7 +284,7 @@ export function CategoriesView() {
               Annuler
             </Button>
             <Button
-              className="bg-cash font-semibold text-white"
+              className="bg-accent font-semibold text-on-accent"
               isLoading={isPending}
               onPress={() => void onSubmit()}
             >

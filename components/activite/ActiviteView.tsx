@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Spinner } from "@heroui/react";
-import { IconArrowRight, IconChartHistogram } from "@tabler/icons-react";
+import { IconArrowRight } from "@tabler/icons-react";
 import { getLocalTimeZone, today, type DateValue } from "@internationalized/date";
 import { CurrencyDisplay } from "@/components/common/CurrencyDisplay";
 import { PageHero } from "@/components/common/PageHero";
@@ -64,8 +64,8 @@ function formatRange(range: DateRange): string {
 
 function SectionCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-xl border border-border bg-surface p-4 shadow-card md:p-5">
-      <h2 className="mb-4 text-sm font-semibold text-text">{title}</h2>
+    <section className="rounded-[22px] bg-surface p-5 shadow-[0_0_0_1px_var(--color-border)] md:p-6">
+      <h2 className="mb-4 font-display text-[20px] font-semibold leading-tight text-text">{title}</h2>
       {children}
     </section>
   );
@@ -126,11 +126,8 @@ export function ActiviteView() {
   return (
     <PageWrapper>
       <PageHero
-        tone="cash"
-        icon={IconChartHistogram}
-        eyebrow="Analyse"
         title="Activité"
-        description={<span className="font-mono text-xs">{rangeLabel}</span>}
+        description={rangeLabel}
       >
         <div className="flex flex-col gap-3">
           <PeriodFilter ariaLabel="Période d'analyse" tone="cash" extended value={dateRange} onChange={setDateRange} />
@@ -203,7 +200,7 @@ export function ActiviteView() {
 
       <Link
         href="/analyse"
-        className="flex min-h-11 w-fit cursor-pointer items-center gap-1.5 text-sm font-semibold text-accent-text hover:underline"
+        className="flex min-h-11 w-fit cursor-pointer items-center gap-1.5 text-sm font-bold underline decoration-accent decoration-2 underline-offset-4"
       >
         Voir l&apos;analyse : jours, heures et produits à pousser
         <IconArrowRight size={15} aria-hidden />
@@ -212,7 +209,7 @@ export function ActiviteView() {
       {/* Lien vers le rapport hebdomadaire */}
       <Link
         href="/activite/hebdomadaire"
-        className="flex min-h-11 w-fit cursor-pointer items-center gap-1.5 text-sm font-semibold text-accent-text hover:underline"
+        className="flex min-h-11 w-fit cursor-pointer items-center gap-1.5 text-sm font-bold underline decoration-accent decoration-2 underline-offset-4"
       >
         Voir les recettes par semaine
         <IconArrowRight size={15} aria-hidden />

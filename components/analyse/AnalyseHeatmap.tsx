@@ -7,6 +7,24 @@ interface AnalyseHeatmapProps {
 
 const HEURES = Array.from({ length: 24 }, (_, h) => h);
 
+/** Cinq niveaux : papier, gris, gris foncé, encre, puis l'or pour le pic. */
+const NIVEAUX = [
+  { bg: "#ECECEA", fg: "#0C0C0E" },
+  { bg: "#B9B9BE", fg: "#0C0C0E" },
+  { bg: "#55555B", fg: "#FFFFFF" },
+  { bg: "#0C0C0E", fg: "#FFFFFF" },
+  { bg: "#F0B429", fg: "#0C0C0E" },
+] as const;
+
+function niveau(n: number, max: number): number {
+  if (n <= 0) return 0;
+  const r = n / max;
+  if (r >= 0.85) return 4;
+  if (r >= 0.6) return 3;
+  if (r >= 0.3) return 2;
+  return 1;
+}
+
 /**
  * Carte de chaleur jour × heure : plus la case est foncée, plus on vend. Chaque case porte son chiffre dans un libellé
  * (lecteurs d'écran, infobulle) : l'information ne dépend pas de la couleur seule.
@@ -42,20 +60,14 @@ export function AnalyseHeatmap({ matrice }: AnalyseHeatmapProps) {
               </th>
               {heures.map((h) => {
                 const n = matrice[j][h];
-                const intensite = n / max;
+                const niv = NIVEAUX[niveau(n, max)];
                 return (
                   <td
                     key={h}
                     title={`${jour} ${h}h : ${n} vente${n > 1 ? "s" : ""}`}
                     aria-label={`${jour} ${h}h : ${n} vente${n > 1 ? "s" : ""}`}
                     className="h-7 min-w-6 rounded-[5px] text-center font-mono text-[10px] text-text"
-                    style={{
-                      backgroundColor:
-                        n === 0
-                          ? "var(--color-surface-high)"
-                          : `color-mix(in srgb, var(--color-accent) ${Math.round(18 + intensite * 82)}%, transparent)`,
-                      color: n > 0 && intensite > 0.55 ? "var(--color-on-accent)" : undefined,
-                    }}
+                    style={{ backgroundColor: niv.bg, color: niv.fg }}
                   >
                     {n > 0 ? n : ""}
                   </td>
@@ -65,13 +77,11 @@ export function AnalyseHeatmap({ matrice }: AnalyseHeatmapProps) {
           ))}
         </tbody>
       </table>
-      <p className="mt-3 flex items-center gap-2 text-xs text-text-muted">
-        <span>Peu de ventes</span>
-        <span
-          aria-hidden
-          className="h-2 w-28 rounded-full"
-          style={{ background: "linear-gradient(to right, color-mix(in srgb, var(--color-accent) 18%, transparent), var(--color-accent))" }}
-        />
+      <p className="mt-3 flex flex-wrap items-center gap-2 text-xs font-semibold text-text-muted">
+        <span>Peu</span>
+        {NIVEAUX.map((n) => (
+          <i key={n.bg} aria-hidden className="block h-3 w-[22px] rounded" style={{ backgroundColor: n.bg }} />
+        ))}
         <span>Beaucoup ({max} max sur une case)</span>
       </p>
     </div>

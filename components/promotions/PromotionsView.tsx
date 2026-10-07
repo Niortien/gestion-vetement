@@ -52,37 +52,37 @@ function ProduitPromoRow({ produit }: { produit: Produit }) {
   }
 
   return (
-    <div className="rounded-lg border border-border bg-surface p-3.5 shadow-card">
+    <div className="rounded-[22px] bg-surface p-4 shadow-[0_0_0_1px_var(--color-border)]">
       <div className="flex items-center gap-3">
         {/* Thumbnail */}
-        <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-surface">
+        <div className="relative h-20 w-16 shrink-0 overflow-hidden rounded-xl bg-surface-high">
           {imageUrl ? (
             <img src={imageUrl} alt={produit.nom} className="h-full w-full object-cover" />
           ) : (
             <div className="flex h-full w-full items-center justify-center text-text-dim text-lg">?</div>
           )}
           {isPromo && (
-            <div className="absolute -top-1 -right-1 rounded-full bg-return px-1 py-0.5 text-[9px] font-bold text-white leading-none">
-              -{tauxReduction}%
+            <div className="absolute left-1 top-1 rounded-full bg-[#C8102E] px-1.5 py-1 text-[10px] font-extrabold leading-none text-white">
+              −{tauxReduction} %
             </div>
           )}
         </div>
 
         {/* Infos */}
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-semibold text-text">{produit.nom}</p>
+          <p className="truncate font-display text-[17px] font-semibold text-text">{produit.nom}</p>
           <div className="mt-0.5 flex items-center gap-2 flex-wrap">
             {isPromo ? (
               <>
                 <span className="text-xs text-text-muted line-through">
                   {prixVente.toLocaleString("fr-FR")} FCFA
                 </span>
-                <span className="[font-family:var(--font-mono)] text-xs font-bold text-return-text">
+                <span className="font-display text-base font-bold tabular-nums text-[#C8102E]">
                   {Number(produit.prixPromo).toLocaleString("fr-FR")} FCFA
                 </span>
               </>
             ) : (
-              <span className="[font-family:var(--font-mono)] text-xs text-text-muted">
+              <span className="font-display text-base font-bold tabular-nums text-text">
                 {prixVente.toLocaleString("fr-FR")} FCFA
               </span>
             )}
@@ -100,7 +100,7 @@ function ProduitPromoRow({ produit }: { produit: Produit }) {
           isSelected={produit.enPromo || expanded}
           onValueChange={handleToggle}
           isDisabled={update.isPending}
-          classNames={{ thumb: "bg-white", wrapper: "group-data-[selected=true]:bg-return" }}
+          classNames={{ thumb: "bg-white", wrapper: "group-data-[selected=true]:bg-text" }}
           aria-label={`Promotion ${produit.nom}`}
         />
       </div>
@@ -137,13 +137,10 @@ export function PromotionsView() {
   return (
     <PageWrapper>
       <PageHero
-        tone="return"
-        icon={IconRosetteDiscount}
-        eyebrow="Catalogue"
         title="Promotions"
-        description="Activez une promotion sur un produit, fixez le prix promo : la vitrine l'affiche aussitôt."
+        description="Le prix barré affiché sur la vitrine est toujours le vrai prix de vente. Active une promotion, fixe le prix promo : la vitrine l'affiche aussitôt."
       >
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <StatTile
             tone="return"
             icon={IconRosetteDiscount}
@@ -170,13 +167,13 @@ export function PromotionsView() {
           startContent={<IconSearch size={16} aria-hidden className="text-text-muted" />}
           classNames={{
             base: "sm:max-w-xs",
-            inputWrapper: "h-10 border-border bg-surface",
+            inputWrapper: "h-11 rounded-full border-border bg-surface",
           }}
           aria-label="Rechercher un produit"
         />
         <SegmentedControl
           ariaLabel="Filtrer les produits"
-          tone="return"
+          tone="accent"
           value={filterMode}
           onChange={setFilterMode}
           options={[

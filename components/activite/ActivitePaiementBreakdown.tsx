@@ -12,77 +12,49 @@ const MODE_LABELS: Record<ModePaiement, string> = {
 };
 
 const MODE_COLORS: Record<ModePaiement, string> = {
-  CASH: "var(--color-accent)",
-  WAVE: "var(--color-in)",
-  ORANGE_MONEY: "var(--color-return)",
-  CARTE: "var(--color-cash)",
-  MTN_MONEY: "var(--color-out)",
+  CASH: "#0C0C0E",
+  WAVE: "#4B37C4",
+  ORANGE_MONEY: "#F0B429",
+  CARTE: "#55555B",
+  MTN_MONEY: "#8A6100",
 };
 
 interface ActivitePaiementBreakdownProps {
   resume: ResumeJour | null;
 }
 
+/** Une ligne par mode de paiement : libellé, barre relative au premier, montant, part. */
 export function ActivitePaiementBreakdown({ resume }: ActivitePaiementBreakdownProps) {
   if (!resume) {
-    return (
-      <p className="py-4 text-center text-sm text-text-muted">Session non disponible</p>
-    );
+    return <p className="py-4 text-center text-sm text-text-muted">Session non disponible</p>;
   }
 
-  const entries = Object.entries(resume.parModePaiement) as [ModePaiement, string][];
+  const entries = (Object.entries(resume.parModePaiement) as [ModePaiement, string][]).sort(
+    ([, a], [, b]) => parseFloat(b || "0") - parseFloat(a || "0")
+  );
   const total = entries.reduce((sum, [, v]) => sum + parseFloat(v || "0"), 0);
+  const max = Math.max(...entries.map(([, v]) => parseFloat(v || "0")), 1);
 
   if (entries.length === 0) {
-    return (
-      <p className="py-4 text-center text-sm text-text-muted">Aucun paiement enregistré aujourd&apos;hui</p>
-    );
+    return <p className="py-4 text-center text-sm text-text-muted">Aucun paiement enregistré aujourd&apos;hui</p>;
   }
 
   return (
-    <div className="space-y-3">
-      {/* Barre de répartition */}
-      <div role="img" aria-label="Répartition des paiements par mode" className="flex h-2.5 w-full gap-0.5 overflow-hidden rounded-full">
-        {entries.map(([mode, montant]) => {
-          const pct = total > 0 ? (parseFloat(montant) / total) * 100 : 0;
-          return (
-            <div
-              key={mode}
-              className="h-full transition-all"
-              style={{
-                width: `${pct}%`,
-                backgroundColor: MODE_COLORS[mode],
-              }}
-            />
-          );
-        })}
-      </div>
-
-      {/* Détail par mode */}
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-        {entries.map(([mode, montant]) => {
-          const pct = total > 0 ? Math.round((parseFloat(montant) / total) * 100) : 0;
-          return (
-            <div
-              key={mode}
-              className="flex items-center gap-2 rounded-lg border border-border bg-surface-high px-3 py-2"
-            >
-              <span
-                className="h-2 w-2 shrink-0 rounded-full"
-                style={{ backgroundColor: MODE_COLORS[mode] }}
-              />
-              <div className="min-w-0">
-                <p className="text-xs text-text-muted">{MODE_LABELS[mode]}</p>
-                <p className="font-mono text-sm font-semibold text-text">
-                  {Math.round(parseFloat(montant)).toLocaleString("fr-FR")}
-                  <span className="ml-1 text-[10px] text-text-muted">FCFA</span>
-                </p>
-                <p className="text-[11px] text-text-muted">{pct}%</p>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
+    <ul aria-label="Répartition des paiements par mode">
+      {entries.map(([mode, montant]) => {
+        const valeur = parseFloat(montant || "0");
+        const pct = total > 0 ? Math.round((valeur / total) * 100) : 0;
+        return (
+          <li key={mode} className="grid grid-cols-[110px_minmax(0,1fr)_auto_44px] items-center gap-3 py-2 text-sm">
+            <span>{MODE_LABELS[mode]}</span>
+            <span aria-hidden className="h-2.5 overflow-hidden rounded-full bg-surface-high">
+              <i className="block h-full rounded-full" style={{ width: `${(valeur / max) * 100}%`, backgroundColor: MODE_COLORS[mode] }} />
+            </span>
+            <span className="text-right font-bold tabular-nums">{Math.round(valeur).toLocaleString("fr-FR")}</span>
+            <span className="text-right text-[13px] tabular-nums text-text-muted">{pct} %</span>
+          </li>
+        );
+      })}
+    </ul>
   );
 }

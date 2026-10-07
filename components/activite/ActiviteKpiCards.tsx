@@ -16,7 +16,6 @@ import {
 } from "@tabler/icons-react";
 import { CountUp } from "@/components/common/CountUp";
 import { CurrencyDisplay } from "@/components/common/CurrencyDisplay";
-import { SpotlightCard } from "@/components/common/SpotlightCard";
 import type { Tone } from "@/components/common/tone";
 
 interface ActiviteKpiCardsProps {
@@ -35,25 +34,23 @@ interface KpiCardProps {
   label: string;
   value: ReactNode;
   tone: Tone;
-  icon: Icon;
+  /** Conservé pour compatibilité : plus de pastille d'icône dans l'atelier. */
+  icon?: Icon;
   sub?: string;
   isLoading: boolean;
+  /** Carte d'encre : l'indicateur principal. */
+  ink?: boolean;
 }
 
-function KpiCard({ label, value, tone, icon: Icon, sub, isLoading }: KpiCardProps) {
+function KpiCard({ label, value, sub, isLoading, ink = false }: KpiCardProps) {
   return (
-    <SpotlightCard tone={tone} className="p-4">
-      <div className="flex items-center justify-between gap-2">
-        <p className="text-xs font-semibold uppercase tracking-wider text-text-muted">{label}</p>
-        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-[color-mix(in_srgb,var(--tone)_14%,transparent)] text-[var(--tone-text)]">
-          <Icon size={16} aria-hidden />
-        </span>
+    <div className={`flex flex-col gap-1.5 rounded-[22px] p-5 ${ink ? "bg-[#0C0C0E] text-white" : "bg-surface text-text shadow-[0_0_0_1px_var(--color-border)]"}`}>
+      <p className={`text-sm font-semibold ${ink ? "text-[#C9C9CE]" : "text-text-muted"}`}>{label}</p>
+      <div className="min-h-[2.25rem]">
+        {isLoading ? <Skeleton className="h-8 w-28 rounded-lg" /> : <div className="text-[28px] font-bold leading-tight">{value}</div>}
       </div>
-      <div className="mt-2 min-h-[2rem]">
-        {isLoading ? <Skeleton className="h-7 w-28 rounded-lg" /> : <div className="text-xl font-bold text-text">{value}</div>}
-      </div>
-      {sub && !isLoading && <p className="mt-1 text-xs text-text-muted">{sub}</p>}
-    </SpotlightCard>
+      {sub && !isLoading && <p className={`text-[13px] font-semibold ${ink ? "text-[#F0B429]" : "text-text-muted"}`}>{sub}</p>}
+    </div>
   );
 }
 
@@ -74,8 +71,9 @@ export function ActiviteKpiCards({
   const beneficePositif = benefice >= 0;
 
   return (
-    <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-4">
+    <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
       <KpiCard
+        ink
         label="Ventes"
         icon={IconCoin}
         tone="cash"

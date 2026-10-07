@@ -20,7 +20,7 @@ export function AnalyseConseils({ conseils }: { conseils: Conseil[] }) {
         const n = NIVEAU[c.niveau];
         const Icon = n.icon;
         return (
-          <li key={c.id} className={cn(n.tone, "rounded-lg border border-border bg-surface p-4")}>
+          <li key={c.id} className={cn(n.tone, "rounded-[18px] bg-base p-4")}>
             <p className="flex items-center gap-2 text-xs font-semibold text-[var(--tone-text)]">
               <span className="flex h-6 w-6 items-center justify-center rounded-md bg-[color-mix(in_srgb,var(--tone)_16%,transparent)]">
                 <Icon size={14} aria-hidden />

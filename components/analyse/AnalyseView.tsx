@@ -6,7 +6,6 @@ import { Button, Spinner } from "@heroui/react";
 import {
   IconAlertCircle,
   IconCalendarStar,
-  IconChartDots3,
   IconClockHour4,
   IconCoin,
   IconReceipt2,
@@ -49,9 +48,9 @@ const PERIODES: { key: string; label: string; jours: PeriodeAnalyse }[] = [
 
 function Section({ titre, description, children }: { titre: string; description?: string; children: ReactNode }) {
   return (
-    <section className="rounded-xl border border-border bg-surface p-4 shadow-card md:p-5">
-      <h2 className="text-sm font-semibold text-text">{titre}</h2>
-      {description && <p className="mt-0.5 text-xs text-text-muted">{description}</p>}
+    <section className="rounded-[22px] bg-surface p-5 shadow-[0_0_0_1px_var(--color-border)] md:p-6">
+      <h2 className="font-display text-[20px] font-semibold leading-tight text-text">{titre}</h2>
+      {description && <p className="mt-1 text-[13px] text-text-muted">{description}</p>}
       <div className="mt-4">{children}</div>
     </section>
   );
@@ -84,13 +83,10 @@ export function AnalyseView() {
   return (
     <PageWrapper>
       <PageHero
-        tone="cash"
-        icon={IconChartDots3}
-        eyebrow="Mini data-analyse"
         title="Analyse"
-        description="Quels produits, quels jours et quelles heures font vos ventes, et ce qu'il faut en faire. Calculé sur vos ventes réelles, sans les ventes annulées."
+        description="Quand les clients achètent, et ce que ça veut dire pour la boutique. Calculé sur les ventes réelles, sans les ventes annulées."
       >
-        <SegmentedControl ariaLabel="Période analysée" tone="cash" value={cle} onChange={setCle} options={PERIODES.map(({ key, label }) => ({ key, label }))} />
+        <SegmentedControl ariaLabel="Période analysée" tone="accent" value={cle} onChange={setCle} options={PERIODES.map(({ key, label }) => ({ key, label }))} />
       </PageHero>
 
       {isError && (
@@ -134,8 +130,8 @@ export function AnalyseView() {
             </p>
           )}
 
-          <div className="grid grid-cols-2 gap-3 md:grid-cols-3 2xl:grid-cols-5">
-            <StatTile tone="cash" icon={IconShoppingBag} label="Ventes" value={<CountUp value={analyse.indicateurs.ventes} />} hint={`${jours} derniers jours`} />
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 2xl:grid-cols-5">
+            <StatTile ink tone="cash" icon={IconShoppingBag} label="Ventes" value={<CountUp value={analyse.indicateurs.ventes} />} hint={`${jours} derniers jours`} />
             <StatTile
               tone="in"
               icon={IconCoin}
